@@ -1,5 +1,5 @@
 interface ImageBuffer {
-	getGDVersion(): string;
+	height: number;
 }
 
 declare module "epd7x5" {
