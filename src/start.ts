@@ -1,5 +1,5 @@
-import * as Epd7x5 from "epd7x5";
+import * as epd from "node-epd";
 
-Epd7x5.init();
+epd.clear();
 
-const frame = Epd7x5.getImageBuffer();
+epd.update();
