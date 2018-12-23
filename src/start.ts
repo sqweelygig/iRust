@@ -1,5 +1,2 @@
-import * as epd from "node-epd";
+import * as epd from "epd7x5";
 
-epd.clear();
-
-epd.update();

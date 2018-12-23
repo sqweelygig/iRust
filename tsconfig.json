@@ -8,6 +8,7 @@
     "noUnusedLocals": true,
     "target": "es6",
     "rootDir": "./src",
+    "typeRoots": [ "./types" ],
     "outDir": "./build"
   }
 }
