@@ -4,4 +4,6 @@ epd.init();
 
 const frame = epd.getImageBuffer();
 
+console.log(frame.getGDVersion());
+
 epd.displayImageBuffer(frame);
