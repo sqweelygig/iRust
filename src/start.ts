@@ -1,3 +1,4 @@
 import * as Express from "express";
 // Just a file.
-Express();
+const express = Express();
+express.listen(process.env.PORT || 80);
