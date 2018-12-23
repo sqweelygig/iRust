@@ -1,1 +1,1 @@
-// Just an empty source folder
+// Just an empty source folder.
