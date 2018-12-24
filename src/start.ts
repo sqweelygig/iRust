@@ -16,14 +16,14 @@ import * as rpio from "rpio";
 const START_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x20]);
 const END_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x22]);
 
-// const DATA_PREFIX = [0x00, 0x00];
+const DATA_PREFIX = [0x00, 0x00];
 
-function write(_data: number[]) {
-	// const payload = Buffer.from(DATA_PREFIX.concat(data));
+function write(data: number[]) {
+	const payload = Buffer.from(DATA_PREFIX.concat(data));
 	rpio.spiBegin();
 	rpio.spiSetClockDivider(32);
 	rpio.spiWrite(START_UPDATE, START_UPDATE.length);
-	// rpio.spiWrite(payload, payload.length);
+	rpio.spiWrite(payload, payload.length);
 	rpio.spiWrite(END_UPDATE, START_UPDATE.length);
 	rpio.spiEnd();
 }
