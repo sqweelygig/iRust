@@ -25,6 +25,8 @@ RUN npm install --unsafe-perm && \
 
 COPY src ./src
 
+COPY it8951 ./it8951
+
 RUN npm run build && \
 	rm -rf ./src && \
 	rm ./tsconfig.json && \
