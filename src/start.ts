@@ -2,7 +2,6 @@
 
 import * as rpio from "rpio";
 
-console.log("rpio.spiBegin");
 rpio.spiBegin();
-console.log("rpio.spiEnd");
+rpio.spiSetClockDivider(32);
 rpio.spiEnd();
