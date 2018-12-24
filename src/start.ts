@@ -11,8 +11,8 @@ const END_IMAGE = 0x0022;
 // const WIDTH = 1200;
 // const HEIGHT = 825;
 
-const START_UPDATE = new Buffer([COMMAND, FULL_IMAGE]);
-const END_UPDATE = new Buffer([COMMAND, END_IMAGE]);
+const START_UPDATE = Buffer.from([COMMAND, FULL_IMAGE]);
+const END_UPDATE = Buffer.from([COMMAND, END_IMAGE]);
 
 rpio.spiBegin();
 rpio.spiSetClockDivider(32);
