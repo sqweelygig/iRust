@@ -10,6 +10,10 @@ RUN apt-get update && \
 	apt-get install -yq git-core libgd2-dev && \
 	apt-get clean
 
+COPY bcm2835 ./bcm2835
+
+COPY it8951 ./it8951
+
 RUN git clone git://git.drogon.net/wiringPi
 RUN cd wiringPi && ./build
 
@@ -24,8 +28,6 @@ RUN npm install --unsafe-perm && \
 	npm cache clean --force
 
 COPY src ./src
-
-COPY it8951 ./it8951
 
 RUN npm run build && \
 	rm -rf ./src && \
