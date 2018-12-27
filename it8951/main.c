@@ -26,9 +26,9 @@ int main (int argc, char *argv[])
 	/*
 	 * Initialise the display
 	 */
-	bcm2835_gpio_write(RESET, LOW);
-	bcm2835_delay(100);
-	bcm2835_gpio_write(RESET, HIGH);
+	//	bcm2835_gpio_write(RESET, LOW);
+	//	bcm2835_delay(100);
+	//	bcm2835_gpio_write(RESET, HIGH);
 
 	/*
 	 * Request the display properties
