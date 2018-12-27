@@ -505,8 +505,17 @@ void GetIT8951SystemInfo(void* pBuf)
 
 uint8_t IT8951_Init()
 {
-	//Get Device Info
-	GetIT8951SystemInfo(&gstI80DevInfo);
+	uint16_t* pusWord;
+	IT8951DevInfo* pstDevInfo;
+
+	//Send I80 CMD
+	LCDWriteCmdCode(USDEF_I80_CMD_GET_DEV_INFO);
+
+	//Burst Read Request for SPI interface only
+	LCDReadNData(pusWord, sizeof(IT8951DevInfo)/2);//Polling HRDY for each words(2-bytes) if possible
+
+	//Show Device information of IT8951
+	pstDevInfo = (IT8951DevInfo*)pBuf;
 
 	printf(
 		"Panel(W,H) = (%d,%d)\r\n",
