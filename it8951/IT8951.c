@@ -469,8 +469,6 @@ extern uint16_t bmp01[];
 
 void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 {
-	uint32_t i;
-
 	LCDWaitForReady();
 
 	bcm2835_gpio_write(CS,LOW);
@@ -485,7 +483,7 @@ void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 
 	LCDWaitForReady();
 
-	for(i=0;i<ulSizeWordCnt;i++)
+	for(uint32_t i=0;i<ulSizeWordCnt;i++)
 	{
 		pwBuf[i] = bcm2835_spi_transfer(0x00)<<8;
 		pwBuf[i] |= bcm2835_spi_transfer(0x00);
