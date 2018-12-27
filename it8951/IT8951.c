@@ -485,24 +485,6 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
     LCDWriteData((uint16_t)(ulDpyBufAddr>>16)); //Display Buffer Base address[26:16]
 }
 
-//-----------------------------------------------------------
-//Test function 1---Software Initial
-//-----------------------------------------------------------
-void GetIT8951SystemInfo(void* pBuf)
-{
-	uint16_t* pusWord = (uint16_t*)pBuf;
-	IT8951DevInfo* pstDevInfo;
-
-	//Send I80 CMD
-	LCDWriteCmdCode(USDEF_I80_CMD_GET_DEV_INFO);
-
-	//Burst Read Request for SPI interface only
-	LCDReadNData(pusWord, sizeof(IT8951DevInfo)/2);//Polling HRDY for each words(2-bytes) if possible
-
-	//Show Device information of IT8951
-	pstDevInfo = (IT8951DevInfo*)pBuf;
-}
-
 uint8_t IT8951_Init()
 {
 	// Send I80 CMD
