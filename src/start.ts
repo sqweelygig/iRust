@@ -18,7 +18,6 @@ interface DisplaySpecification {
 class Display {
 	public static async build(): Promise<Display> {
 		const display = new Display();
-		await display.connect();
 		await display.reset();
 		await display.readDisplaySpecification();
 		return display;
@@ -40,13 +39,6 @@ class Display {
 
 	private constructor(pins = Display.PINS) {
 		this.pins = pins;
-	}
-
-	public getDisplaySpecification(): DisplaySpecification {
-		return this.spec;
-	}
-
-	private async connect() {
 		rpio.init({
 			gpiomem: false,
 		});
@@ -56,11 +48,20 @@ class Display {
 		rpio.spiSetClockDivider(32);
 	}
 
+	public disconnect() {
+		rpio.spiEnd();
+		rpio.close(this.pins.ready);
+		rpio.close(this.pins.reset);
+	}
+
+	public getDisplaySpecification(): DisplaySpecification {
+		return this.spec;
+	}
+
 	private async reset() {
 		rpio.write(this.pins.reset, rpio.LOW);
 		rpio.msleep(100);
 		rpio.write(this.pins.reset, rpio.HIGH);
-		await this.displayReady();
 	}
 
 	private async displayReady() {
@@ -74,6 +75,7 @@ class Display {
 	}
 
 	private async readDisplaySpecification() {
+		await this.displayReady();
 		rpio.spiWrite(Display.COMMANDS.getInfo, Display.COMMANDS.getInfo.length);
 		await this.displayReady();
 		const size = 42;
@@ -88,4 +90,5 @@ class Display {
 
 Display.build().then((d: Display) => {
 	console.log(d.getDisplaySpecification());
+	d.disconnect();
 });
