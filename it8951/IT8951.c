@@ -435,53 +435,56 @@ void LCDWriteCmdCode(uint16_t usCmdCode)
 	bcm2835_gpio_write(CS,HIGH);
 }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ * This marks the beginning of digested, ready to translate code
+ *
+ *
+ *
+ *
+ *
+ */
+
 extern uint16_t bmp01[];
+
+void awaitHardwareReady()
+{
+	uint8_t hardwareReady;
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+}
 
 uint8_t IT8951_Init()
 {
 	/*
 	 * Request the display properties
 	 */
-	uint8_t hardwareReady;
 	uint32_t i;
 	uint16_t* byWord_deviceInfo = (uint16_t*)&gstI80DevInfo;
 	uint32_t wordCount_deviceInfo = sizeof(IT8951DevInfo)/2;
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
+	awaitHardwareReady();
 	bcm2835_gpio_write(CS,LOW);
 	bcm2835_spi_transfer(PREFIX_COMMAND>>8);
 	bcm2835_spi_transfer(PREFIX_COMMAND);
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
+	awaitHardwareReady();
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
 	bcm2835_gpio_write(CS,HIGH);
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
+	awaitHardwareReady();
 	bcm2835_gpio_write(CS,LOW);
 	bcm2835_spi_transfer(PREFIX_READ>>8);
 	bcm2835_spi_transfer(PREFIX_READ);
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
+	awaitHardwareReady();
 	bcm2835_spi_transfer(0x00); // The first word is just empty space
 	bcm2835_spi_transfer(0x00); // The first word is just empty space
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
+	awaitHardwareReady();
 	for(i=0;i<wordCount_deviceInfo;i++)
 	{
 		byWord_deviceInfo[i] = bcm2835_spi_transfer(0x00)<<8;
