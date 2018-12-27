@@ -510,21 +510,21 @@ uint8_t IT8951_Init()
 
 	printf(
 		"Panel(W,H) = (%d,%d)\r\n",
-		gstI80DevInfo->usPanelW,
-		gstI80DevInfo->usPanelH
+		gstI80DevInfo.usPanelW,
+		gstI80DevInfo.usPanelH
 	);
 	printf(
 		"Image Buffer Address = %X\r\n",
-		gstI80DevInfo->usImgBufAddrL | (gstI80DevInfo->usImgBufAddrH << 16)
+		gstI80DevInfo.usImgBufAddrL | (gstI80DevInfo.usImgBufAddrH << 16)
 	);
 	//Show Firmware and LUT Version
 	printf(
 		"FW Version = %s\r\n",
-		(uint8_t*)gstI80DevInfo->usFWVersion
+		(uint8_t*)gstI80DevInfo.usFWVersion
 	);
 	printf(
 		"LUT Version = %s\r\n",
-		(uint8_t*)gstI80DevInfo->usLUTVersion
+		(uint8_t*)gstI80DevInfo.usLUTVersion
 	);
 
 	gpFrameBuf = malloc(gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
