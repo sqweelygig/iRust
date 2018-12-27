@@ -513,6 +513,8 @@ uint8_t IT8951_Init()
 	 * Request the display properties
 	 */
 	uint8_t hardwareReady;
+	uint32_t i;
+	uint16_t* byWord_deviceInfo = (uint16_t*)&gstI80DevInfo;
 	hardwareReady = bcm2835_gpio_lev(HRDY);
 	while(hardwareReady == 0)
 	{
@@ -529,7 +531,7 @@ uint8_t IT8951_Init()
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
 	bcm2835_gpio_write(CS,HIGH);
-	LCDReadNData((uint16_t*)&gstI80DevInfo, sizeof(IT8951DevInfo)/2);
+	LCDReadNData(byWord_deviceInfo, sizeof(IT8951DevInfo)/2);
 
 	/*
 	 * Present the display properties
