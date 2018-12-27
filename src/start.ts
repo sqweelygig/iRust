@@ -6,15 +6,10 @@ import * as rpio from "rpio";
 const PIN = {
 	READY: 18,
 	RESET: 11,
-	SELECT: 24,
-};
-const PREFIX = {
-	COMMAND: Buffer.from([0x60, 0x00]),
-	READ: Buffer.from([0x10, 0x00]),
-	WRITE: Buffer.from([0x00, 0x00]),
 };
 const COMMAND = {
 	GET_INFO: Buffer.from([0x60, 0x00, 0x03, 0x02]),
+	RX_DATA: Buffer.from([0x10, 0x00, 0x00, 0x00]),
 };
 
 function awaitDisplayReady() {
@@ -37,21 +32,15 @@ rpio.msleep(100);
 rpio.write(PIN.RESET, rpio.HIGH);
 
 awaitDisplayReady();
-rpio.write(PIN.SELECT, rpio.LOW);
 rpio.spiWrite(COMMAND.GET_INFO, COMMAND.GET_INFO.length);
-rpio.spiEnd();
-rpio.write(PIN.SELECT, rpio.HIGH);
-awaitDisplayReady();
-rpio.write(PIN.SELECT, rpio.LOW);
-rpio.spiBegin();
-rpio.spiSetClockDivider(32);
-rpio.spiWrite(PREFIX.READ, PREFIX.READ.length);
+
 awaitDisplayReady();
 const size = 42;
 const rxBuffer = Buffer.alloc(size);
-rpio.spiTransfer(Buffer.alloc(size, 0x00), rxBuffer, size);
+rpio.spiTransfer(COMMAND.RX_DATA, rxBuffer, COMMAND.RX_DATA.length);
+
 rpio.spiEnd();
-rpio.write(PIN.SELECT, rpio.HIGH);
+
 console.log(rxBuffer);
 //
 // const START_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x20]);

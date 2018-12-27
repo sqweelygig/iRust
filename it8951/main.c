@@ -45,6 +45,7 @@ int main (int argc, char *argv[])
 	bcm2835_spi_transfer(0x03);
 	bcm2835_spi_transfer(0x02);
 	bcm2835_gpio_write(CS,HIGH);
+
 	/*
 	 * Read the display properties
 	 */
