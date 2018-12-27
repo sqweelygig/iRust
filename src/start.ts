@@ -42,6 +42,6 @@ function write(data: number[]) {
 	rpio.spiEnd();
 }
 
-write(new Array<number>(WIDTH * HEIGHT).fill(0xffffffff));
+write(new Array<number>(WIDTH * HEIGHT).fill(0x00000000));
 
 rpio.sleep(300);
