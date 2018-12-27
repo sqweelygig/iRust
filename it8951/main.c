@@ -37,14 +37,12 @@ int main (int argc, char *argv[])
 	IT8951DevInfo deviceInfo;
 	uint16_t* deviceInfo_byWord = (uint16_t*)&deviceInfo;
 	uint32_t deviceInfo_wordCount = sizeof(IT8951DevInfo)/2;
-	awaitHardwareReady();
 	bcm2835_gpio_write(CS,LOW);
 	bcm2835_spi_transfer(0x60);
 	bcm2835_spi_transfer(0x00);
 	bcm2835_spi_transfer(0x03);
 	bcm2835_spi_transfer(0x02);
 	bcm2835_gpio_write(CS,HIGH);
-	awaitHardwareReady();
 	bcm2835_gpio_write(CS,LOW);
 	bcm2835_spi_transfer(0x10);
 	bcm2835_spi_transfer(0x00);

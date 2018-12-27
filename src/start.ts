@@ -14,7 +14,7 @@ const PREFIX = {
 	WRITE: Buffer.from([0x00, 0x00]),
 };
 const COMMAND = {
-	GET_INFO: Buffer.from([0x03, 0x02]),
+	GET_INFO: Buffer.from([0x60, 0x00, 0x03, 0x02]),
 };
 
 function awaitDisplayReady() {
@@ -28,17 +28,16 @@ rpio.init({
 	gpiomem: false,
 });
 rpio.open(PIN.RESET, rpio.OUTPUT, rpio.HIGH);
-rpio.open(PIN.SELECT, rpio.OUTPUT, rpio.HIGH);
 rpio.open(PIN.READY, rpio.INPUT);
+rpio.spiBegin();
+rpio.spiSetClockDivider(32);
+
 rpio.write(PIN.RESET, rpio.LOW);
 rpio.msleep(100);
 rpio.write(PIN.RESET, rpio.HIGH);
+
 awaitDisplayReady();
 rpio.write(PIN.SELECT, rpio.LOW);
-rpio.spiBegin();
-rpio.spiSetClockDivider(32);
-rpio.spiWrite(PREFIX.COMMAND, PREFIX.COMMAND.length);
-awaitDisplayReady();
 rpio.spiWrite(COMMAND.GET_INFO, COMMAND.GET_INFO.length);
 rpio.spiEnd();
 rpio.write(PIN.SELECT, rpio.HIGH);
