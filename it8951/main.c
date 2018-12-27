@@ -17,11 +17,11 @@ int main (int argc, char *argv[])
 	 */
 	bcm2835_init();
 	bcm2835_gpio_fsel(CS, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_write(CS, HIGH);
 	bcm2835_gpio_fsel(HRDY, BCM2835_GPIO_FSEL_INPT);
 	bcm2835_gpio_fsel(RESET, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_spi_begin();
 	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);
-	bcm2835_gpio_write(CS, HIGH);
 
 	/*
 	 * Initialise the display
@@ -86,15 +86,15 @@ int main (int argc, char *argv[])
 		(uint8_t*)deviceInfo_asInfo->usLUTVersion
 	);
 
-//	if(IT8951_Init())
-//	{
-//		printf("IT8951_Init error \n");
-//		return 1;
-//	}
-//
-//	IT8951_GUI_Example();
-//
-//	IT8951_Cancel();
+	if(IT8951_Init())
+	{
+		printf("IT8951_Init error \n");
+		return 1;
+	}
+
+	IT8951_GUI_Example();
+
+	IT8951_Cancel();
 
 	bcm2835_spi_end();
 	bcm2835_close();
