@@ -70,11 +70,12 @@ class Display {
 
 	private async displayReady(): Promise<void> {
 		return new Promise((resolve) => {
-			let hardwareReady = rpio.read(this.pins.ready);
-			while (hardwareReady === rpio.LOW) {
-				hardwareReady = rpio.read(this.pins.ready);
-			}
-			resolve();
+			const interval = setInterval(() => {
+				if (rpio.read(this.pins.ready) === rpio.HIGH) {
+					clearInterval(interval);
+					resolve();
+				}
+			}, 1);
 		});
 	}
 
