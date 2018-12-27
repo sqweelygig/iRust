@@ -49,7 +49,7 @@ rpio.spiSetClockDivider(32);
 rpio.spiWrite(PREFIX.READ, PREFIX.READ.length);
 awaitHardwareReady();
 const size = 42;
-const rxBuffer = new Buffer(size);
+const rxBuffer = Buffer.alloc(size);
 rpio.spiTransfer(Buffer.alloc(size, 0x00), rxBuffer, size);
 rpio.spiEnd();
 rpio.write(PIN.SELECT, rpio.HIGH);
