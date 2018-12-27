@@ -2,6 +2,16 @@
 
 IT8951DevInfo deviceInfo;
 
+void awaitHardwareReady()
+{
+	uint8_t hardwareReady;
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+}
+
 int main (int argc, char *argv[])
 {
 	bcm2835_init();
@@ -17,7 +27,7 @@ int main (int argc, char *argv[])
 
 	bcm2835_gpio_write(CS, HIGH);
 
-	printf("****** IT8951(d) ******\n");
+	printf("****** IT8951(e) ******\n");
 
 	bcm2835_gpio_write(RESET, LOW);
 	bcm2835_delay(100);
