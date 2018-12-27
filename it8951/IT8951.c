@@ -501,24 +501,6 @@ void GetIT8951SystemInfo(void* pBuf)
 
 	//Show Device information of IT8951
 	pstDevInfo = (IT8951DevInfo*)pBuf;
-	printf(
-		"Panel(W,H) = (%d,%d)\r\n",
-		pstDevInfo->usPanelW,
-		pstDevInfo->usPanelH
-	);
-	printf(
-		"Image Buffer Address = %X\r\n",
-		pstDevInfo->usImgBufAddrL | (pstDevInfo->usImgBufAddrH << 16)
-	);
-	//Show Firmware and LUT Version
-	printf(
-		"FW Version = %s\r\n",
-		(uint8_t*)pstDevInfo->usFWVersion
-	);
-	printf(
-		"LUT Version = %s\r\n",
-		(uint8_t*)pstDevInfo->usLUTVersion
-	);
 }
 
 uint8_t IT8951_Init()
@@ -539,6 +521,20 @@ uint8_t IT8951_Init()
 		deviceInfo->usPanelW,
 		deviceInfo->usPanelH
 	);
+	printf(
+		"Image Buffer Address = %X\r\n",
+		deviceInfo->usImgBufAddrL | (deviceInfo->usImgBufAddrH << 16)
+	);
+	//Show Firmware and LUT Version
+	printf(
+		"FW Version = %s\r\n",
+		(uint8_t*)deviceInfo->usFWVersion
+	);
+	printf(
+		"LUT Version = %s\r\n",
+		(uint8_t*)deviceInfo->usLUTVersion
+	);
+
 	//Get Device Info
 	GetIT8951SystemInfo(&gstI80DevInfo);
 
