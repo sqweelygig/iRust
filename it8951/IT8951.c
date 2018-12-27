@@ -435,31 +435,7 @@ void LCDWriteCmdCode(uint16_t usCmdCode)
 	bcm2835_gpio_write(CS,HIGH);
 }
 
-/*
- *
- *
- *
- *
- *
- * This marks the beginning of digested, ready to translate code
- *
- *
- *
- *
- *
- */
-
 extern uint16_t bmp01[];
-
-void awaitHardwareReady()
-{
-	uint8_t hardwareReady;
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
-}
 
 uint8_t IT8951_Init()
 {
