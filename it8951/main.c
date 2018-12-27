@@ -2,11 +2,6 @@
 
 int main (int argc, char *argv[])
 {
-	/*
-	printf("ReadReg = 0x%x\n",IT8951ReadReg(LISAR));
-	IT8951WriteReg(LISAR,0x1234);
-	printf("ReadReg = 0x%x\n",IT8951ReadReg(LISAR));
-	*/
 	bcm2835_init();
 
 	bcm2835_spi_begin();

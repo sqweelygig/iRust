@@ -576,7 +576,7 @@ void IT8951_GUI_Example()
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
 
-	EPD_DrawMatrix(300,300,550,412,bmp01);
+	EPD_DrawMatrix(400,400,550,412,bmp01);
 
 	IT8951WaitForDisplayReady();
 
