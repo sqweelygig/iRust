@@ -109,34 +109,6 @@ uint16_t LCDReadData()
 //-----------------------------------------------------------
 //  Read Burst N words Data
 //-----------------------------------------------------------
-void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
-{
-	uint32_t i;
-	
-	uint16_t wPreamble = 0x1000;
-
-	LCDWaitForReady();
-	
-	bcm2835_gpio_write(CS,LOW);
-
-	bcm2835_spi_transfer(wPreamble>>8);
-	bcm2835_spi_transfer(wPreamble);
-	
-	LCDWaitForReady();
-	
-	pwBuf[0]=bcm2835_spi_transfer(0x00);//dummy
-	pwBuf[0]=bcm2835_spi_transfer(0x00);//dummy
-	
-	LCDWaitForReady();
-	
-	for(i=0;i<ulSizeWordCnt;i++)
-	{
-		pwBuf[i] = bcm2835_spi_transfer(0x00)<<8;
-		pwBuf[i] |= bcm2835_spi_transfer(0x00);
-	}
-	
-	bcm2835_gpio_write(CS,HIGH); 
-}
 
 //-----------------------------------------------------------
 //Host controller function 5---Write command to host data Bus with aruments
@@ -468,26 +440,6 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
 
 void LCDWriteCmdCode(uint16_t usCmdCode)
 {
-	//Set Preamble for Write Command
-	uint16_t wPreamble = 0x6000;
-
-	LCDWaitForReady();
-
-	bcm2835_gpio_write(CS,LOW);
-
-	bcm2835_spi_transfer(wPreamble>>8);
-	bcm2835_spi_transfer(wPreamble);
-
-	LCDWaitForReady();
-
-	bcm2835_spi_transfer(usCmdCode>>8);
-	bcm2835_spi_transfer(usCmdCode);
-
-	bcm2835_gpio_write(CS,HIGH);
-}
-
-uint8_t IT8951_Init()
-{
 	uint8_t hardwareReady;
 
 	hardwareReady = bcm2835_gpio_lev(HRDY);
@@ -507,16 +459,96 @@ uint8_t IT8951_Init()
 		hardwareReady = bcm2835_gpio_lev(HRDY);
 	}
 
-	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
-	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
+	bcm2835_spi_transfer(usCmdCode>>8);
+	bcm2835_spi_transfer(usCmdCode);
 
 	bcm2835_gpio_write(CS,HIGH);
+}
 
-	// Burst Read Request for SPI interface only
-	LCDReadNData((uint16_t*)&gstI80DevInfo, sizeof(IT8951DevInfo)/2);
+extern uint16_t bmp01[];
 
+void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
+{
+	uint32_t i;
+
+	LCDWaitForReady();
+
+	bcm2835_gpio_write(CS,LOW);
+
+	bcm2835_spi_transfer(PREFIX_READ>>8);
+	bcm2835_spi_transfer(PREFIX_READ);
+
+	LCDWaitForReady();
+
+	pwBuf[0]=bcm2835_spi_transfer(0x00);//dummy
+	pwBuf[0]=bcm2835_spi_transfer(0x00);//dummy
+
+	LCDWaitForReady();
+
+	for(i=0;i<ulSizeWordCnt;i++)
+	{
+		pwBuf[i] = bcm2835_spi_transfer(0x00)<<8;
+		pwBuf[i] |= bcm2835_spi_transfer(0x00);
+	}
+
+	bcm2835_gpio_write(CS,HIGH);
+}
+
+uint8_t IT8951_Init()
+{
+	uint8_t hardwareReady;
+
+	/*
+	 * Request the display properties
+	 */
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(PREFIX_COMMAND>>8);
+	bcm2835_spi_transfer(PREFIX_COMMAND);
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
+	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
+	bcm2835_gpio_write(CS,HIGH);
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(PREFIX_READ>>8);
+	bcm2835_spi_transfer(PREFIX_READ);
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+	pwBuf[0]=bcm2835_spi_transfer(0x00); //dummy
+	pwBuf[0]=bcm2835_spi_transfer(0x00); //dummy
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+	uint32_t i;
+	for(i=0;i<sizeof(IT8951DevInfo)/2;i++)
+	{
+		gstI80DevInfo[i] = bcm2835_spi_transfer(0x00)<<8;
+		gstI80DevInfo[i] |= bcm2835_spi_transfer(0x00);
+	}
+	bcm2835_gpio_write(CS,HIGH);
+
+	/*
+	 * Present the display properties
+	 */
 	IT8951DevInfo* deviceInfo = (IT8951DevInfo*)&gstI80DevInfo;
-
 	printf(
 		"Panel(W,H) = (%d,%d)\r\n",
 		deviceInfo->usPanelW,
@@ -557,8 +589,6 @@ void IT8951_Cancel()
 	bcm2835_spi_end();
 	bcm2835_close();
 }
-
-extern uint16_t bmp01[];
 
 void IT8951_GUI_Example()
 {

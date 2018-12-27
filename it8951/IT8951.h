@@ -63,7 +63,8 @@ typedef struct
 #define USDEF_I80_CMD_DPY_BUF_AREA 0x0037
 
 
-#define CMD_PREFIX 0x6000
+#define PREFIX_COMMAND 0x6000
+#define PREFIX_READ    0x1000
 
 
 //Panel
