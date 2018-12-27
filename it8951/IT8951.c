@@ -713,39 +713,8 @@ void IT8951_GUI_Example()
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
 
-	EPD_DrawMatrix(100,100,550,412,bmp01);
+	EPD_DrawMatrix(0,0,550,412,bmp01);
 
-	IT8951WaitForDisplayReady();
-	
-	//Setting Load image information
-	stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
-	stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
-	stLdImgInfo.usPixelFormat    = IT8951_8BPP; 
-	stLdImgInfo.usRotate         = IT8951_ROTATE_0;
-	stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
-	//Set Load Area
-	stAreaImgInfo.usX      = 0;
-	stAreaImgInfo.usY      = 0;
-	stAreaImgInfo.usWidth  = 1200;
-	stAreaImgInfo.usHeight = 825;
-	
-	//Load Image from Host to IT8951 Image Buffer
-	IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
-	//Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform 
-	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
-}
-
-void IT8951_BMP_Example(uint32_t x, uint32_t y,char *path)
-{
-	IT8951LdImgInfo stLdImgInfo;
-	IT8951AreaImgInfo stAreaImgInfo;
-	
-	EPD_Clear(0xff);
-	
-	//��ʾͼ��
-	Show_bmp(x,y,path);
-
-	
 	IT8951WaitForDisplayReady();
 	
 	//Setting Load image information
