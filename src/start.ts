@@ -3,42 +3,89 @@
 
 import * as rpio from "rpio";
 
-const PIN = {
-	READY: 18,
-	RESET: 11,
-};
-const COMMAND = {
-	GET_INFO: Buffer.from([0x60, 0x00, 0x03, 0x02]),
-	RX_DATA: Buffer.from([0x10, 0x00]),
-};
+interface Pins {
+	ready: number;
+	reset: number;
+	// TODO: [IMPROVEMENT] chipSelect
+}
 
-function awaitDisplayReady() {
-	let hardwareReady = rpio.read(PIN.READY);
-	while (hardwareReady === rpio.LOW) {
-		hardwareReady = rpio.read(PIN.READY);
+interface DisplaySpecification {
+	// TODO [IMPROVEMENT] Firmware version, etc.
+	height: number;
+	width: number;
+}
+
+class Display {
+	public static async build(): Promise<Display> {
+		const display = new Display();
+		await display.connect();
+		await display.reset();
+		await display.readDisplaySpecification();
+		return display;
+	}
+
+	private static PINS = {
+		ready: 18,
+		reset: 11,
+	};
+
+	private static COMMANDS = {
+		getInfo: Buffer.from([0x60, 0x00, 0x03, 0x02]),
+		receiveData: Buffer.from([0x10, 0x00]),
+	};
+
+	private pins: Pins;
+
+	private spec: DisplaySpecification;
+
+	private constructor(pins = Display.PINS) {
+		this.pins = pins;
+	}
+
+	public getDisplaySpecification(): DisplaySpecification {
+		return this.spec;
+	}
+
+	private async connect() {
+		rpio.init({
+			gpiomem: false,
+		});
+		rpio.open(this.pins.reset, rpio.OUTPUT, rpio.HIGH);
+		rpio.open(this.pins.ready, rpio.INPUT);
+		rpio.spiBegin();
+		rpio.spiSetClockDivider(32);
+	}
+
+	private async reset() {
+		rpio.write(this.pins.reset, rpio.LOW);
+		rpio.msleep(100);
+		rpio.write(this.pins.reset, rpio.HIGH);
+		await this.displayReady();
+	}
+
+	private async displayReady() {
+		return new Promise((resolve) => {
+			let hardwareReady = rpio.read(this.pins.ready);
+			while (hardwareReady === rpio.LOW) {
+				hardwareReady = rpio.read(this.pins.ready);
+			}
+			resolve();
+		});
+	}
+
+	private async readDisplaySpecification() {
+		rpio.spiWrite(Display.COMMANDS.getInfo, Display.COMMANDS.getInfo.length);
+		await this.displayReady();
+		const size = 42;
+		const rxBuffer = Buffer.alloc(size);
+		rpio.spiTransfer(Display.COMMANDS.receiveData, rxBuffer, size);
+		this.spec = {
+			height: rxBuffer.readInt16BE(6),
+			width: rxBuffer.readInt16BE(4),
+		};
 	}
 }
 
-rpio.init({
-	gpiomem: false,
+Display.build().then((d: Display) => {
+	console.log(d.getDisplaySpecification());
 });
-rpio.open(PIN.RESET, rpio.OUTPUT, rpio.HIGH);
-rpio.open(PIN.READY, rpio.INPUT);
-rpio.spiBegin();
-rpio.spiSetClockDivider(32);
-rpio.write(PIN.RESET, rpio.LOW);
-rpio.msleep(100);
-rpio.write(PIN.RESET, rpio.HIGH);
-awaitDisplayReady();
-
-rpio.spiWrite(COMMAND.GET_INFO, COMMAND.GET_INFO.length);
-awaitDisplayReady();
-const size = 42;
-const rxBuffer = Buffer.alloc(size);
-rpio.spiTransfer(COMMAND.RX_DATA, rxBuffer, size);
-
-rpio.spiEnd();
-
-console.log(rxBuffer);
-console.log(rxBuffer.readInt16BE(4));
-console.log(rxBuffer.readInt16BE(6));
