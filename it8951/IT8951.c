@@ -437,17 +437,6 @@ void LCDWriteCmdCode(uint16_t usCmdCode)
 
 extern uint16_t bmp01[];
 
-void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
-{
-	uint32_t i;
-
-	for(i=0;i<ulSizeWordCnt;i++)
-	{
-		pwBuf[i] = bcm2835_spi_transfer(0x00)<<8;
-		pwBuf[i] |= bcm2835_spi_transfer(0x00);
-	}
-}
-
 uint8_t IT8951_Init()
 {
 	/*
@@ -493,7 +482,11 @@ uint8_t IT8951_Init()
 	{
 		hardwareReady = bcm2835_gpio_lev(HRDY);
 	}
-	LCDReadNData(byWord_deviceInfo, wordCount_deviceInfo);
+	for(i=0;i<wordCount_deviceInfo;i++)
+	{
+		byWord_deviceInfo[i] = bcm2835_spi_transfer(0x00)<<8;
+		byWord_deviceInfo[i] |= bcm2835_spi_transfer(0x00);
+	}
 	bcm2835_gpio_write(CS,HIGH);
 
 	/*
