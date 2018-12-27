@@ -1,5 +1,4 @@
 #include "IT8951.h"
-#include <time.h>
 
 /*
 extern IT8951DevInfo gstI80DevInfo;
@@ -513,12 +512,8 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
 //-----------------------------------------------------------
 uint8_t IT8951_Init()
 {
-	if (!bcm2835_init()) 
-	{
-		printf("bcm2835_init error \n");
-		return 1;
-	}
-	
+	bcm2835_init();
+
 	bcm2835_spi_begin();
 	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);   	//default
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);               		//default
@@ -530,7 +525,7 @@ uint8_t IT8951_Init()
 	
 	bcm2835_gpio_write(CS, HIGH);
 
-	printf("****** IT8951 ******\n");
+	printf("****** IT8951(2) ******\n");
 
 	bcm2835_gpio_write(RESET, LOW);
 	bcm2835_delay(100);
@@ -725,7 +720,7 @@ void IT8951_GUI_Example()
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
 
-	EPD_DrawMatrix(0,0,550,412,bmp01);
+	EPD_DrawMatrix(100,100,550,412,bmp01);
 
 	IT8951WaitForDisplayReady();
 
