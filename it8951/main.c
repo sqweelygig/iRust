@@ -41,7 +41,6 @@ int main (int argc, char *argv[])
 	bcm2835_gpio_write(CS,LOW);
 	bcm2835_spi_transfer(0x60);
 	bcm2835_spi_transfer(0x00);
-	awaitHardwareReady();
 	bcm2835_spi_transfer(0x03);
 	bcm2835_spi_transfer(0x02);
 	bcm2835_gpio_write(CS,HIGH);
@@ -49,7 +48,6 @@ int main (int argc, char *argv[])
 	bcm2835_gpio_write(CS,LOW);
 	bcm2835_spi_transfer(0x10);
 	bcm2835_spi_transfer(0x00);
-	awaitHardwareReady();
 	bcm2835_spi_transfer(0x00); // The first two bytes are just empty space
 	bcm2835_spi_transfer(0x00); // The first two bytes are just empty space
 	awaitHardwareReady();
