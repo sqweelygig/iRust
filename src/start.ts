@@ -40,7 +40,7 @@ const rxBuffer = Buffer.alloc(size);
 const txArray = new Array(size).fill(0x00);
 txArray[0] = 0x10;
 const txBuffer = Buffer.from(txArray);
-rpio.spiTransfer(txBuffer, rxBuffer, COMMAND.RX_DATA.length);
+rpio.spiTransfer(txBuffer, rxBuffer, size);
 console.log(0x04b0);
 
 rpio.spiEnd();
