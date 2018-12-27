@@ -523,8 +523,8 @@ void GetIT8951SystemInfo(void* pBuf)
 
 uint8_t IT8951_Init()
 {
-	IT8951DevInfo pointer_deviceInfo;
-	uint16_t* byWord_deviceInfo = (uint16_t*)pointerToDeviceInfo;
+	IT8951DevInfo deviceInfo;
+	uint16_t* byWord_deviceInfo = (uint16_t*)&deviceInfo;
 
 	//Send I80 CMD
 	LCDWriteCmdCode(USDEF_I80_CMD_GET_DEV_INFO);
