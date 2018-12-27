@@ -724,10 +724,11 @@ void IT8951_GUI_Example()
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
 
+	printf((unsigned)time(NULL));
+
 	EPD_DrawMatrix(0,0,550,412,bmp01);
 
 	IT8951WaitForDisplayReady();
-	
 
 	//Load Image from Host to IT8951 Image Buffer
 	IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
