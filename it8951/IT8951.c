@@ -531,8 +531,7 @@ uint8_t IT8951_Init()
 	bcm2835_gpio_write(CS, HIGH);
 
 	printf("****** IT8951 ******\n");
-	printf(time(NULL));
-	
+
 	bcm2835_gpio_write(RESET, LOW);
 	bcm2835_delay(100);
 	bcm2835_gpio_write(RESET, HIGH);
