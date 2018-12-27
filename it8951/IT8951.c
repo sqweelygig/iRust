@@ -253,36 +253,6 @@ void IT8951MemBurstWriteProc(uint32_t ulMemAddr , uint32_t ulWriteSize, uint16_t
     IT8951MemBurstEnd();
 }
 
-// ****************************************************************************************
-// Function name: IT8951MemBurstReadProc( )
-//
-// Description:
-//   IT8951 Burst Read procedure
-//      
-// Arguments:
-//      uint32_t ulMemAddr: IT8951 Read Memory Address
-//      uint32_t ulReadSize: Read Size (Unit: Word)
-//      uint8_t* pDestBuf - Buffer for storing Read data
-// Return Values:
-//   NULL.
-// Note:
-//
-// ****************************************************************************************
-void IT8951MemBurstReadProc(uint32_t ulMemAddr , uint32_t ulReadSize, uint16_t* pDestBuf )
-{
-    //Send Burst Read Start Cmd and Args
-    IT8951MemBurstReadTrigger(ulMemAddr , ulReadSize);
-          
-    //Burst Read Fire
-    IT8951MemBurstReadStart();
-    
-    //Burst Read Request for SPI interface only
-    LCDReadNData(pDestBuf, ulReadSize);
-
-    //Send Burst End Cmd
-    IT8951MemBurstEnd(); //the same with IT8951MemBurstEnd()
-}
-
 //-----------------------------------------------------------
 //Host Cmd 10---LD_IMG
 //-----------------------------------------------------------
@@ -472,14 +442,6 @@ void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 	uint32_t i;
 	uint8_t hardwareReady;
 
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
-
-	bcm2835_gpio_write(CS,LOW);
-
 	bcm2835_spi_transfer(PREFIX_READ>>8);
 	bcm2835_spi_transfer(PREFIX_READ);
 
@@ -503,8 +465,6 @@ void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 		pwBuf[i] = bcm2835_spi_transfer(0x00)<<8;
 		pwBuf[i] |= bcm2835_spi_transfer(0x00);
 	}
-
-	bcm2835_gpio_write(CS,HIGH);
 }
 
 uint8_t IT8951_Init()
@@ -515,6 +475,7 @@ uint8_t IT8951_Init()
 	uint8_t hardwareReady;
 	uint32_t i;
 	uint16_t* byWord_deviceInfo = (uint16_t*)&gstI80DevInfo;
+	uint32_t wordCount_deviceInfo = sizeof(IT8951DevInfo)/2;
 	hardwareReady = bcm2835_gpio_lev(HRDY);
 	while(hardwareReady == 0)
 	{
@@ -531,7 +492,14 @@ uint8_t IT8951_Init()
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
 	bcm2835_gpio_write(CS,HIGH);
-	LCDReadNData(byWord_deviceInfo, sizeof(IT8951DevInfo)/2);
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+	bcm2835_gpio_write(CS,LOW);
+	LCDReadNData(byWord_deviceInfo, wordCount_deviceInfo);
+	bcm2835_gpio_write(CS,HIGH);
 
 	/*
 	 * Present the display properties
