@@ -18,12 +18,10 @@ const COMMAND = {
 };
 
 function awaitDisplayReady() {
-	rpio.open(PIN.READY, rpio.INPUT);
 	let hardwareReady = rpio.read(PIN.READY);
 	while (hardwareReady === rpio.LOW) {
 		hardwareReady = rpio.read(PIN.READY);
 	}
-	rpio.close(PIN.READY);
 }
 
 rpio.init({
@@ -31,6 +29,7 @@ rpio.init({
 });
 rpio.open(PIN.RESET, rpio.OUTPUT, rpio.HIGH);
 rpio.open(PIN.SELECT, rpio.OUTPUT, rpio.HIGH);
+rpio.open(PIN.READY, rpio.INPUT);
 rpio.write(PIN.RESET, rpio.LOW);
 rpio.msleep(100);
 rpio.write(PIN.RESET, rpio.HIGH);
