@@ -1,4 +1,5 @@
 #include "IT8951.h"
+#include <time.h>
 
 /*
 extern IT8951DevInfo gstI80DevInfo;
