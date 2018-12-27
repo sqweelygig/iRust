@@ -488,14 +488,24 @@ void LCDWriteCmdCode(uint16_t usCmdCode)
 
 uint8_t IT8951_Init()
 {
-	LCDWaitForReady();
+	uint8_t hardwareReady;
+
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
 
 	bcm2835_gpio_write(CS,LOW);
 
 	bcm2835_spi_transfer(CMD_PREFIX>>8);
 	bcm2835_spi_transfer(CMD_PREFIX);
 
-	LCDWaitForReady();
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
 
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
