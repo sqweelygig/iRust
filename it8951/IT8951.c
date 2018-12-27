@@ -370,39 +370,6 @@ void IT8951LoadImgEnd(void)
     LCDWriteCmdCode(IT8951_TCON_LD_IMG_END);
 }
 
-void GetIT8951SystemInfo(void* pBuf)
-{
-	uint16_t* pusWord = (uint16_t*)pBuf;
-	IT8951DevInfo* pstDevInfo;
-
-	//Send I80 CMD
-	LCDWriteCmdCode(USDEF_I80_CMD_GET_DEV_INFO);
-
-	//Burst Read Request for SPI interface only
-	LCDReadNData(pusWord, sizeof(IT8951DevInfo)/2);//Polling HRDY for each words(2-bytes) if possible
-
-	//Show Device information of IT8951
-	pstDevInfo = (IT8951DevInfo*)pBuf;
-	printf(
-		"Panel(W,H) = (%d,%d)\r\n",
-		pstDevInfo->usPanelW,
-		pstDevInfo->usPanelH
-	);
-	printf(
-		"Image Buffer Address = %X\r\n",
-		pstDevInfo->usImgBufAddrL | (pstDevInfo->usImgBufAddrH << 16)
-	);
-	//Show Firmware and LUT Version
-	printf(
-		"FW Version = %s\r\n",
-		(uint8_t*)pstDevInfo->usFWVersion
-	);
-	printf(
-		"LUT Version = %s\r\n",
-		(uint8_t*)pstDevInfo->usLUTVersion
-	);
-}
-
 //-----------------------------------------------------------
 //Initial function 2---Set Image buffer base address
 //-----------------------------------------------------------
@@ -521,6 +488,39 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
 //-----------------------------------------------------------
 //Test function 1---Software Initial
 //-----------------------------------------------------------
+void GetIT8951SystemInfo(void* pBuf)
+{
+	uint16_t* pusWord = (uint16_t*)pBuf;
+	IT8951DevInfo* pstDevInfo;
+
+	//Send I80 CMD
+	LCDWriteCmdCode(USDEF_I80_CMD_GET_DEV_INFO);
+
+	//Burst Read Request for SPI interface only
+	LCDReadNData(pusWord, sizeof(IT8951DevInfo)/2);//Polling HRDY for each words(2-bytes) if possible
+
+	//Show Device information of IT8951
+	pstDevInfo = (IT8951DevInfo*)pBuf;
+	printf(
+		"Panel(W,H) = (%d,%d)\r\n",
+		pstDevInfo->usPanelW,
+		pstDevInfo->usPanelH
+	);
+	printf(
+		"Image Buffer Address = %X\r\n",
+		pstDevInfo->usImgBufAddrL | (pstDevInfo->usImgBufAddrH << 16)
+	);
+	//Show Firmware and LUT Version
+	printf(
+		"FW Version = %s\r\n",
+		(uint8_t*)pstDevInfo->usFWVersion
+	);
+	printf(
+		"LUT Version = %s\r\n",
+		(uint8_t*)pstDevInfo->usLUTVersion
+	);
+}
+
 uint8_t IT8951_Init()
 {
 	//Get Device Info
