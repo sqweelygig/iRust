@@ -9,7 +9,18 @@ const HEIGHT = 825;
 const START_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x20]);
 const END_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x22]);
 const UPDATE_DISPLAY = Buffer.from([0x60, 0x00, 0x00, 0x34]);
-const DEFINE_AREA = Buffer.from([0x00, 0x00, 0x00, 0x00, Math.floor(WIDTH / 256), WIDTH % 256, Math.floor(HEIGHT / 256), HEIGHT % 256, 0x00, 2]);
+const DEFINE_AREA = Buffer.from([
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	Math.floor(WIDTH / 256),
+	WIDTH % 256,
+	Math.floor(HEIGHT / 256),
+	HEIGHT % 256,
+	0x00,
+	2,
+]);
 
 function write(data: number[]) {
 	const byteDigestedData = [0x00, 0x00];
@@ -42,8 +53,6 @@ function write(data: number[]) {
 	rpio.write(24, rpio.LOW);
 	rpio.spiWrite(DEFINE_AREA, DEFINE_AREA.length);
 	rpio.write(24, rpio.HIGH);
-	rpio.msleep(500);
-	rpio.write(24, rpio.LOW);
 	rpio.spiEnd();
 }
 
