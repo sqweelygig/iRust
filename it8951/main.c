@@ -37,7 +37,7 @@ int main (int argc, char *argv[])
 	 * Request the display properties
 	 */
 	uint32_t i;
-	uint16_t* byWord_deviceInfo = (uint16_t*)&gstI80DevInfo;
+	uint16_t* byWord_deviceInfo = (uint16_t*)&deviceInfo;
 	uint32_t wordCount_deviceInfo = sizeof(IT8951DevInfo)/2;
 	awaitHardwareReady();
 	bcm2835_gpio_write(CS,LOW);
@@ -65,27 +65,27 @@ int main (int argc, char *argv[])
 	/*
 	 * Present the display properties
 	 */
-	IT8951DevInfo* deviceInfo = (IT8951DevInfo*)&gstI80DevInfo;
+	IT8951DevInfo* asInfo_deviceInfo = (IT8951DevInfo*)&deviceInfo;
 	printf(
 		"Words in Device Info = %d\r\n",
 		wordCount_deviceInfo
 	);
 	printf(
 		"Panel(W,H) = (%d,%d)\r\n",
-		deviceInfo->usPanelW,
-		deviceInfo->usPanelH
+		asInfo_deviceInfo->usPanelW,
+		asInfo_deviceInfo->usPanelH
 	);
 	printf(
 		"Image Buffer Address = %X\r\n",
-		deviceInfo->usImgBufAddrL | (deviceInfo->usImgBufAddrH << 16)
+		asInfo_deviceInfo->usImgBufAddrL | (asInfo_deviceInfo->usImgBufAddrH << 16)
 	);
 	printf(
 		"FW Version = %s\r\n",
-		(uint8_t*)deviceInfo->usFWVersion
+		(uint8_t*)asInfo_deviceInfo->usFWVersion
 	);
 	printf(
 		"LUT Version = %s\r\n",
-		(uint8_t*)deviceInfo->usLUTVersion
+		(uint8_t*)asInfo_deviceInfo->usLUTVersion
 	);
 
 	if(IT8951_Init())
