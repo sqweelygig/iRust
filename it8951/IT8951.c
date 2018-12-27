@@ -480,8 +480,8 @@ void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 
 	LCDWaitForReady();
 
-	pwBuf[0]=bcm2835_spi_transfer(0x00);//dummy
-	pwBuf[0]=bcm2835_spi_transfer(0x00);//dummy
+	bcm2835_spi_transfer(0x00); // The first word is just empty space
+	bcm2835_spi_transfer(0x00); // The first word is just empty space
 
 	LCDWaitForReady();
 
