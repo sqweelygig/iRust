@@ -16,8 +16,8 @@ interface DisplaySpecification {
 }
 
 class Display {
-	public static async build(pins = Display.PINS): Promise<Display> {
-		const display = new Display(pins);
+	public static async build(): Promise<Display> {
+		const display = new Display();
 		await display.connect();
 		await display.reset();
 		await display.readDisplaySpecification();
