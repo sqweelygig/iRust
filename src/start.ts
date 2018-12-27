@@ -2,6 +2,7 @@
 // TODO [NOTE_TO_SELF] node-gd
 
 import * as rpio from "rpio";
+import * as Bluebird from "bluebird";
 
 interface Pins {
 	reset: number;
@@ -58,10 +59,9 @@ class Display {
 		return this.spec;
 	}
 
-	private async reset(): void {
+	private async reset(): Promise<void> {
 		rpio.write(this.pins.reset, rpio.LOW);
-		rpio.msleep(100);
-		rpio.write(this.pins.reset, rpio.HIGH);
+		return Bluebird.delay(100, rpio.write(this.pins.reset, rpio.HIGH));
 	}
 
 	private async displayReady(): Promise<void> {
