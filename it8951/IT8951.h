@@ -65,6 +65,7 @@ typedef struct
 
 #define PREFIX_COMMAND 0x6000
 #define PREFIX_READ    0x1000
+#define PREFIX_WRITE   0x0000
 
 
 //Panel

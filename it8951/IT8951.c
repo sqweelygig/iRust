@@ -450,8 +450,8 @@ void LCDWriteCmdCode(uint16_t usCmdCode)
 
 	bcm2835_gpio_write(CS,LOW);
 
-	bcm2835_spi_transfer(CMD_PREFIX>>8);
-	bcm2835_spi_transfer(CMD_PREFIX);
+	bcm2835_spi_transfer(PREFIX_COMMAND>>8);
+	bcm2835_spi_transfer(PREFIX_COMMAND);
 
 	hardwareReady = bcm2835_gpio_lev(HRDY);
 	while(hardwareReady == 0)
@@ -496,11 +496,10 @@ void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 
 uint8_t IT8951_Init()
 {
-	uint8_t hardwareReady;
-
 	/*
 	 * Request the display properties
 	 */
+	uint8_t hardwareReady;
 	hardwareReady = bcm2835_gpio_lev(HRDY);
 	while(hardwareReady == 0)
 	{
