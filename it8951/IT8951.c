@@ -440,25 +440,6 @@ extern uint16_t bmp01[];
 void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 {
 	uint32_t i;
-	uint8_t hardwareReady;
-
-	bcm2835_spi_transfer(PREFIX_READ>>8);
-	bcm2835_spi_transfer(PREFIX_READ);
-
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
-
-	bcm2835_spi_transfer(0x00); // The first word is just empty space
-	bcm2835_spi_transfer(0x00); // The first word is just empty space
-
-	hardwareReady = bcm2835_gpio_lev(HRDY);
-	while(hardwareReady == 0)
-	{
-		hardwareReady = bcm2835_gpio_lev(HRDY);
-	}
 
 	for(i=0;i<ulSizeWordCnt;i++)
 	{
@@ -498,6 +479,20 @@ uint8_t IT8951_Init()
 		hardwareReady = bcm2835_gpio_lev(HRDY);
 	}
 	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(PREFIX_READ>>8);
+	bcm2835_spi_transfer(PREFIX_READ);
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
+	bcm2835_spi_transfer(0x00); // The first word is just empty space
+	bcm2835_spi_transfer(0x00); // The first word is just empty space
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
 	LCDReadNData(byWord_deviceInfo, wordCount_deviceInfo);
 	bcm2835_gpio_write(CS,HIGH);
 
