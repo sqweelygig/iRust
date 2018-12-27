@@ -17,8 +17,6 @@ int main (int argc, char *argv[])
 	 */
 	bcm2835_init();
 	bcm2835_spi_begin();
-	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);
-	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);
 	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);
 	bcm2835_gpio_fsel(CS, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(HRDY, BCM2835_GPIO_FSEL_INPT);
@@ -76,7 +74,7 @@ int main (int argc, char *argv[])
 		deviceInfo_asInfo->usPanelH
 	);
 	printf(
-		"Image Buffer Address = %X\r\n",
+		"Image Buffer Addr = %X\r\n",
 		deviceInfo_asInfo->usImgBufAddrL | (deviceInfo_asInfo->usImgBufAddrH << 16)
 	);
 	printf(
