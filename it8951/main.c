@@ -74,7 +74,7 @@ int main (int argc, char *argv[])
 		deviceInfo_asInfo->usPanelH
 	);
 	printf(
-		"Image Buffer Addr HIGH= %X\r\n",
+		"Image Buffer Addr = %X\r\n",
 		deviceInfo_asInfo->usImgBufAddrL | (deviceInfo_asInfo->usImgBufAddrH << 16)
 	);
 	printf(
@@ -86,15 +86,18 @@ int main (int argc, char *argv[])
 		(uint8_t*)deviceInfo_asInfo->usLUTVersion
 	);
 
-	if(IT8951_Init())
-	{
-		printf("IT8951_Init error \n");
-		return 1;
-	}
+//	if(IT8951_Init())
+//	{
+//		printf("IT8951_Init error \n");
+//		return 1;
+//	}
+//
+//	IT8951_GUI_Example();
+//
+//	IT8951_Cancel();
 
-	IT8951_GUI_Example();
-
-	IT8951_Cancel();
+	bcm2835_spi_end();
+	bcm2835_close();
 
 	return 0;
 }

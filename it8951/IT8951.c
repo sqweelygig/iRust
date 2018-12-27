@@ -484,8 +484,6 @@ void IT8951_Cancel()
 {
 	free(gpFrameBuf);
 
-	bcm2835_spi_end();
-	bcm2835_close();
 }
 
 void IT8951_GUI_Example()
