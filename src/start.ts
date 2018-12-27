@@ -16,8 +16,8 @@ interface DisplaySpecification {
 }
 
 class Display {
-	public static async build(): Promise<Display> {
-		const display = new Display();
+	public static async build(pins = Display.PINS): Promise<Display> {
+		const display = new Display(pins);
 		await display.connect();
 		await display.reset();
 		await display.readDisplaySpecification();
@@ -42,11 +42,17 @@ class Display {
 		this.pins = pins;
 	}
 
+	public async disconnect(): Promise<void> {
+		rpio.spiEnd();
+		rpio.close(this.pins.reset);
+		rpio.close(this.pins.ready);
+	}
+
 	public getDisplaySpecification(): DisplaySpecification {
 		return this.spec;
 	}
 
-	private async connect() {
+	private async connect(): Promise<void> {
 		rpio.init({
 			gpiomem: false,
 		});
@@ -56,14 +62,14 @@ class Display {
 		rpio.spiSetClockDivider(32);
 	}
 
-	private async reset() {
+	private async reset(): Promise<void> {
 		rpio.write(this.pins.reset, rpio.LOW);
 		rpio.msleep(100);
 		rpio.write(this.pins.reset, rpio.HIGH);
 		await this.displayReady();
 	}
 
-	private async displayReady() {
+	private async displayReady(): Promise<void> {
 		return new Promise((resolve) => {
 			let hardwareReady = rpio.read(this.pins.ready);
 			while (hardwareReady === rpio.LOW) {
@@ -73,7 +79,7 @@ class Display {
 		});
 	}
 
-	private async readDisplaySpecification() {
+	private async readDisplaySpecification(): Promise<void> {
 		rpio.spiWrite(Display.COMMANDS.getInfo, Display.COMMANDS.getInfo.length);
 		await this.displayReady();
 		const size = 42;
@@ -86,6 +92,9 @@ class Display {
 	}
 }
 
-Display.build().then((d: Display) => {
+Display.build()
+.then((d: Display) => {
+	console.log("SPEC");
 	console.log(d.getDisplaySpecification());
+	return d.disconnect();
 });
