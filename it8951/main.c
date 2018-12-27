@@ -7,6 +7,7 @@ int main (int argc, char *argv[])
 	IT8951WriteReg(LISAR,0x1234);
 	printf("ReadReg = 0x%x\n",IT8951ReadReg(LISAR));
 	*/
+	bcm2835_init();
 
 	if(IT8951_Init())
 	{

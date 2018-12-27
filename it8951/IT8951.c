@@ -512,8 +512,6 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
 //-----------------------------------------------------------
 uint8_t IT8951_Init()
 {
-	bcm2835_init();
-
 	bcm2835_spi_begin();
 	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);   	//default
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);               		//default
@@ -621,83 +619,6 @@ void IT8951DisplayExample()
  	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
 }
 
-void IT8951DisplayExample2()
-{
-	IT8951LdImgInfo stLdImgInfo;
-	IT8951AreaImgInfo stAreaImgInfo;
-	
-	//--------------------------------------------------------------------------------------------
-	//      Regular display - Display Any Gray colors with Mode 2 or others
-	//--------------------------------------------------------------------------------------------
-	//Preparing buffer to All black (8 bpp image)
-	//or you can create your image pattern here..
-	memset(gpFrameBuf              , 0x00, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 1, 0x11, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 2, 0x22, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 3, 0x33, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 4, 0x44, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 5, 0x55, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 6, 0x66, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 7, 0x77, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 8, 0x88, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 9, 0x99, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 10, 0xaa, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 11, 0xbb, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 12, 0xcc, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 13, 0xdd, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 14, 0xee, 1200 * 51 * 1);
-	memset(gpFrameBuf+1200 * 51 * 15, 0xff, (1200*825)-(1200 * 51 * 15));
-	IT8951WaitForDisplayReady();
-	//Setting Load image information
-	stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
-	stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
-	stLdImgInfo.usPixelFormat    = IT8951_8BPP; 
-	stLdImgInfo.usRotate         = IT8951_ROTATE_0;
-	stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
-	//Set Load Area
-	stAreaImgInfo.usX      = 0;
-	stAreaImgInfo.usY      = 0;
-	stAreaImgInfo.usWidth  = gstI80DevInfo.usPanelW;
-	stAreaImgInfo.usHeight = gstI80DevInfo.usPanelH;
-	//Load Image from Host to IT8951 Image Buffer
-	IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
-	//Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform 
-	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
-}
-/*
-extern const unsigned char pic[];
-void IT8951DisplayExample3()
-{
-	IT8951LdImgInfo stLdImgInfo;
-	IT8951AreaImgInfo stAreaImgInfo;
-	uint32_t i;
-	
-	for (i = 0;i < 1200*825;i++)
-	{
-		gpFrameBuf[i] = pic[i];
-	}
-
-	IT8951WaitForDisplayReady();
-	
-	//Setting Load image information
-	stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
-	stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
-	stLdImgInfo.usPixelFormat    = IT8951_8BPP; 
-	stLdImgInfo.usRotate         = IT8951_ROTATE_0;
-	stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
-	//Set Load Area
-	stAreaImgInfo.usX      = 0;
-	stAreaImgInfo.usY      = 0;
-	stAreaImgInfo.usWidth  = 1200;
-	stAreaImgInfo.usHeight = 825;
-	
-	//Load Image from Host to IT8951 Image Buffer
-	IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
-	//Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform 
-	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
-}
-*/
-
 extern uint16_t bmp01[];
 
 void IT8951_GUI_Example()
@@ -720,7 +641,7 @@ void IT8951_GUI_Example()
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
 
-	EPD_DrawMatrix(100,100,550,412,bmp01);
+	EPD_DrawMatrix(200,200,550,412,bmp01);
 
 	IT8951WaitForDisplayReady();
 
