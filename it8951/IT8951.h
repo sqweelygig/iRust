@@ -61,6 +61,11 @@ typedef struct
 #define USDEF_I80_CMD_DPY_AREA     0x0034
 #define USDEF_I80_CMD_GET_DEV_INFO 0x0302
 #define USDEF_I80_CMD_DPY_BUF_AREA 0x0037
+
+
+#define CMD_PREFIX 0x6000
+
+
 //Panel
 #define IT8951_PANEL_WIDTH   1024 //it Get Device information
 #define IT8951_PANEL_HEIGHT   758

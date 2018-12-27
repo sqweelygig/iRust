@@ -488,14 +488,12 @@ void LCDWriteCmdCode(uint16_t usCmdCode)
 
 uint8_t IT8951_Init()
 {
-	uint16_t wPreamble = 0x6000;
-
 	LCDWaitForReady();
 
 	bcm2835_gpio_write(CS,LOW);
 
-	bcm2835_spi_transfer(wPreamble>>8);
-	bcm2835_spi_transfer(wPreamble);
+	bcm2835_spi_transfer(CMD_PREFIX>>8);
+	bcm2835_spi_transfer(CMD_PREFIX);
 
 	LCDWaitForReady();
 
