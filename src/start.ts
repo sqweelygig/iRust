@@ -94,7 +94,6 @@ class Display {
 
 Display.build()
 .then((d: Display) => {
-	console.log("SPEC");
 	console.log(d.getDisplaySpecification());
 	return d.disconnect();
 });
