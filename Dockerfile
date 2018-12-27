@@ -13,9 +13,6 @@ RUN apt-get update && \
 COPY bcm2835 ./bcm2835
 RUN cd bcm2835 && ./configure && make && make install
 
-COPY it8951 ./it8951
-RUN cd it8951 && make
-
 RUN git clone git://git.drogon.net/wiringPi
 RUN cd wiringPi && ./build
 
@@ -36,5 +33,8 @@ RUN npm run build && \
 	rm ./tsconfig.json && \
 	npm prune --production && \
 	npm cache clean --force
+
+COPY it8951 ./it8951
+RUN cd it8951 && make
 
 CMD ["npm", "start"]

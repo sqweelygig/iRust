@@ -713,57 +713,8 @@ void IT8951_GUI_Example()
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
 
-	EPD_DrawLine(100,100,200,200,0x40);
-	EPD_DrawLine(200,200,400,200,0x40);
-	EPD_DrawLine(400,200,400,400,0x40);
-	EPD_DrawLine(400,400,600,400,0x40);
-	EPD_DrawLine(600,600,800,800,0x40);
-
-	EPD_DrawLine(0,0,99,99,0x10);
-	EPD_DrawLine(801,801,1200,825,0x00);
-
-	EPD_DrawRect(500, 500, 100, 100, 0x00);
-
-	EPD_DrawCircle(700, 500, 100, 0x00);
-
-	point[0].X = 30;
-	point[0].Y = 40;
-	
-	point[1].X = 40;
-	point[1].Y = 70;
-
-	point[2].X = 50;
-	point[2].Y = 90;
-
-	point[3].X = 90;
-	point[3].Y = 60;
-
-	point[4].X = 70;
-	point[4].Y = 20;
-
-	EPD_DrawPolygon(point,5,0x00);
-
-	EPD_DrawEllipse(800, 300, 100, 50, 0x00);
-
-	EPD_FillRect(300, 500, 100, 50, 0x00);
-		
-	EPD_FillCircle(100, 500, 70,0x00);
-
-
-	EPD_Text(400,100, (uint8_t*)"hello world",0x00, 0xff);
-	EPD_Text(400,200, (uint8_t*)"yang weibiao",0x00, 0xff);
- 
-
-//	EPD_DrawBitmap(0,0,bmp01);
-
-	//EPD_DrawMatrix(1,1,550,412,bmp01);
 	EPD_DrawMatrix(100,100,550,412,bmp01);
 
-
-	//ÏÔÊ¾Í¼Ïñ
-	//Show_bmp("16.bmp");
-
-	
 	IT8951WaitForDisplayReady();
 	
 	//Setting Load image information
@@ -791,7 +742,7 @@ void IT8951_BMP_Example(uint32_t x, uint32_t y,char *path)
 	
 	EPD_Clear(0xff);
 	
-	//ÏÔÊ¾Í¼Ïñ
+	//ï¿½ï¿½Ê¾Í¼ï¿½ï¿½
 	Show_bmp(x,y,path);
 
 	
