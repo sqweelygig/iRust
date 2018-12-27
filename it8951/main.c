@@ -68,7 +68,7 @@ int main (int argc, char *argv[])
 	IT8951DevInfo* deviceInfo_asInfo = (IT8951DevInfo*)&deviceInfo;
 	printf(
 		"Words in Device Info = %d\r\n",
-		wordCount_deviceInfo
+		deviceInfo_wordCount
 	);
 	printf(
 		"Panel(W,H) = (%d,%d)\r\n",
