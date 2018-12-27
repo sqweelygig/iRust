@@ -469,21 +469,36 @@ extern uint16_t bmp01[];
 
 void LCDReadNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 {
-	LCDWaitForReady();
+	uint32_t i;
+	uint8_t hardwareReady;
+
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
 
 	bcm2835_gpio_write(CS,LOW);
 
 	bcm2835_spi_transfer(PREFIX_READ>>8);
 	bcm2835_spi_transfer(PREFIX_READ);
 
-	LCDWaitForReady();
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
 
 	bcm2835_spi_transfer(0x00); // The first word is just empty space
 	bcm2835_spi_transfer(0x00); // The first word is just empty space
 
-	LCDWaitForReady();
+	hardwareReady = bcm2835_gpio_lev(HRDY);
+	while(hardwareReady == 0)
+	{
+		hardwareReady = bcm2835_gpio_lev(HRDY);
+	}
 
-	for(uint32_t i=0;i<ulSizeWordCnt;i++)
+	for(i=0;i<ulSizeWordCnt;i++)
 	{
 		pwBuf[i] = bcm2835_spi_transfer(0x00)<<8;
 		pwBuf[i] |= bcm2835_spi_transfer(0x00);
