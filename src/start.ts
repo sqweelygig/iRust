@@ -4,15 +4,15 @@
 import * as rpio from "rpio";
 
 interface Pins {
-	ready: number;
 	reset: number;
+	ready: number;
 	// TODO: [IMPROVEMENT] chipSelect
 }
 
 interface DisplaySpecification {
 	// TODO [IMPROVEMENT] Firmware version, etc.
-	height: number;
 	width: number;
+	height: number;
 }
 
 class Display {
@@ -42,17 +42,11 @@ class Display {
 		this.pins = pins;
 	}
 
-	public async disconnect(): Promise<void> {
-		rpio.spiEnd();
-		rpio.close(this.pins.reset);
-		rpio.close(this.pins.ready);
-	}
-
 	public getDisplaySpecification(): DisplaySpecification {
 		return this.spec;
 	}
 
-	private async connect(): Promise<void> {
+	private async connect() {
 		rpio.init({
 			gpiomem: false,
 		});
@@ -62,14 +56,14 @@ class Display {
 		rpio.spiSetClockDivider(32);
 	}
 
-	private async reset(): Promise<void> {
+	private async reset() {
 		rpio.write(this.pins.reset, rpio.LOW);
 		rpio.msleep(100);
 		rpio.write(this.pins.reset, rpio.HIGH);
 		await this.displayReady();
 	}
 
-	private async displayReady(): Promise<void> {
+	private async displayReady() {
 		return new Promise((resolve) => {
 			let hardwareReady = rpio.read(this.pins.ready);
 			while (hardwareReady === rpio.LOW) {
@@ -79,7 +73,7 @@ class Display {
 		});
 	}
 
-	private async readDisplaySpecification(): Promise<void> {
+	private async readDisplaySpecification() {
 		rpio.spiWrite(Display.COMMANDS.getInfo, Display.COMMANDS.getInfo.length);
 		await this.displayReady();
 		const size = 42;
@@ -92,8 +86,6 @@ class Display {
 	}
 }
 
-Display.build()
-.then((d: Display) => {
+Display.build().then((d: Display) => {
 	console.log(d.getDisplaySpecification());
-	return d.disconnect();
 });
