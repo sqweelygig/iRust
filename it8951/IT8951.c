@@ -377,19 +377,30 @@ void GetIT8951SystemInfo(void* pBuf)
 
 	//Send I80 CMD
 	LCDWriteCmdCode(USDEF_I80_CMD_GET_DEV_INFO);
- 
+
 	//Burst Read Request for SPI interface only
 	LCDReadNData(pusWord, sizeof(IT8951DevInfo)/2);//Polling HRDY for each words(2-bytes) if possible
-	
+
 	//Show Device information of IT8951
 	pstDevInfo = (IT8951DevInfo*)pBuf;
-	printf("Panel(W,H) = (%d,%d)\r\n",
-	pstDevInfo->usPanelW, pstDevInfo->usPanelH );
-	printf("Image Buffer Address = %X\r\n",
-	pstDevInfo->usImgBufAddrL | (pstDevInfo->usImgBufAddrH << 16));
+	printf(
+		"Panel(W,H) = (%d,%d)\r\n",
+		pstDevInfo->usPanelW,
+		pstDevInfo->usPanelH
+	);
+	printf(
+		"Image Buffer Address = %X\r\n",
+		pstDevInfo->usImgBufAddrL | (pstDevInfo->usImgBufAddrH << 16)
+	);
 	//Show Firmware and LUT Version
-	printf("FW Version = %s\r\n", (uint8_t*)pstDevInfo->usFWVersion);
-	printf("LUT Version = %s\r\n", (uint8_t*)pstDevInfo->usLUTVersion);
+	printf(
+		"FW Version = %s\r\n",
+		(uint8_t*)pstDevInfo->usFWVersion
+	);
+	printf(
+		"LUT Version = %s\r\n",
+		(uint8_t*)pstDevInfo->usLUTVersion
+	);
 }
 
 //-----------------------------------------------------------
@@ -512,6 +523,9 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
 //-----------------------------------------------------------
 uint8_t IT8951_Init()
 {
+	//Get Device Info
+	GetIT8951SystemInfo(&gstI80DevInfo);
+
 	gpFrameBuf = malloc(gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	if (!gpFrameBuf)
 	{
