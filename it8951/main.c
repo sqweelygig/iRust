@@ -50,7 +50,6 @@ int main (int argc, char *argv[])
 	bcm2835_spi_transfer(0x00);
 	bcm2835_spi_transfer(0x00); // The first two bytes are just empty space
 	bcm2835_spi_transfer(0x00); // The first two bytes are just empty space
-	awaitHardwareReady();
 	for(i=0;i<deviceInfo_wordCount;i++)
 	{
 		deviceInfo_byWord[i] = bcm2835_spi_transfer(0x00)<<8;
