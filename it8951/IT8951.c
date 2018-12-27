@@ -463,9 +463,6 @@ void awaitHardwareReady()
 
 uint8_t IT8951_Init()
 {
-	/*
-	 * Request the display properties
-	 */
 	uint32_t i;
 	uint16_t* byWord_deviceInfo = (uint16_t*)&gstI80DevInfo;
 	uint32_t wordCount_deviceInfo = sizeof(IT8951DevInfo)/2;
@@ -474,16 +471,16 @@ uint8_t IT8951_Init()
 	bcm2835_spi_transfer(0x60);
 	bcm2835_spi_transfer(0x00);
 	awaitHardwareReady();
-	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
-	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
+	bcm2835_spi_transfer(0x03);
+	bcm2835_spi_transfer(0x02);
 	bcm2835_gpio_write(CS,HIGH);
 	awaitHardwareReady();
 	bcm2835_gpio_write(CS,LOW);
-	bcm2835_spi_transfer(PREFIX_READ>>8);
-	bcm2835_spi_transfer(PREFIX_READ);
+	bcm2835_spi_transfer(0x10);
+	bcm2835_spi_transfer(0x00);
 	awaitHardwareReady();
-	bcm2835_spi_transfer(0x00); // The first word is just empty space
-	bcm2835_spi_transfer(0x00); // The first word is just empty space
+	bcm2835_spi_transfer(0x00); // The first two bytes are just empty space
+	bcm2835_spi_transfer(0x00); // The first two bytes are just empty space
 	awaitHardwareReady();
 	for(i=0;i<wordCount_deviceInfo;i++)
 	{
@@ -491,28 +488,6 @@ uint8_t IT8951_Init()
 		byWord_deviceInfo[i] |= bcm2835_spi_transfer(0x00);
 	}
 	bcm2835_gpio_write(CS,HIGH);
-
-	/*
-	 * Present the display properties
-	 */
-	IT8951DevInfo* deviceInfo = (IT8951DevInfo*)&gstI80DevInfo;
-	printf(
-		"Panel(W,H) = (%d,%d)\r\n",
-		deviceInfo->usPanelW,
-		deviceInfo->usPanelH
-	);
-	printf(
-		"Image Buffer Address = %X\r\n",
-		deviceInfo->usImgBufAddrL | (deviceInfo->usImgBufAddrH << 16)
-	);
-	printf(
-		"FW Version = %s\r\n",
-		(uint8_t*)deviceInfo->usFWVersion
-	);
-	printf(
-		"LUT Version = %s\r\n",
-		(uint8_t*)deviceInfo->usLUTVersion
-	);
 
 	gpFrameBuf = malloc(gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	if (!gpFrameBuf)
