@@ -29,11 +29,11 @@ function write(data: number[]) {
 	rpio.msleep(500);
 	rpio.write(24, rpio.LOW);
 	rpio.spiWrite(START_UPDATE, START_UPDATE.length);
-	rpio.write(25, rpio.HIGH);
+	rpio.write(24, rpio.HIGH);
 	rpio.msleep(500);
 	rpio.write(24, rpio.LOW);
 	rpio.spiWrite(payload, payload.length);
-	rpio.write(25, rpio.HIGH);
+	rpio.write(24, rpio.HIGH);
 	rpio.msleep(500);
 	rpio.write(24, rpio.LOW);
 	rpio.spiWrite(END_UPDATE, START_UPDATE.length);
