@@ -471,8 +471,8 @@ uint8_t IT8951_Init()
 	uint32_t wordCount_deviceInfo = sizeof(IT8951DevInfo)/2;
 	awaitHardwareReady();
 	bcm2835_gpio_write(CS,LOW);
-	bcm2835_spi_transfer(PREFIX_COMMAND>>8);
-	bcm2835_spi_transfer(PREFIX_COMMAND);
+	bcm2835_spi_transfer(0x60);
+	bcm2835_spi_transfer(0x00);
 	awaitHardwareReady();
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
 	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
