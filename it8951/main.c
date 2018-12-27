@@ -16,11 +16,11 @@ int main (int argc, char *argv[])
 	 * Initialise the Broadcom SPI chip.
 	 */
 	bcm2835_init();
-	bcm2835_spi_begin();
-	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);
 	bcm2835_gpio_fsel(CS, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(HRDY, BCM2835_GPIO_FSEL_INPT);
 	bcm2835_gpio_fsel(RESET, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_spi_begin();
+	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);
 	bcm2835_gpio_write(CS, HIGH);
 
 	/*
