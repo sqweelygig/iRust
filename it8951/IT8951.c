@@ -512,22 +512,6 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
 //-----------------------------------------------------------
 uint8_t IT8951_Init()
 {
-	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);   	//default
-	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);               		//default
-	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);		//default
-	
-	bcm2835_gpio_fsel(CS, BCM2835_GPIO_FSEL_OUTP);  
-	bcm2835_gpio_fsel(HRDY, BCM2835_GPIO_FSEL_INPT);
-	bcm2835_gpio_fsel(RESET, BCM2835_GPIO_FSEL_OUTP);
-	
-	bcm2835_gpio_write(CS, HIGH);
-
-	printf("****** IT8951(2) ******\n");
-
-	bcm2835_gpio_write(RESET, LOW);
-	bcm2835_delay(100);
-	bcm2835_gpio_write(RESET, HIGH);
-
 	//Get Device Info
 	GetIT8951SystemInfo(&gstI80DevInfo);
 	
