@@ -48,7 +48,7 @@ class Display {
 		rpio.spiSetClockDivider(32);
 	}
 
-	public disconnect() {
+	public destructor(): void {
 		rpio.spiEnd();
 		rpio.close(this.pins.ready);
 		rpio.close(this.pins.reset);
@@ -58,13 +58,13 @@ class Display {
 		return this.spec;
 	}
 
-	private async reset() {
+	private async reset(): void {
 		rpio.write(this.pins.reset, rpio.LOW);
 		rpio.msleep(100);
 		rpio.write(this.pins.reset, rpio.HIGH);
 	}
 
-	private async displayReady() {
+	private async displayReady(): Promise<void> {
 		return new Promise((resolve) => {
 			let hardwareReady = rpio.read(this.pins.ready);
 			while (hardwareReady === rpio.LOW) {
@@ -74,7 +74,7 @@ class Display {
 		});
 	}
 
-	private async readDisplaySpecification() {
+	private async readDisplaySpecification(): Promise<void> {
 		await this.displayReady();
 		rpio.spiWrite(Display.COMMANDS.getInfo, Display.COMMANDS.getInfo.length);
 		await this.displayReady();
@@ -90,5 +90,5 @@ class Display {
 
 Display.build().then((d: Display) => {
 	console.log(d.getDisplaySpecification());
-	d.disconnect();
+	d.destructor();
 });

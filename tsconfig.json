@@ -6,6 +6,7 @@
     "strictNullChecks": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
+    "noImplicitReturns": true,
     "target": "es6",
     "rootDir": "./src",
     "outDir": "./build"
