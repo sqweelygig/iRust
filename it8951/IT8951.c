@@ -523,6 +523,8 @@ void GetIT8951SystemInfo(void* pBuf)
 
 uint8_t IT8951_Init()
 {
+	pBuf = &foo;
+	uint16_t* pusWord = (uint16_t*)pBuf;
 	//Get Device Info
 	GetIT8951SystemInfo(&gstI80DevInfo);
 
