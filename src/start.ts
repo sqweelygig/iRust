@@ -9,7 +9,7 @@ const PIN = {
 };
 const COMMAND = {
 	GET_INFO: Buffer.from([0x60, 0x00, 0x03, 0x02]),
-	RX_DATA: Buffer.from([0x10, 0x00, 0x00, 0x00]),
+	RX_DATA: Buffer.from([0x10, 0x00]),
 };
 
 function awaitDisplayReady() {
@@ -30,22 +30,20 @@ rpio.spiSetClockDivider(32);
 rpio.write(PIN.RESET, rpio.LOW);
 rpio.msleep(100);
 rpio.write(PIN.RESET, rpio.HIGH);
-
 awaitDisplayReady();
+
 rpio.spiWrite(COMMAND.GET_INFO, COMMAND.GET_INFO.length);
-
 awaitDisplayReady();
+
 const size = 42;
 const rxBuffer = Buffer.alloc(size);
-const txArray = new Array(size).fill(0x00);
-txArray[0] = 0x10;
-const txBuffer = Buffer.from(txArray);
-rpio.spiTransfer(txBuffer, rxBuffer, size);
-console.log(0x04b0);
+rpio.spiTransfer(COMMAND.RX_DATA, rxBuffer, size);
 
 rpio.spiEnd();
 
 console.log(rxBuffer);
+console.log(rxBuffer.readInt16BE(2));
+console.log(rxBuffer.readInt16BE(3));
 //
 // const START_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x20]);
 // const END_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x22]);
