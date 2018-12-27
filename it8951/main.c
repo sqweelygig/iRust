@@ -21,7 +21,7 @@ int main (int argc, char *argv[])
 	//IT8951_GUI_Example();
 
 	if (argc != 4)
-	{
+	{s
 		printf("Error: argc!=4.\n");
 		exit(1);
 	}
