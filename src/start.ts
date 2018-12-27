@@ -24,6 +24,9 @@ function awaitHardwareReady() {
 	}
 }
 
+rpio.init({
+	gpiomem: false,
+});
 rpio.open(PIN.READY, rpio.INPUT, rpio.HIGH);
 rpio.open(PIN.RESET, rpio.OUTPUT, rpio.HIGH);
 rpio.open(PIN.SELECT, rpio.OUTPUT, rpio.HIGH);
@@ -35,10 +38,7 @@ rpio.write(PIN.SELECT, rpio.LOW);
 rpio.spiBegin();
 rpio.spiSetClockDivider(32);
 rpio.spiWrite(PREFIX.COMMAND, PREFIX.COMMAND.length);
-rpio.spiEnd();
 awaitHardwareReady();
-rpio.spiBegin();
-rpio.spiSetClockDivider(32);
 rpio.spiWrite(COMMAND.GET_INFO, COMMAND.GET_INFO.length);
 rpio.spiEnd();
 rpio.write(PIN.SELECT, rpio.HIGH);
@@ -47,11 +47,11 @@ rpio.write(PIN.SELECT, rpio.LOW);
 rpio.spiBegin();
 rpio.spiSetClockDivider(32);
 rpio.spiWrite(PREFIX.READ, PREFIX.READ.length);
-rpio.spiEnd();
 awaitHardwareReady();
 const size = 42;
 const rxBuffer = new Buffer(size);
 rpio.spiTransfer(new Buffer(size), rxBuffer, size);
+rpio.spiEnd();
 rpio.write(PIN.SELECT, rpio.HIGH);
 console.log(rxBuffer);
 //
