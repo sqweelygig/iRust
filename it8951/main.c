@@ -9,6 +9,8 @@ int main (int argc, char *argv[])
 	*/
 	bcm2835_init();
 
+	bcm2835_spi_begin();
+
 	if(IT8951_Init())
 	{
 		printf("IT8951_Init error \n");

@@ -512,7 +512,6 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
 //-----------------------------------------------------------
 uint8_t IT8951_Init()
 {
-	bcm2835_spi_begin();
 	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);   	//default
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);               		//default
 	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);		//default
@@ -555,70 +554,6 @@ void IT8951_Cancel()
 	bcm2835_close();
 }
 
-
-//-----------------------------------------------------------
-//Test function 2---Example of Display Flow
-//-----------------------------------------------------------
-void IT8951DisplayExample()
-{
-	IT8951LdImgInfo stLdImgInfo;
-	IT8951AreaImgInfo stAreaImgInfo;
-	
-	//Prepare image
-	//Write pixel 0xF0(White) to Frame Buffer
- 	memset(gpFrameBuf, 0xF0, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
-	
- 	//Check TCon is free ? Wait TCon Ready (optional)
- 	IT8951WaitForDisplayReady();
- 	
- 	//--------------------------------------------------------------------------------------------
- 	//      initial display - Display white only
- 	//--------------------------------------------------------------------------------------------
- 	//Load Image and Display
- 	//Setting Load image information
- 	stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
- 	stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
- 	stLdImgInfo.usPixelFormat    = IT8951_8BPP;
- 	stLdImgInfo.usRotate         = IT8951_ROTATE_0;
- 	stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
- 	//Set Load Area
- 	stAreaImgInfo.usX      = 0;
- 	stAreaImgInfo.usY      = 0;
- 	stAreaImgInfo.usWidth  = gstI80DevInfo.usPanelW;
- 	stAreaImgInfo.usHeight = gstI80DevInfo.usPanelH;
- 	
- 	//Load Image from Host to IT8951 Image Buffer
- 	IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
- 	//Display Area ?V (x,y,w,h) with mode 0 for initial White to clear Panel
- 	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 0);
- 	
- 	//--------------------------------------------------------------------------------------------
- 	//      Regular display - Display Any Gray colors with Mode 2 or others
- 	//--------------------------------------------------------------------------------------------
- 	//Preparing buffer to All black (8 bpp image)
- 	//or you can create your image pattern here..
- 	memset(gpFrameBuf, 0x00, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
- 	 
- 	IT8951WaitForDisplayReady();
- 	
- 	//Setting Load image information
- 	stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
- 	stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
- 	stLdImgInfo.usPixelFormat    = IT8951_8BPP; 
- 	stLdImgInfo.usRotate         = IT8951_ROTATE_0;
- 	stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
- 	//Set Load Area
- 	stAreaImgInfo.usX      = 0;
- 	stAreaImgInfo.usY      = 0;
- 	stAreaImgInfo.usWidth  = gstI80DevInfo.usPanelW;
- 	stAreaImgInfo.usHeight = gstI80DevInfo.usPanelH;
- 	
- 	//Load Image from Host to IT8951 Image Buffer
- 	IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
- 	//Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform 
- 	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
-}
-
 extern uint16_t bmp01[];
 
 void IT8951_GUI_Example()
@@ -641,7 +576,7 @@ void IT8951_GUI_Example()
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
 
-	EPD_DrawMatrix(200,200,550,412,bmp01);
+	EPD_DrawMatrix(300,300,550,412,bmp01);
 
 	IT8951WaitForDisplayReady();
 
@@ -650,84 +585,3 @@ void IT8951_GUI_Example()
 	//Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform 
 	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
 }
-
-//-----------------------------------------------------------
-// Load 1bpp image flow (must display with IT8951DisplayArea1bpp()
-//-----------------------------------------------------------
-
-void IT8951Load1bppImage(uint8_t* p1bppImgBuf, uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH)
-{
-    IT8951LdImgInfo stLdImgInfo;
-    IT8951AreaImgInfo stAreaImgInfo;
-	
-    //Setting Load image information
-    stLdImgInfo.ulStartFBAddr    = (uint32_t) p1bppImgBuf;
-    stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
-    stLdImgInfo.usPixelFormat    = IT8951_8BPP; //we use 8bpp because IT8951 dose not support 1bpp mode for load image?Aso we use Load 8bpp mode ,but the transfer size needs to be reduced to Size/8
-    stLdImgInfo.usRotate         = IT8951_ROTATE_0;
-    stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
-    //Set Load Area
-    stAreaImgInfo.usX      = usX/8;
-    stAreaImgInfo.usY      = usY;
-    stAreaImgInfo.usWidth  = usW/8;//1bpp, Chaning Transfer size setting to 1/8X of 8bpp mode 
-    stAreaImgInfo.usHeight = usH;
-    printf("IT8951HostAreaPackedPixelWrite [wait]\n\r");
-    //Load Image from Host to IT8951 Image Buffer
-    IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
-}
-
-//-----------------------------------------------------------
-//Test function 3---Example of Display 1bpp Flow
-//-----------------------------------------------------------
-void IT8951Display1bppExample()
-{
-    IT8951AreaImgInfo stAreaImgInfo;
-    
-    //Prepare image
-    //Write pixel 0x00(Black) to Frame Buffer
-    //or you can create your image pattern here..
-     memset(gpFrameBuf, 0x00, (gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH)/8);//Host Frame Buffer(Source)
-     
-     //Check TCon is free ? Wait TCon Ready (optional)
-     IT8951WaitForDisplayReady();
-     
-     //Load Image and Display
-     //Set Load Area
-     stAreaImgInfo.usX      = 0;
-     stAreaImgInfo.usY      = 0;
-     stAreaImgInfo.usWidth  = gstI80DevInfo.usPanelW;
-     stAreaImgInfo.usHeight = gstI80DevInfo.usPanelH;
-     //Load Image from Host to IT8951 Image Buffer
-     IT8951Load1bppImage(gpFrameBuf, stAreaImgInfo.usX, stAreaImgInfo.usY, stAreaImgInfo.usWidth, stAreaImgInfo.usHeight);//Display function 4, Arg
-     
-     //Display Area - (x,y,w,h) with mode 2 for Gray Scale
-     //e.g. if we want to set b0(Background color) for Black-0x00 , Set b1(Foreground) for White-0xFF
-     IT8951DisplayArea1bpp(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 0, 0x00, 0xFF);
-}
-
-void IT8951Display1bppExample2()
-{
-    IT8951AreaImgInfo stAreaImgInfo;
-    
-    //Prepare image
-    //Write pixel 0x00(Black) to Frame Buffer
-    //or you can create your image pattern here..
-    memset(gpFrameBuf, 0xff, (gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH)/8);//Host Frame Buffer(Source)
-    
-    //Check TCon is free ? Wait TCon Ready (optional)
-    IT8951WaitForDisplayReady();
-    
-    //Load Image and Display
-    //Set Load Area
-    stAreaImgInfo.usX      = 0;
-    stAreaImgInfo.usY      = 0;
-    stAreaImgInfo.usWidth  = gstI80DevInfo.usPanelW;
-    stAreaImgInfo.usHeight = gstI80DevInfo.usPanelH;
-    //Load Image from Host to IT8951 Image Buffer
-    IT8951Load1bppImage(gpFrameBuf, stAreaImgInfo.usX, stAreaImgInfo.usY, stAreaImgInfo.usWidth, stAreaImgInfo.usHeight);//Display function 4, Arg
-    
-    //Display Area - (x,y,w,h) with mode 2 for Gray Scale
-    //e.g. if we want to set b0(Background color) for Black-0x00 , Set b1(Foreground) for White-0xFF
-    IT8951DisplayArea1bpp(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 0, 0x00, 0xFF);
-}
-
