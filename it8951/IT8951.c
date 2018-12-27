@@ -523,8 +523,15 @@ void GetIT8951SystemInfo(void* pBuf)
 
 uint8_t IT8951_Init()
 {
-	pBuf = &foo;
-	uint16_t* pusWord = (uint16_t*)pBuf;
+	pointer_deviceInfo = &foo;
+	uint16_t* byWord_deviceInfo = (uint16_t*)pointerToDeviceInfo;
+
+	//Send I80 CMD
+	LCDWriteCmdCode(USDEF_I80_CMD_GET_DEV_INFO);
+
+	//Burst Read Request for SPI interface only
+	LCDReadNData(byWord_deviceInfo, sizeof(IT8951DevInfo)/2);//Polling HRDY for each words(2-bytes) if possible
+
 	//Get Device Info
 	GetIT8951SystemInfo(&gstI80DevInfo);
 
