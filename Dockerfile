@@ -37,4 +37,5 @@ RUN npm run build && \
 COPY it8951 ./it8951
 RUN cd it8951 && make
 
-CMD ["./it8951/IT8951"]
+CMD ["npm", "start"]
+#CMD ["./it8951/IT8951"]

@@ -74,7 +74,7 @@ int main (int argc, char *argv[])
 		deviceInfo_asInfo->usPanelH
 	);
 	printf(
-		"Image Buffer Addr = %X\r\n",
+		"Image Buffer Addr HIGH= %X\r\n",
 		deviceInfo_asInfo->usImgBufAddrL | (deviceInfo_asInfo->usImgBufAddrH << 16)
 	);
 	printf(

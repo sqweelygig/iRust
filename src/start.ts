@@ -1,31 +1,59 @@
 // TODO [REFACTOR] Bundle this entire file into a proper class
 // TODO [NOTE_TO_SELF] node-gd
 
-// import * as rpio from "rpio";
-//
-// const PIN = {
-// 	CHIP_SELECT: 24,
-// 	HARDWARE_READY: 18,
-// };
-//
-// const STATE = {
-// 	HIGH: 1,
-// 	LOW: 0,
-// };
-//
-// const PREFIX = {
-// 	COMMAND: 0x6000,
-// 	READ: 0x1000,
-// 	WRITE: 0x0000,
-// };
-//
-// const COMMAND = {
-// 	GET_INFO: 0x0302,
-// };
+import * as rpio from "rpio";
 
-//
-// const WIDTH = 1200;
-// const HEIGHT = 825;
+const PIN = {
+	READY: 18,
+	RESET: 11,
+	SELECT: 24,
+};
+const PREFIX = {
+	COMMAND: Buffer.from([0x60, 0x00]),
+	READ: Buffer.from([0x10, 0x00]),
+	WRITE: Buffer.from([0x00, 0x00]),
+};
+const COMMAND = {
+	GET_INFO: Buffer.from([0x03, 0x02]),
+};
+
+function awaitHardwareReady() {
+	let hardwareReady = rpio.read(PIN.READY);
+	while (hardwareReady === rpio.LOW) {
+		hardwareReady = rpio.read(PIN.READY);
+	}
+}
+
+rpio.open(PIN.READY, rpio.INPUT, rpio.HIGH);
+rpio.open(PIN.RESET, rpio.OUTPUT, rpio.HIGH);
+rpio.open(PIN.SELECT, rpio.OUTPUT, rpio.HIGH);
+rpio.write(PIN.RESET, rpio.LOW);
+rpio.msleep(100);
+rpio.write(PIN.RESET, rpio.HIGH);
+awaitHardwareReady();
+rpio.write(PIN.SELECT, rpio.LOW);
+rpio.spiBegin();
+rpio.spiSetClockDivider(32);
+rpio.spiWrite(PREFIX.COMMAND, PREFIX.COMMAND.length);
+rpio.spiEnd();
+awaitHardwareReady();
+rpio.spiBegin();
+rpio.spiSetClockDivider(32);
+rpio.spiWrite(COMMAND.GET_INFO, COMMAND.GET_INFO.length);
+rpio.spiEnd();
+rpio.write(PIN.SELECT, rpio.HIGH);
+awaitHardwareReady();
+rpio.write(PIN.SELECT, rpio.LOW);
+rpio.spiBegin();
+rpio.spiSetClockDivider(32);
+rpio.spiWrite(PREFIX.READ, PREFIX.READ.length);
+rpio.spiEnd();
+awaitHardwareReady();
+const size = 42;
+const rxBuffer = new Buffer(size);
+rpio.spiTransfer(new Buffer(size), rxBuffer, size);
+rpio.write(PIN.SELECT, rpio.HIGH);
+console.log(rxBuffer);
 //
 // const START_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x20]);
 // const END_UPDATE = Buffer.from([0x60, 0x00, 0x00, 0x22]);
