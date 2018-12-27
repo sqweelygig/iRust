@@ -21,7 +21,7 @@ int main (int argc, char *argv[])
 
 	bcm2835_gpio_write(CS, HIGH);
 
-	printf("****** IT8951 ******\n");
+	printf("****** IT8951(2) ******\n");
 
 	bcm2835_gpio_write(RESET, LOW);
 	bcm2835_delay(100);
