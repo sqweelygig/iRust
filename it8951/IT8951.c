@@ -27,25 +27,6 @@ void LCDWaitForReady()
 //-----------------------------------------------------------
 //Host controller function 2---Write command code to host data Bus
 //-----------------------------------------------------------
-void LCDWriteCmdCode(uint16_t usCmdCode)
-{
-	//Set Preamble for Write Command
-	uint16_t wPreamble = 0x6000; 
-	
-	LCDWaitForReady();	
-
-	bcm2835_gpio_write(CS,LOW);
-	
-	bcm2835_spi_transfer(wPreamble>>8);
-	bcm2835_spi_transfer(wPreamble);
-	
-	LCDWaitForReady();	
-	
-	bcm2835_spi_transfer(usCmdCode>>8);
-	bcm2835_spi_transfer(usCmdCode);
-	
-	bcm2835_gpio_write(CS,HIGH); 
-}
 
 //-----------------------------------------------------------
 //Host controller function 3---Write Data to host data Bus
@@ -485,10 +466,43 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
     LCDWriteData((uint16_t)(ulDpyBufAddr>>16)); //Display Buffer Base address[26:16]
 }
 
+void LCDWriteCmdCode(uint16_t usCmdCode)
+{
+	//Set Preamble for Write Command
+	uint16_t wPreamble = 0x6000;
+
+	LCDWaitForReady();
+
+	bcm2835_gpio_write(CS,LOW);
+
+	bcm2835_spi_transfer(wPreamble>>8);
+	bcm2835_spi_transfer(wPreamble);
+
+	LCDWaitForReady();
+
+	bcm2835_spi_transfer(usCmdCode>>8);
+	bcm2835_spi_transfer(usCmdCode);
+
+	bcm2835_gpio_write(CS,HIGH);
+}
+
 uint8_t IT8951_Init()
 {
-	// Send I80 CMD
-	LCDWriteCmdCode(USDEF_I80_CMD_GET_DEV_INFO);
+	uint16_t wPreamble = 0x6000;
+
+	LCDWaitForReady();
+
+	bcm2835_gpio_write(CS,LOW);
+
+	bcm2835_spi_transfer(wPreamble>>8);
+	bcm2835_spi_transfer(wPreamble);
+
+	LCDWaitForReady();
+
+	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO>>8);
+	bcm2835_spi_transfer(USDEF_I80_CMD_GET_DEV_INFO);
+
+	bcm2835_gpio_write(CS,HIGH);
 
 	// Burst Read Request for SPI interface only
 	LCDReadNData((uint16_t*)&gstI80DevInfo, sizeof(IT8951DevInfo)/2);
@@ -504,7 +518,6 @@ uint8_t IT8951_Init()
 		"Image Buffer Address = %X\r\n",
 		deviceInfo->usImgBufAddrL | (deviceInfo->usImgBufAddrH << 16)
 	);
-	//Show Firmware and LUT Version
 	printf(
 		"FW Version = %s\r\n",
 		(uint8_t*)deviceInfo->usFWVersion
