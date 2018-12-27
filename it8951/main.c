@@ -72,8 +72,8 @@ int main (int argc, char *argv[])
 	);
 	printf(
 		"Panel(W,H) = (%d,%d)\r\n",
-		asInfo_deviceInfo->usPanelW,
-		asInfo_deviceInfo->usPanelH
+		deviceInfo->usPanelW,
+		deviceInfo->usPanelH
 	);
 	printf(
 		"Image Buffer Address = %X\r\n",
