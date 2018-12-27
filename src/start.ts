@@ -59,13 +59,11 @@ class Display {
 	}
 
 	private async reset(): Promise<void> {
+		await this.displayReady();
 		rpio.write(this.pins.reset, rpio.LOW);
-		return new Promise<void>((resolve) => {
-			setTimeout(() => {
-				rpio.write(this.pins.reset, rpio.HIGH);
-				resolve();
-			}, 100);
-		});
+		await this.displayReady();
+		rpio.write(this.pins.reset, rpio.HIGH);
+		await this.displayReady();
 	}
 
 	private async displayReady(): Promise<void> {
@@ -89,6 +87,7 @@ class Display {
 			height: rxBuffer.readInt16BE(6),
 			width: rxBuffer.readInt16BE(4),
 		};
+		await this.displayReady();
 	}
 }
 
