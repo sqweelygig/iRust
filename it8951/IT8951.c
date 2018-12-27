@@ -515,7 +515,10 @@ uint8_t IT8951_Init()
 	LCDReadNData(pusWord, sizeof(IT8951DevInfo)/2);//Polling HRDY for each words(2-bytes) if possible
 
 	//Show Device information of IT8951
-	pstDevInfo = (IT8951DevInfo*)pBuf;
+	pstDevInfo = (IT8951DevInfo*)pusWord;
+
+	//Get Device Info
+	//GetIT8951SystemInfo(&gstI80DevInfo);
 
 	printf(
 		"Panel(W,H) = (%d,%d)\r\n",
