@@ -530,6 +530,7 @@ uint8_t IT8951_Init()
 	bcm2835_gpio_write(CS, HIGH);
 
 	printf("****** IT8951 ******\n");
+	printf((unsigned)time(NULL));
 	
 	bcm2835_gpio_write(RESET, LOW);
 	bcm2835_delay(100);
@@ -723,8 +724,6 @@ void IT8951_GUI_Example()
 
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
-
-	printf((unsigned)time(NULL));
 
 	EPD_DrawMatrix(0,0,550,412,bmp01);
 
