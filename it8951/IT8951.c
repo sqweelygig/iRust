@@ -512,9 +512,6 @@ void IT8951DisplayAreaBuf(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH
 //-----------------------------------------------------------
 uint8_t IT8951_Init()
 {
-	//Get Device Info
-	GetIT8951SystemInfo(&gstI80DevInfo);
-	
 	gpFrameBuf = malloc(gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	if (!gpFrameBuf)
 	{
@@ -560,7 +557,7 @@ void IT8951_GUI_Example()
 	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 	EPD_Clear(0xff);
 
-	EPD_DrawMatrix(400,400,550,412,bmp01);
+	EPD_DrawMatrix(000,000,550,412,bmp01);
 
 	IT8951WaitForDisplayReady();
 
