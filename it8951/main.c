@@ -89,11 +89,7 @@ int main (int argc, char *argv[])
 		(uint8_t*)deviceInfo_asInfo->usLUTVersion
 	);
 
-	IT8951_Init();
-
 	IT8951_GUI_Example();
-
-	IT8951_Cancel();
 
 	bcm2835_spi_end();
 	bcm2835_close();
