@@ -2,6 +2,7 @@
 // TODO [NOTE_TO_SELF] node-gd?
 
 import * as rpio from "rpio";
+import * as gm from "gm";
 
 interface Pins {
 	reset: number;
@@ -124,10 +125,15 @@ class Display {
 async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
-	await d.sendPixels(new Array(1200 * 825).fill(0x00));
+	await d.sendPixels(new Array(1200 * 825).fill(0xff));
 	d.destructor();
 }
 
 test().then(() => {
 	console.log("Test cycle complete.");
+	gm(200, 200)
+		.drawText(10, 50, "from scratch")
+		.toBuffer("PNG", (_error, buffer) => {
+			console.log(buffer);
+		});
 });

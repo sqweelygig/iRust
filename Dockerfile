@@ -11,7 +11,7 @@ RUN apt-get update && \
 	apt-get clean
 
 COPY graphics_magick ./graphics_magick
-RUN cd graphics_magic && ./configure
+RUN cd graphics_magick && ./configure
 
 RUN git clone git://git.drogon.net/wiringPi
 RUN cd wiringPi && ./build
