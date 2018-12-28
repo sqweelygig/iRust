@@ -335,13 +335,8 @@ void IT8951MemBurstReadProc(uint32_t ulMemAddr , uint32_t ulReadSize, uint16_t* 
 //-----------------------------------------------------------
 void IT8951LoadImgStart(IT8951LdImgInfo* pstLdImgInfo)
 {
-    uint16_t usArg;
-    //Setting Argument for Load image start
-    usArg = (pstLdImgInfo->usEndianType << 8 )
-    |(pstLdImgInfo->usPixelFormat << 4)
-    |(pstLdImgInfo->usRotate);
     //Send Cmd
-    LCDWriteCmdCode(IT8951_TCON_LD_IMG);
+    LCDWriteCmdCode(0x0020);
     //Send Arg
     LCDWriteData(0x0030);
 }
@@ -424,19 +419,15 @@ void IT8951WaitForDisplayReady()
 void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgInfo* pstAreaImgInfo)
 {
 	uint32_t i,j;
-	//Source buffer address of Host
-	uint16_t* pusFrameBuf = (uint16_t*)pstLdImgInfo->ulStartFBAddr;
-
 	//Send Load Image start Cmd
 	IT8951LoadImgStart(pstLdImgInfo);
 	//Host Write Data
-	for(j=0;j< pstAreaImgInfo->usHeight;j++)
+	for(j=0;j<pstAreaImgInfo->usHeight;j++)
 	{
-		 for(i=0;i< pstAreaImgInfo->usWidth/2;i++)
+		 for(i=0;i<pstAreaImgInfo->usWidth/2;i++)
 			{
-					//Write a Word(2-Bytes) for each time
-					LCDWriteData(0xffff);
-					pusFrameBuf++;
+				//Write a Word(2-Bytes) for each time
+				LCDWriteData(0x7777);
 			}
 	}
 	//Send Load Img End Command
