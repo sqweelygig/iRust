@@ -33,7 +33,7 @@ class Display {
 		dataFormat: Buffer.from([0x00, 0x00, 0x00, 0x30]),
 		fullHeight: Buffer.from([0x00, 0x00, 0x03, 0x39]),
 		fullWidth: Buffer.from([0x00, 0x00, 0x04, 0xb0]),
-		getInfo: Buffer.from([0x60, 0x00, 0x03, 0x02]),
+		getInfo: [0x60, 0x00, 0x03, 0x02],
 		origin: Buffer.from([0x00, 0x00, 0x00, 0x00]),
 		receiveData: Buffer.from([0x10, 0x00]),
 		refreshScreen: Buffer.from([0x60, 0x00, 0x00, 0x34]),
@@ -131,9 +131,14 @@ class Display {
 		});
 	}
 
-	private async readDisplaySpecification(): Promise<void> {
+	private async write(data: number[]): Promise<void> {
 		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.getInfo, Display.COMMANDS.getInfo.length);
+		const buffer = Buffer.from(data);
+		rpio.spiWrite(buffer, buffer.length);
+	}
+
+	private async readDisplaySpecification(): Promise<void> {
+		this.write(Display.COMMANDS.getInfo);
 		await this.displayReady();
 		const size = 42;
 		const rxBuffer = Buffer.alloc(size);
