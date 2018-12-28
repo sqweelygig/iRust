@@ -5,11 +5,9 @@ import * as rpio from "rpio";
 interface Pins {
 	reset: number;
 	ready: number;
-	// TODO: [IMPROVEMENT] chipSelect
 }
 
-interface DisplaySpecification {
-	// TODO [IMPROVEMENT] Firmware version, etc.
+interface DisplayDimensions {
 	width: number;
 	height: number;
 }
@@ -44,7 +42,7 @@ class Display {
 
 	private pins: Pins;
 
-	private spec: DisplaySpecification;
+	private spec: DisplayDimensions;
 
 	private constructor(pins = Display.PINS) {
 		this.pins = pins;
@@ -53,17 +51,14 @@ class Display {
 		});
 		rpio.open(this.pins.reset, rpio.OUTPUT, rpio.HIGH);
 		rpio.open(this.pins.ready, rpio.INPUT);
-		rpio.spiBegin();
-		rpio.spiSetClockDivider(32);
 	}
 
 	public destructor(): void {
-		rpio.spiEnd();
 		rpio.close(this.pins.ready);
 		rpio.close(this.pins.reset);
 	}
 
-	public getDimensions(): DisplaySpecification {
+	public getDimensions(): DisplayDimensions {
 		return this.spec;
 	}
 
@@ -85,6 +80,8 @@ class Display {
 	}
 
 	public async sendStage(stage: Stage): Promise<void> {
+		rpio.spiBegin();
+		rpio.spiSetClockDivider(32);
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
 		const data = [];
@@ -101,6 +98,7 @@ class Display {
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
 		await this.write([0x00, 0x00, 0x00, 0x01]);
+		rpio.spiEnd();
 	}
 
 	private async reset(): Promise<void> {
@@ -131,6 +129,8 @@ class Display {
 	}
 
 	private async readHardwareInformation(): Promise<void> {
+		rpio.spiBegin();
+		rpio.spiSetClockDivider(32);
 		await this.write(Display.COMMANDS.getInfo);
 		await this.displayReady();
 		const size = 42;
@@ -140,6 +140,7 @@ class Display {
 			height: rxBuffer.readInt16BE(6),
 			width: rxBuffer.readInt16BE(4),
 		};
+		rpio.spiEnd();
 	}
 }
 
@@ -154,24 +155,28 @@ async function test() {
 		stage.line(
 			radius,
 			radius,
-			radius - Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
-			radius + Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
-			0x000000,
-		);
-		stage.line(
-			radius,
-			radius,
-			radius - Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
-			radius + Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
+			radius -
+				Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
+			radius +
+				Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
 			0x000000,
 		);
 		stage.line(
 			radius,
 			radius,
 			radius -
-			Math.round(0.7 * radius * Math.sin((rightNow.hour() * Math.PI) / 6)),
+				Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
 			radius +
-			Math.round(0.7 * radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
+				Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
+			0x000000,
+		);
+		stage.line(
+			radius,
+			radius,
+			radius -
+				Math.round(0.7 * radius * Math.sin((rightNow.hour() * Math.PI) / 6)),
+			radius +
+				Math.round(0.7 * radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
 			0x000000,
 		);
 		console.log(rightNow.hour(), rightNow.minutes(), rightNow.seconds());
