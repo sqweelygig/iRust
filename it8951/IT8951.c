@@ -697,12 +697,18 @@ void IT8951_GUI_Example()
 	bcm2835_spi_transfer(0x00);
 	bcm2835_spi_transfer(0x20); // Send screen
 	bcm2835_gpio_write(CS,HIGH);
-	LCDWriteData(0x0030);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x30); // Transfer format
+	bcm2835_gpio_write(CS,HIGH);
 	for(j=0;j<825;j++)
 	{
 		 for(i=0;i<1200/2;i++)
 			{
-				LCDWriteData(0xffff);
+				LCDWriteData(0x0000);
 			}
 	}
 	awaitHardwareReady();
