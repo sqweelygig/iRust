@@ -88,11 +88,11 @@ class Display {
 
 	public sendFrame(frame: graphicsMagick.State): Promise<void> {
 		return new Promise((resolve, reject) => {
-			frame.toBuffer("bmp", (error, buffer) => {
+			frame.stream("bmp", (error, output) => {
 				if (error) {
 					reject(error);
 				} else {
-					console.log(buffer);
+					console.log(output);
 					resolve();
 				}
 			});
