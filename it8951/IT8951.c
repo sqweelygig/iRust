@@ -690,7 +690,13 @@ extern uint16_t bmp01[];
 void IT8951_GUI_Example()
 {
 	uint32_t i,j;
-	LCDWriteCmdCode(0x0020);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x60);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x20); // Send screen
+	bcm2835_gpio_write(CS,HIGH);
 	LCDWriteData(0x0030);
 	for(j=0;j<825;j++)
 	{
@@ -699,9 +705,20 @@ void IT8951_GUI_Example()
 				LCDWriteData(0x0000);
 			}
 	}
-	LCDWriteCmdCode(0x0022);
-
-	LCDWriteCmdCode(0x0034);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x60);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x22); // Sent screen
+	bcm2835_gpio_write(CS,HIGH);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x60);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x34); // Refresh screen
+	bcm2835_gpio_write(CS,HIGH);
 	LCDWriteData(0);
 	LCDWriteData(0);
 	LCDWriteData(1200);
