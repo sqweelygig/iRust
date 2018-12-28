@@ -66,19 +66,6 @@ class Display {
 		return this.spec;
 	}
 
-	public async sendPixels(data: number[]): Promise<void> {
-		await this.write(Display.COMMANDS.transmitScreen);
-		await this.write(Display.COMMANDS.dataFormat);
-		await this.write(Display.COMMANDS.sendData.concat(data));
-		await this.write(Display.COMMANDS.completeTransmit);
-		await this.write(Display.COMMANDS.refreshScreen);
-		await this.write(Display.COMMANDS.origin);
-		await this.write(Display.COMMANDS.origin);
-		await this.write(Display.COMMANDS.fullWidth);
-		await this.write(Display.COMMANDS.fullHeight);
-		await this.write([0x00, 0x00, 0x00, 0x01]);
-	}
-
 	public async createStage(): Promise<Stage> {
 		return new Promise<Stage>((resolve, reject) => {
 			gd.createTrueColor(this.spec.width, this.spec.height, (error, stage) => {
@@ -89,6 +76,25 @@ class Display {
 				}
 			});
 		});
+	}
+
+	public async sendStage(stage: Stage): Promise<void> {
+		await this.write(Display.COMMANDS.transmitScreen);
+		await this.write(Display.COMMANDS.dataFormat);
+		const data = [];
+		for (let y = 0; y < this.spec.height; y++) {
+			for (let x = 0; x < this.spec.width; x++) {
+				data.push(stage.getPixel(x, y));
+			}
+		}
+		await this.write(Display.COMMANDS.sendData.concat(data));
+		await this.write(Display.COMMANDS.completeTransmit);
+		await this.write(Display.COMMANDS.refreshScreen);
+		await this.write(Display.COMMANDS.origin);
+		await this.write(Display.COMMANDS.origin);
+		await this.write(Display.COMMANDS.fullWidth);
+		await this.write(Display.COMMANDS.fullHeight);
+		await this.write([0x00, 0x00, 0x00, 0x01]);
 	}
 
 	private async reset(): Promise<void> {
@@ -134,9 +140,8 @@ class Display {
 async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
-	await d.sendPixels(new Array(1200 * 825).fill(0xff));
 	const stage = await d.createStage();
-	console.log(stage.getPixel(0, 0));
+	await d.sendStage(stage);
 	d.destructor();
 }
 
