@@ -144,6 +144,7 @@ async function test() {
 	console.log(d.getDisplaySpecification());
 	await d.sendPixels(new Array(1200 * 825).fill(0xff));
 	const f = d.getFrame();
+	f.resize(1200, 825);
 	await d.sendFrame(f);
 	d.destructor();
 }
