@@ -1,8 +1,8 @@
 // TODO [REFACTOR] Bundle this entire file into a proper class
 // TODO [NOTE_TO_SELF] node-gd
 
-import * as rpio from "rpio";
 import * as graphicsMagick from "gm";
+import * as rpio from "rpio";
 
 interface Pins {
 	reset: number;
