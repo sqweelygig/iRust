@@ -78,7 +78,7 @@ class Display {
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
-		await this.write(Display.COMMANDS.viaWhite);
+		await this.write([0x00, 0x00, 0x00, 0x01]);
 	}
 
 	private async reset(): Promise<void> {
