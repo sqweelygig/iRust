@@ -149,7 +149,7 @@ async function test() {
 	const spec = display.getDimensions();
 	const stage = await display.createStage(0xffffff);
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
-	stage.setThickness(30);
+	stage.setThickness(300);
 	stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
 	console.log(rightNow.minutes());
 	console.log(rightNow.hour());
