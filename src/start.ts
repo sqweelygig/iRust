@@ -69,25 +69,43 @@ class Display {
 
 	public async testTransmit(): Promise<void> {
 		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.transmitScreen, Display.COMMANDS.transmitScreen.length);
+		rpio.spiWrite(
+			Display.COMMANDS.transmitScreen,
+			Display.COMMANDS.transmitScreen.length,
+		);
 		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.dataFormat, Display.COMMANDS.dataFormat.length);
+		rpio.spiWrite(
+			Display.COMMANDS.dataFormat,
+			Display.COMMANDS.dataFormat.length,
+		);
 		await this.displayReady();
 		const data = new Array(1200 * 825).fill(0x00);
 		const payload = Buffer.from([0x00, 0x00].concat(data));
 		rpio.spiWrite(payload, payload.length);
 		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.completeTransmit, Display.COMMANDS.completeTransmit.length);
+		rpio.spiWrite(
+			Display.COMMANDS.completeTransmit,
+			Display.COMMANDS.completeTransmit.length,
+		);
 		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.refreshScreen, Display.COMMANDS.refreshScreen.length);
+		rpio.spiWrite(
+			Display.COMMANDS.refreshScreen,
+			Display.COMMANDS.refreshScreen.length,
+		);
 		await this.displayReady();
 		rpio.spiWrite(Display.COMMANDS.origin, Display.COMMANDS.origin.length);
 		await this.displayReady();
 		rpio.spiWrite(Display.COMMANDS.origin, Display.COMMANDS.origin.length);
 		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.fullWidth, Display.COMMANDS.fullWidth.length);
+		rpio.spiWrite(
+			Display.COMMANDS.fullWidth,
+			Display.COMMANDS.fullWidth.length,
+		);
 		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.fullHeight, Display.COMMANDS.fullHeight.length);
+		rpio.spiWrite(
+			Display.COMMANDS.fullHeight,
+			Display.COMMANDS.fullHeight.length,
+		);
 		await this.displayReady();
 		rpio.spiWrite(Display.COMMANDS.viaGray, Display.COMMANDS.viaGray.length);
 	}
@@ -127,8 +145,13 @@ class Display {
 	}
 }
 
-Display.build().then((d: Display) => {
+async function test() {
+	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
 	await d.testTransmit();
 	d.destructor();
+}
+
+test().then(() => {
+	console.log("Test cycle complete.");
 });
