@@ -1,7 +1,6 @@
 // TODO [REFACTOR] Bundle this entire file into a proper class
 // TODO [NOTE_TO_SELF] node-gd?
 
-import * as gm from "gm";
 import * as rpio from "rpio";
 
 interface Pins {
@@ -131,10 +130,4 @@ async function test() {
 
 test().then(() => {
 	console.log("Test cycle complete.");
-	gm(200, 200)
-	.setFormat("JPEG")
-	.toBuffer("PNG", (error, buffer) => {
-		console.log(error);
-		console.log(buffer);
-	});
 });

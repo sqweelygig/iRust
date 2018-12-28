@@ -7,7 +7,7 @@ RUN mkdir ./.ssh --mode=700 && \
 	chmod 700 ./.ssh/github
 
 RUN apt-get update && \
-	apt-get install -yq git-core graphicsmagick && \
+	apt-get install -yq git-core imagemagick && \
 	apt-get clean
 
 RUN npm install -g node-gyp && \
