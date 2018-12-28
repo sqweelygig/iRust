@@ -132,7 +132,6 @@ async function test() {
 test().then(() => {
 	console.log("Test cycle complete.");
 	gm(200, 200)
-		.drawText(10, 50, "from scratch")
 		.toBuffer("PNG", (error, buffer) => {
 			console.log(error);
 			console.log(buffer);
