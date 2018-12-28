@@ -428,7 +428,7 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 	uint16_t* pusFrameBuf = (uint16_t*)pstLdImgInfo->ulStartFBAddr;
 
 	//Send Load Image start Cmd
-	IT8951LoadImgAreaStart(pstLdImgInfo , pstAreaImgInfo);
+	IT8951LoadImgStart(pstLdImgInfo , pstAreaImgInfo);
 	//Host Write Data
 	for(j=0;j< pstAreaImgInfo->usHeight;j++)
 	{
