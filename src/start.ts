@@ -67,11 +67,10 @@ class Display {
 		return this.spec;
 	}
 
-	public async testTransmit(): Promise<void> {
+	public async update(data: number[]): Promise<void> {
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
 		await this.displayReady();
-		const data = new Array(1200 * 825).fill(0xdd);
 		const payload = Buffer.from([0x00, 0x00].concat(data));
 		rpio.spiWrite(payload, payload.length);
 		await this.write(Display.COMMANDS.completeTransmit);
@@ -126,7 +125,7 @@ class Display {
 async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
-	await d.testTransmit();
+	await d.update(new Array(1200 * 825).fill(0x11));
 	d.destructor();
 }
 
