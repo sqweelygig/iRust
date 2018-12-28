@@ -713,7 +713,7 @@ void IT8951_GUI_Example()
 		 for(i=0;i<1200/2;i++)
 			{
 				bcm2835_spi_transfer(0xff); // colour, first px
-				bcm2835_spi_transfer(0x00); // colour, second px
+				bcm2835_spi_transfer(0xff); // colour, second px
 			}
 	}
 	bcm2835_gpio_write(CS,HIGH);
