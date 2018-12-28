@@ -147,28 +147,36 @@ async function test() {
 	const rightNow = moment();
 	const display = await Display.build();
 	const spec = display.getDimensions();
-	const stage = await display.createStage(0xffffff);
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
-	stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
-	stage.line(
-		radius,
-		radius,
-		radius - Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
-		radius + Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
-		0x000000,
-	);
-	stage.line(
-		radius,
-		radius,
-		radius -
+	setInterval(async () => {
+		const stage = await display.createStage(0xffffff);
+		stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
+		stage.line(
+			radius,
+			radius,
+			radius - Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
+			radius + Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
+			0x000000,
+		);
+		stage.line(
+			radius,
+			radius,
+			radius - Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
+			radius + Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
+			0x000000,
+		);
+		stage.line(
+			radius,
+			radius,
+			radius -
 			Math.round(0.7 * radius * Math.sin((rightNow.hour() * Math.PI) / 6)),
-		radius +
+			radius +
 			Math.round(0.7 * radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
-		0x000000,
-	);
-	console.log(rightNow.hour(), rightNow.minutes());
-	await display.sendStage(stage);
-	display.destructor();
+			0x000000,
+		);
+		console.log(rightNow.hour(), rightNow.minutes());
+		await display.sendStage(stage);
+	}, 1000);
 }
 
 test().then(() => {
