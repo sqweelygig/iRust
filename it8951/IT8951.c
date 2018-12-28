@@ -435,7 +435,7 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 		 for(i=0;i< pstAreaImgInfo->usWidth/2;i++)
 			{
 					//Write a Word(2-Bytes) for each time
-					LCDWriteData(0x0000);
+					LCDWriteData(0xffff);
 					pusFrameBuf++;
 			}
 	}
