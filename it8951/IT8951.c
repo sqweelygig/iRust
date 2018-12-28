@@ -419,19 +419,16 @@ void IT8951WaitForDisplayReady()
 void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgInfo* pstAreaImgInfo)
 {
 	uint32_t i,j;
-	//Send Load Image start Cmd
-	IT8951LoadImgStart(pstLdImgInfo);
-	//Host Write Data
-	for(j=0;j<pstAreaImgInfo->usHeight;j++)
+    LCDWriteCmdCode(0x0020);
+    LCDWriteData(0x0030);
+	for(j=0;j<925;j++)
 	{
-		 for(i=0;i<pstAreaImgInfo->usWidth/2;i++)
+		 for(i=0;i<1200/2;i++)
 			{
-				//Write a Word(2-Bytes) for each time
-				LCDWriteData(0x7777);
+				LCDWriteData(0x0000);
 			}
 	}
-	//Send Load Img End Command
-	IT8951LoadImgEnd();
+    LCDWriteCmdCode(0x0022);
 }
 
 //-----------------------------------------------------------
@@ -442,11 +439,11 @@ void IT8951DisplayArea(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, u
 	//Send I80 Display Command (User defined command of IT8951)
 	LCDWriteCmdCode(0x0034); //0x0034
 	//Write arguments
-	LCDWriteData(usX);
-	LCDWriteData(usY);
-	LCDWriteData(usW);
-	LCDWriteData(usH);
-	LCDWriteData(usDpyMode);
+	LCDWriteData(0);
+	LCDWriteData(0);
+	LCDWriteData(1200);
+	LCDWriteData(825);
+	LCDWriteData(2);
 }
 
 //Display Area with bitmap on EPD
