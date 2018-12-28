@@ -138,7 +138,7 @@ class Display {
 	}
 
 	private async readDisplaySpecification(): Promise<void> {
-		this.write(Display.COMMANDS.getInfo);
+		await this.write(Display.COMMANDS.getInfo);
 		await this.displayReady();
 		const size = 42;
 		const rxBuffer = Buffer.alloc(size);
