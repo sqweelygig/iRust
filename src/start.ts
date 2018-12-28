@@ -1,3 +1,4 @@
+import * as gd from "node-gd";
 import * as rpio from "rpio";
 
 interface Pins {
@@ -78,6 +79,18 @@ class Display {
 		await this.write([0x00, 0x00, 0x00, 0x01]);
 	}
 
+	public async createStage(): Promise<Stage> {
+		return new Promise<Stage>((resolve, reject) => {
+			gd.createTrueColor(this.spec.width, this.spec.height, (error, stage) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(stage);
+				}
+			});
+		});
+	}
+
 	private async reset(): Promise<void> {
 		rpio.write(this.pins.reset, rpio.LOW);
 		return new Promise<void>((resolve) => {
@@ -122,6 +135,8 @@ async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
 	await d.sendPixels(new Array(1200 * 825).fill(0xff));
+	const stage = await d.createStage();
+	console.log(stage.getPixel(0, 0));
 	d.destructor();
 }
 
