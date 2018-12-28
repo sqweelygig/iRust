@@ -449,7 +449,7 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 void IT8951DisplayArea(uint16_t usX, uint16_t usY, uint16_t usW, uint16_t usH, uint16_t usDpyMode)
 {
 	//Send I80 Display Command (User defined command of IT8951)
-	LCDWriteCmdCode(USDEF_I80_CMD_DPY_AREA); //0x0034
+	LCDWriteCmdCode(0x0033); //0x0034
 	//Write arguments
 	LCDWriteData(usX);
 	LCDWriteData(usY);

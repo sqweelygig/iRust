@@ -13,6 +13,7 @@ void awaitHardwareReady()
 int main (int argc, char *argv[])
 {
 	uint32_t i;
+	uint32_t j;
 	IT8951DevInfo deviceInfo;
 	uint16_t* deviceInfo_byWord = (uint16_t*)&deviceInfo;
 	uint32_t deviceInfo_wordCount = sizeof(IT8951DevInfo)/2;
@@ -89,16 +90,78 @@ int main (int argc, char *argv[])
 		(uint8_t*)deviceInfo_asInfo->usLUTVersion
 	);
 
-	if(IT8951_Init())
-	{
-		printf("IT8951_Init error \n");
-		return 1;
+	/*
+	 * Start a whole screen update
+	 */
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x60);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x20);
+	bcm2835_gpio_write(CS,HIGH);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x30);
+	bcm2835_gpio_write(CS,HIGH);
+
+	/*
+	 * Send the payload
+	 */
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	for(i=0;i<1200;i++) {
+		for(j=0;j<825;j++) {
+			bcm2835_spi_transfer(0x00);
+			bcm2835_spi_transfer(0x00);
+		}
 	}
+	bcm2835_gpio_write(CS,HIGH);
 
-	IT8951_GUI_Example();
+	/*
+	 * End the whole screen update
+	 */
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x60);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x22);
+	bcm2835_gpio_write(CS,HIGH);
 
-	IT8951_Cancel();
+	/*
+	 * Request that the whole screen updates
+	 */
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x60);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x34);
+	bcm2835_gpio_write(CS,HIGH);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x04);
+	bcm2835_spi_transfer(0xb0);
+	bcm2835_spi_transfer(0x03);
+	bcm2835_spi_transfer(0x39);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x02);
+	bcm2835_gpio_write(CS,HIGH);
 
+	/*
+	 * Close the Broadcom connection down
+	 */
 	bcm2835_spi_end();
 	bcm2835_close();
 
