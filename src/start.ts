@@ -78,7 +78,7 @@ class Display {
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
-		await this.write(Display.COMMANDS.viaGray);
+		await this.write(Display.COMMANDS.viaWhite);
 	}
 
 	private async reset(): Promise<void> {
@@ -124,7 +124,7 @@ class Display {
 async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
-	await d.sendPixels(new Array(1200 * 825).fill(0xff));
+	await d.sendPixels(new Array(1200 * 825).fill(0x00));
 	d.destructor();
 }
 
