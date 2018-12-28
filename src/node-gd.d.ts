@@ -1,4 +1,5 @@
 interface Stage {
+	ellipse(centreX: number, centreY: number, width: number, height: number, colour: number): void;
 	fill(x: number, y: number, colour: number): void;
 	getPixel(x: number, y: number): number;
 }

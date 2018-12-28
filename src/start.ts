@@ -146,6 +146,7 @@ async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
 	const stage = await d.createStage(0xffffff);
+	stage.ellipse(100, 100, 100, 100, 0x000000);
 	await d.sendStage(stage);
 	d.destructor();
 }
