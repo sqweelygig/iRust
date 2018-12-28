@@ -40,6 +40,7 @@ class Display {
 		sendData: [0x00, 0x00],
 		transmitScreen: [0x60, 0x00, 0x00, 0x20],
 		viaGray: [0x00, 0x00, 0x00, 0x02],
+		viaWhite: [0x00, 0x00, 0x00, 0x00],
 	};
 
 	private pins: Pins;
@@ -125,7 +126,7 @@ class Display {
 async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
-	await d.update(new Array(1200 * 825).fill(0x11));
+	await d.update(new Array(1200 * 825).fill(0x55));
 	d.destructor();
 }
 
