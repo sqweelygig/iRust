@@ -2,6 +2,7 @@
 // TODO [NOTE_TO_SELF] node-gd?
 
 import * as rpio from "rpio";
+import * as gm from "gm";
 
 interface Pins {
 	reset: number;
@@ -125,6 +126,10 @@ async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
 	await d.sendPixels(new Array(1200 * 825).fill(0xff));
+	const image = gm.subClass({imageMagick: true})(200, 200).toBuffer("PNG", (error, buffer) => {
+		console.log(error);
+		console.log(buffer);
+	});
 	d.destructor();
 }
 
