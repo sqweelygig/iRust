@@ -755,7 +755,7 @@ void IT8951_GUI_Example()
 //	EPD_DrawBitmap(0,0,bmp01);
 
 	//EPD_DrawMatrix(1,1,550,412,bmp01);
-	EPD_DrawMatrix(000,000,550,412,bmp01);
+	EPD_DrawMatrix(100,000,550,412,bmp01);
 
 
 	//��ʾͼ��
