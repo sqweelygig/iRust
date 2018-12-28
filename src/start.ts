@@ -132,8 +132,9 @@ async function test() {
 test().then(() => {
 	console.log("Test cycle complete.");
 	gm(200, 200)
-		.toBuffer("PNG", (error, buffer) => {
-			console.log(error);
-			console.log(buffer);
-		});
+	.setFormat("JPEG")
+	.toBuffer("PNG", (error, buffer) => {
+		console.log(error);
+		console.log(buffer);
+	});
 });
