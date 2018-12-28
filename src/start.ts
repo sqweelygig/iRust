@@ -2,6 +2,7 @@
 // TODO [NOTE_TO_SELF] node-gd
 
 import * as rpio from "rpio";
+import * as graphicsMagick from "gm";
 
 interface Pins {
 	reset: number;
@@ -68,12 +69,10 @@ class Display {
 		return this.spec;
 	}
 
-	public async update(data: number[]): Promise<void> {
+	public async sendPixels(data: number[]): Promise<void> {
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
-		await this.displayReady();
-		const payload = Buffer.from([0x00, 0x00].concat(data));
-		rpio.spiWrite(payload, payload.length);
+		await this.write(Display.COMMANDS.sendData.concat(data));
 		await this.write(Display.COMMANDS.completeTransmit);
 		await this.write(Display.COMMANDS.refreshScreen);
 		await this.write(Display.COMMANDS.origin);
@@ -81,6 +80,10 @@ class Display {
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
 		await this.write(Display.COMMANDS.viaGray);
+	}
+
+	public getFrame(): graphicsMagick.State {
+		return graphicsMagick(this.spec.width, this.spec.height, "#ffffffff");
 	}
 
 	private async reset(): Promise<void> {
@@ -126,7 +129,7 @@ class Display {
 async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
-	await d.update(new Array(1200 * 825).fill(0x55));
+	await d.sendPixels(new Array(1200 * 825).fill(0xff));
 	d.destructor();
 }
 
