@@ -18,7 +18,7 @@ int main (int argc, char *argv[])
 	uint32_t deviceInfo_wordCount = sizeof(IT8951DevInfo)/2;
 
 	/*
-	 * Initialise the Broadcom SPI chip.
+	 * Initialise the Broadcom SPI chip
 	 */
 	bcm2835_init();
 	bcm2835_spi_begin();

@@ -760,7 +760,7 @@ void IT8951_GUI_Example()
 	EPD_DrawMatrix(100,100,550,412,bmp01);
 
 
-	//ÏÔÊ¾Í¼Ïñ
+	//ï¿½ï¿½Ê¾Í¼ï¿½ï¿½
 	//Show_bmp("16.bmp");
 
 	
@@ -791,7 +791,7 @@ void IT8951_BMP_Example(uint32_t x, uint32_t y,char *path)
 	
 	EPD_Clear(0xff);
 	
-	//ÏÔÊ¾Í¼Ïñ
+	//ï¿½ï¿½Ê¾Í¼ï¿½ï¿½
 	Show_bmp(x,y,path);
 
 	
