@@ -66,13 +66,18 @@ class Display {
 		return this.spec;
 	}
 
-	public async createStage(): Promise<Stage> {
+	public async createStage(fill?: number): Promise<Stage> {
 		return new Promise<Stage>((resolve, reject) => {
 			gd.createTrueColor(this.spec.width, this.spec.height, (error, stage) => {
 				if (error) {
 					reject(error);
-				} else {
+				} else if (stage) {
+					if (fill) {
+						stage.fill(0, 0, fill);
+					}
 					resolve(stage);
+				} else {
+					reject();
 				}
 			});
 		});
@@ -140,7 +145,7 @@ class Display {
 async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
-	const stage = await d.createStage();
+	const stage = await d.createStage(0xffffff);
 	await d.sendStage(stage);
 	d.destructor();
 }
