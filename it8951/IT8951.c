@@ -421,7 +421,7 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 	uint32_t i,j;
     LCDWriteCmdCode(0x0020);
     LCDWriteData(0x0030);
-	for(j=0;j<925;j++)
+	for(j=0;j<825;j++)
 	{
 		 for(i=0;i<1200/2;i++)
 			{
@@ -689,82 +689,24 @@ extern uint16_t bmp01[];
 
 void IT8951_GUI_Example()
 {
-	IT8951LdImgInfo stLdImgInfo;
-	IT8951AreaImgInfo stAreaImgInfo;
-	Point point[5];
-	
-	//memset(gpFrameBuf, 0xff, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
-	EPD_Clear(0xff);
+	uint32_t i,j;
+	LCDWriteCmdCode(0x0020);
+	LCDWriteData(0x0030);
+	for(j=0;j<825;j++)
+	{
+		 for(i=0;i<1200/2;i++)
+			{
+				LCDWriteData(0xffff);
+			}
+	}
+	LCDWriteCmdCode(0x0022);
 
-	EPD_DrawLine(100,100,200,200,0x40);
-	EPD_DrawLine(200,200,400,200,0x40);
-	EPD_DrawLine(400,200,400,400,0x40);
-	EPD_DrawLine(400,400,600,400,0x40);
-	EPD_DrawLine(600,600,800,800,0x40);
-
-	EPD_DrawLine(0,0,99,99,0x10);
-	EPD_DrawLine(801,801,1200,825,0x00);
-
-	EPD_DrawRect(500, 500, 100, 100, 0x00);
-
-	EPD_DrawCircle(700, 500, 100, 0x00);
-
-	point[0].X = 30;
-	point[0].Y = 40;
-	
-	point[1].X = 40;
-	point[1].Y = 70;
-
-	point[2].X = 50;
-	point[2].Y = 90;
-
-	point[3].X = 90;
-	point[3].Y = 60;
-
-	point[4].X = 70;
-	point[4].Y = 20;
-
-	EPD_DrawPolygon(point,5,0x00);
-
-	EPD_DrawEllipse(800, 300, 100, 50, 0x00);
-
-	EPD_FillRect(300, 500, 100, 50, 0x00);
-		
-	EPD_FillCircle(100, 500, 70,0x00);
-
-
-	EPD_Text(400,100, (uint8_t*)"hello world",0x00, 0xff);
-	EPD_Text(400,200, (uint8_t*)"yang weibiao",0x00, 0xff);
- 
-
-//	EPD_DrawBitmap(0,0,bmp01);
-
-	//EPD_DrawMatrix(1,1,550,412,bmp01);
-	EPD_DrawMatrix(100,100,550,412,bmp01);
-
-
-	//��ʾͼ��
-	//Show_bmp("16.bmp");
-
-	
-	IT8951WaitForDisplayReady();
-	
-	//Setting Load image information
-	stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
-	stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
-	stLdImgInfo.usPixelFormat    = IT8951_8BPP; 
-	stLdImgInfo.usRotate         = IT8951_ROTATE_0;
-	stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
-	//Set Load Area
-	stAreaImgInfo.usX      = 0;
-	stAreaImgInfo.usY      = 0;
-	stAreaImgInfo.usWidth  = 1200;
-	stAreaImgInfo.usHeight = 825;
-	
-	//Load Image from Host to IT8951 Image Buffer
-	IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
-	//Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform 
-	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
+	LCDWriteCmdCode(0x0034);
+	LCDWriteData(0);
+	LCDWriteData(0);
+	LCDWriteData(1200);
+	LCDWriteData(825);
+	LCDWriteData(2);
 }
 
 void IT8951_BMP_Example(uint32_t x, uint32_t y,char *path)
