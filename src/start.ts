@@ -1,7 +1,6 @@
 // TODO [REFACTOR] Bundle this entire file into a proper class
-// TODO [NOTE_TO_SELF] node-gd
+// TODO [NOTE_TO_SELF] node-gd?
 
-import * as graphicsMagick from "gm";
 import * as rpio from "rpio";
 
 interface Pins {
@@ -82,23 +81,6 @@ class Display {
 		await this.write(Display.COMMANDS.viaGray);
 	}
 
-	public getFrame(): graphicsMagick.State {
-		return graphicsMagick(this.spec.width, this.spec.height, "#00000000");
-	}
-
-	public sendFrame(frame: graphicsMagick.State): Promise<void> {
-		return new Promise((resolve, reject) => {
-			frame.stream("bmp", (error, output) => {
-				if (error) {
-					reject(error);
-				} else {
-					console.log(output);
-					resolve();
-				}
-			});
-		});
-	}
-
 	private async reset(): Promise<void> {
 		rpio.write(this.pins.reset, rpio.LOW);
 		return new Promise<void>((resolve) => {
@@ -143,9 +125,6 @@ async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
 	await d.sendPixels(new Array(1200 * 825).fill(0xff));
-	const f = d.getFrame();
-	f.resize(1200, 825);
-	await d.sendFrame(f);
 	d.destructor();
 }
 

@@ -10,9 +10,6 @@ RUN apt-get update && \
 	apt-get install -yq git-core libgd2-dev && \
 	apt-get clean
 
-COPY graphics_magick ./graphics_magick
-RUN cd graphics_magick && ./configure
-
 RUN git clone git://git.drogon.net/wiringPi
 RUN cd wiringPi && ./build
 
