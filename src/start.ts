@@ -144,11 +144,11 @@ class Display {
 }
 
 async function test() {
-	const rightNow = moment();
 	const display = await Display.build();
 	const spec = display.getDimensions();
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	setInterval(async () => {
+		const rightNow = moment();
 		const stage = await display.createStage(0xffffff);
 		stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
 		stage.line(
