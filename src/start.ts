@@ -154,31 +154,35 @@ async function test() {
 		stage.line(
 			radius,
 			radius,
-			radius - Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
-			radius + Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
-			0x000000,
-		);
-		stage.line(
-			radius,
-			radius,
-			radius - Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
-			radius + Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
+			radius -
+				Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
+			radius +
+				Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
 			0x000000,
 		);
 		stage.line(
 			radius,
 			radius,
 			radius -
-			Math.round(0.7 * radius * Math.sin((rightNow.hour() * Math.PI) / 6)),
+				Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
 			radius +
-			Math.round(0.7 * radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
+				Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
 			0x000000,
 		);
-		console.log(rightNow.hour(), rightNow.minutes());
+		stage.line(
+			radius,
+			radius,
+			radius -
+				Math.round(0.7 * radius * Math.sin((rightNow.hour() * Math.PI) / 6)),
+			radius +
+				Math.round(0.7 * radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
+			0x000000,
+		);
+		console.log(rightNow.hour(), rightNow.minutes(), rightNow.seconds());
 		await display.sendStage(stage);
-	}, 1000);
+	}, 250);
 }
 
 test().then(() => {
-	console.log("Test cycle complete.");
+	console.log("Clock initiated.");
 });
