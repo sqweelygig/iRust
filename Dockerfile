@@ -10,9 +10,6 @@ RUN apt-get update && \
 	apt-get install -yq git-core graphicsmagick && \
 	apt-get clean
 
-RUN git clone git://git.drogon.net/wiringPi
-RUN cd wiringPi && ./build
-
 RUN npm install -g node-gyp && \
 	npm cache clean --force
 
