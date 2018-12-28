@@ -1,8 +1,8 @@
 // TODO [REFACTOR] Bundle this entire file into a proper class
 // TODO [NOTE_TO_SELF] node-gd?
 
-import * as rpio from "rpio";
 import * as gm from "gm";
+import * as rpio from "rpio";
 
 interface Pins {
 	reset: number;
@@ -133,7 +133,8 @@ test().then(() => {
 	console.log("Test cycle complete.");
 	gm(200, 200)
 		.drawText(10, 50, "from scratch")
-		.toBuffer("PNG", (_error, buffer) => {
+		.toBuffer("PNG", (error, buffer) => {
+			console.log(error);
 			console.log(buffer);
 		});
 });
