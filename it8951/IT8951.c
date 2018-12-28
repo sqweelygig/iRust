@@ -343,7 +343,7 @@ void IT8951LoadImgStart(IT8951LdImgInfo* pstLdImgInfo)
     //Send Cmd
     LCDWriteCmdCode(IT8951_TCON_LD_IMG);
     //Send Arg
-    LCDWriteData(usArg);
+    LCDWriteData(0x0030);
 }
 //-----------------------------------------------------------
 //Host Cmd 11---LD_IMG_AREA
