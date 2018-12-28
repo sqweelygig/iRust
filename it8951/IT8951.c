@@ -545,9 +545,6 @@ uint8_t IT8951_Init()
 	
  	gulImgBufAddr = gstI80DevInfo.usImgBufAddrL | (gstI80DevInfo.usImgBufAddrH << 16);
  	
- 	//Set to Enable I80 Packed mode
- 	IT8951WriteReg(I80CPCR, 0x0001);
-
 	return 0;
 }
 
@@ -755,7 +752,7 @@ void IT8951_GUI_Example()
 //	EPD_DrawBitmap(0,0,bmp01);
 
 	//EPD_DrawMatrix(1,1,550,412,bmp01);
-	EPD_DrawMatrix(100,000,550,412,bmp01);
+	EPD_DrawMatrix(300,000,550,412,bmp01);
 
 
 	//��ʾͼ��
