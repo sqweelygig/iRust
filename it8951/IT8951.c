@@ -708,7 +708,7 @@ void IT8951_GUI_Example()
 	{
 		 for(i=0;i<1200/2;i++)
 			{
-				LCDWriteData(0xffff);
+				LCDWriteData(0x0000);
 			}
 	}
 	awaitHardwareReady();
