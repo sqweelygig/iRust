@@ -725,11 +725,41 @@ void IT8951_GUI_Example()
 	bcm2835_spi_transfer(0x00);
 	bcm2835_spi_transfer(0x34); // Refresh screen
 	bcm2835_gpio_write(CS,HIGH);
-	LCDWriteData(0);
-	LCDWriteData(0);
-	LCDWriteData(1200);
-	LCDWriteData(825);
-	LCDWriteData(2);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00); // x-min
+	bcm2835_gpio_write(CS,HIGH);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00); // y-min
+	bcm2835_gpio_write(CS,HIGH);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x04); // x-max
+	bcm2835_spi_transfer(0xb0); // x-max
+	bcm2835_gpio_write(CS,HIGH);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x03); // y-max
+	bcm2835_spi_transfer(0x39); // y-max
+	bcm2835_gpio_write(CS,HIGH);
+	awaitHardwareReady();
+	bcm2835_gpio_write(CS,LOW);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x00);
+	bcm2835_spi_transfer(0x02); // refresh
+	bcm2835_gpio_write(CS,HIGH);
 }
 
 void IT8951_BMP_Example(uint32_t x, uint32_t y,char *path)
