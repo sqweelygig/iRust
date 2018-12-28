@@ -29,12 +29,17 @@ class Display {
 	};
 
 	private static COMMANDS = {
+		completeTransmit: Buffer.from([0x60, 0x00, 0x00, 0x22]),
 		dataFormat: Buffer.from([0x00, 0x00, 0x00, 0x30]),
+		fullHeight: Buffer.from([0x00, 0x00, 0x03, 0x39]),
+		fullWidth: Buffer.from([0x00, 0x00, 0x04, 0xb0]),
 		getInfo: Buffer.from([0x60, 0x00, 0x03, 0x02]),
+		origin: Buffer.from([0x00, 0x00, 0x00, 0x00]),
 		receiveData: Buffer.from([0x10, 0x00]),
 		refreshScreen: Buffer.from([0x60, 0x00, 0x00, 0x34]),
-		sendScreen: Buffer.from([0x60, 0x00, 0x00, 0x20]),
-		sentScreen: Buffer.from([0x60, 0x00, 0x00, 0x22]),
+		sendData: Buffer.from([0x00, 0x00]),
+		transmitScreen: Buffer.from([0x60, 0x00, 0x00, 0x20]),
+		viaGray: Buffer.from([0x00, 0x00, 0x00, 0x02]),
 	};
 
 	private pins: Pins;
@@ -60,6 +65,31 @@ class Display {
 
 	public getDisplaySpecification(): DisplaySpecification {
 		return this.spec;
+	}
+
+	public async testTransmit(): Promise<void> {
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.transmitScreen, Display.COMMANDS.transmitScreen.length);
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.dataFormat, Display.COMMANDS.dataFormat.length);
+		await this.displayReady();
+		const data = new Array(1200 * 825).fill(0x00);
+		const payload = Buffer.from([0x00, 0x00].concat(data));
+		rpio.spiWrite(payload, payload.length);
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.completeTransmit, Display.COMMANDS.completeTransmit.length);
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.refreshScreen, Display.COMMANDS.refreshScreen.length);
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.origin, Display.COMMANDS.origin.length);
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.origin, Display.COMMANDS.origin.length);
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.fullWidth, Display.COMMANDS.fullWidth.length);
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.fullHeight, Display.COMMANDS.fullHeight.length);
+		await this.displayReady();
+		rpio.spiWrite(Display.COMMANDS.viaGray, Display.COMMANDS.viaGray.length);
 	}
 
 	private async reset(): Promise<void> {
@@ -99,5 +129,6 @@ class Display {
 
 Display.build().then((d: Display) => {
 	console.log(d.getDisplaySpecification());
+	await d.testTransmit();
 	d.destructor();
 });
