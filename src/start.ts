@@ -160,8 +160,8 @@ async function test() {
 	stage.line(
 		radius,
 		radius,
-		radius + Math.round(radius * Math.sin((rightNow.hour() * Math.PI) / 6)),
-		radius + Math.round(radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
+		radius + Math.round(0.7 * radius * Math.sin((rightNow.hour() * Math.PI) / 6)),
+		radius + Math.round(0.7 * radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
 		0x000000,
 	);
 	console.log(rightNow.hour(), rightNow.minutes());
