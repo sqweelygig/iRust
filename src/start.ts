@@ -31,6 +31,7 @@ class Display {
 	private static COMMANDS = {
 		getInfo: Buffer.from([0x60, 0x00, 0x03, 0x02]),
 		receiveData: Buffer.from([0x10, 0x00]),
+		sendScreen: Buffer.from([0x60, 0x00, 0x00, 0x20]),
 	};
 
 	private pins: Pins;
