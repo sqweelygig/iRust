@@ -144,9 +144,11 @@ class Display {
 
 async function test() {
 	const d = await Display.build();
-	console.log(d.getDisplaySpecification());
+	const spec = d.getDisplaySpecification();
 	const stage = await d.createStage(0xffffff);
-	stage.ellipse(100, 100, 100, 100, 0x000000);
+	const diameter = Math.min(spec.width, spec.height);
+	stage.setThickness(30);
+	stage.ellipse(diameter / 2, diameter / 2, diameter, diameter, 0x000000);
 	await d.sendStage(stage);
 	d.destructor();
 }
