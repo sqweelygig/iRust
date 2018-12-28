@@ -83,7 +83,20 @@ class Display {
 	}
 
 	public getFrame(): graphicsMagick.State {
-		return graphicsMagick(this.spec.width, this.spec.height, "#ffffffff");
+		return graphicsMagick(this.spec.width, this.spec.height, "#00000000");
+	}
+
+	public sendFrame(frame: graphicsMagick.State): Promise<void> {
+		return new Promise((resolve, reject) => {
+			frame.toBuffer("bmp", (error, buffer) => {
+				if (error) {
+					reject(error);
+				} else {
+					console.log(buffer);
+					resolve();
+				}
+			});
+		});
 	}
 
 	private async reset(): Promise<void> {
@@ -130,6 +143,8 @@ async function test() {
 	const d = await Display.build();
 	console.log(d.getDisplaySpecification());
 	await d.sendPixels(new Array(1200 * 825).fill(0xff));
+	const f = d.getFrame();
+	await d.sendFrame(f);
 	d.destructor();
 }
 
