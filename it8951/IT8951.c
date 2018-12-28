@@ -758,7 +758,7 @@ void IT8951_GUI_Example()
 	bcm2835_spi_transfer(0x00);
 	bcm2835_spi_transfer(0x00);
 	bcm2835_spi_transfer(0x00);
-	bcm2835_spi_transfer(0x00); // refresh
+	bcm2835_spi_transfer(0x02); // refresh technique
 	bcm2835_gpio_write(CS,HIGH);
 }
 
