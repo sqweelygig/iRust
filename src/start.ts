@@ -155,9 +155,9 @@ async function test() {
 			radius,
 			radius,
 			radius -
-			Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
+				Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
 			radius +
-			Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
+				Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
 			0x000000,
 		);
 		stage.line(
@@ -180,7 +180,7 @@ async function test() {
 		);
 		console.log(rightNow.hour(), rightNow.minutes(), rightNow.seconds());
 		await display.sendStage(stage);
-	}, 250);
+	}, 1000);
 }
 
 test().then(() => {
