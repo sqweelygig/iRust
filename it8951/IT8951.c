@@ -367,7 +367,7 @@ void IT8951LoadImgAreaStart(IT8951LdImgInfo* pstLdImgInfo ,IT8951AreaImgInfo* ps
 //-----------------------------------------------------------
 void IT8951LoadImgEnd(void)
 {
-    LCDWriteCmdCode(IT8951_TCON_LD_IMG_END);
+    LCDWriteCmdCode(0x0022);
 }
 
 void GetIT8951SystemInfo(void* pBuf)
@@ -435,7 +435,7 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 		 for(i=0;i< pstAreaImgInfo->usWidth/2;i++)
 			{
 					//Write a Word(2-Bytes) for each time
-					LCDWriteData(*pusFrameBuf);
+					LCDWriteData(0x0000);
 					pusFrameBuf++;
 			}
 	}
