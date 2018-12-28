@@ -427,8 +427,6 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 	//Source buffer address of Host
 	uint16_t* pusFrameBuf = (uint16_t*)pstLdImgInfo->ulStartFBAddr;
 
-	//Set Image buffer(IT8951) Base address
-	IT8951SetImgBufBaseAddr(pstLdImgInfo->ulImgBufBaseAddr);
 	//Send Load Image start Cmd
 	IT8951LoadImgAreaStart(pstLdImgInfo , pstAreaImgInfo);
 	//Host Write Data
@@ -757,7 +755,7 @@ void IT8951_GUI_Example()
 //	EPD_DrawBitmap(0,0,bmp01);
 
 	//EPD_DrawMatrix(1,1,550,412,bmp01);
-	EPD_DrawMatrix(100,100,550,412,bmp01);
+	EPD_DrawMatrix(000,000,550,412,bmp01);
 
 
 	//��ʾͼ��
