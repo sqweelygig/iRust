@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import * as gd from "node-gd";
 import * as rpio from "rpio";
 
@@ -17,7 +18,7 @@ class Display {
 	public static async build(): Promise<Display> {
 		const display = new Display();
 		await display.reset();
-		await display.readDisplaySpecification();
+		await display.readHardwareInformation();
 		return display;
 	}
 
@@ -62,7 +63,7 @@ class Display {
 		rpio.close(this.pins.reset);
 	}
 
-	public getDisplaySpecification(): DisplaySpecification {
+	public getDimensions(): DisplaySpecification {
 		return this.spec;
 	}
 
@@ -129,7 +130,7 @@ class Display {
 		rpio.spiWrite(buffer, buffer.length);
 	}
 
-	private async readDisplaySpecification(): Promise<void> {
+	private async readHardwareInformation(): Promise<void> {
 		await this.write(Display.COMMANDS.getInfo);
 		await this.displayReady();
 		const size = 42;
@@ -143,14 +144,17 @@ class Display {
 }
 
 async function test() {
-	const d = await Display.build();
-	const spec = d.getDisplaySpecification();
-	const stage = await d.createStage(0xffffff);
-	const diameter = Math.min(spec.width, spec.height);
+	const rightNow = moment();
+	const display = await Display.build();
+	const spec = display.getDimensions();
+	const stage = await display.createStage(0xffffff);
+	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	stage.setThickness(30);
-	stage.ellipse(diameter / 2, diameter / 2, diameter, diameter, 0x000000);
-	await d.sendStage(stage);
-	d.destructor();
+	stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
+	console.log(rightNow.minutes());
+	console.log(rightNow.hour());
+	await display.sendStage(stage);
+	display.destructor();
 }
 
 test().then(() => {
