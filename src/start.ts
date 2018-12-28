@@ -29,17 +29,17 @@ class Display {
 	};
 
 	private static COMMANDS = {
-		completeTransmit: Buffer.from([0x60, 0x00, 0x00, 0x22]),
-		dataFormat: Buffer.from([0x00, 0x00, 0x00, 0x30]),
-		fullHeight: Buffer.from([0x00, 0x00, 0x03, 0x39]),
-		fullWidth: Buffer.from([0x00, 0x00, 0x04, 0xb0]),
+		completeTransmit: [0x60, 0x00, 0x00, 0x22],
+		dataFormat: [0x00, 0x00, 0x00, 0x30],
+		fullHeight: [0x00, 0x00, 0x03, 0x39],
+		fullWidth: [0x00, 0x00, 0x04, 0xb0],
 		getInfo: [0x60, 0x00, 0x03, 0x02],
-		origin: Buffer.from([0x00, 0x00, 0x00, 0x00]),
-		receiveData: Buffer.from([0x10, 0x00]),
-		refreshScreen: Buffer.from([0x60, 0x00, 0x00, 0x34]),
-		sendData: Buffer.from([0x00, 0x00]),
-		transmitScreen: Buffer.from([0x60, 0x00, 0x00, 0x20]),
-		viaGray: Buffer.from([0x00, 0x00, 0x00, 0x02]),
+		origin: [0x00, 0x00, 0x00, 0x00],
+		receiveData: [0x10, 0x00],
+		refreshScreen: [0x60, 0x00, 0x00, 0x34],
+		sendData: [0x00, 0x00],
+		transmitScreen: [0x60, 0x00, 0x00, 0x20],
+		viaGray: [0x00, 0x00, 0x00, 0x02],
 	};
 
 	private pins: Pins;
@@ -68,46 +68,19 @@ class Display {
 	}
 
 	public async testTransmit(): Promise<void> {
+		await this.write(Display.COMMANDS.transmitScreen);
+		await this.write(Display.COMMANDS.dataFormat);
 		await this.displayReady();
-		rpio.spiWrite(
-			Display.COMMANDS.transmitScreen,
-			Display.COMMANDS.transmitScreen.length,
-		);
-		await this.displayReady();
-		rpio.spiWrite(
-			Display.COMMANDS.dataFormat,
-			Display.COMMANDS.dataFormat.length,
-		);
-		await this.displayReady();
-		const data = new Array(1200 * 825).fill(0x00);
+		const data = new Array(1200 * 825).fill(0xdd);
 		const payload = Buffer.from([0x00, 0x00].concat(data));
 		rpio.spiWrite(payload, payload.length);
-		await this.displayReady();
-		rpio.spiWrite(
-			Display.COMMANDS.completeTransmit,
-			Display.COMMANDS.completeTransmit.length,
-		);
-		await this.displayReady();
-		rpio.spiWrite(
-			Display.COMMANDS.refreshScreen,
-			Display.COMMANDS.refreshScreen.length,
-		);
-		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.origin, Display.COMMANDS.origin.length);
-		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.origin, Display.COMMANDS.origin.length);
-		await this.displayReady();
-		rpio.spiWrite(
-			Display.COMMANDS.fullWidth,
-			Display.COMMANDS.fullWidth.length,
-		);
-		await this.displayReady();
-		rpio.spiWrite(
-			Display.COMMANDS.fullHeight,
-			Display.COMMANDS.fullHeight.length,
-		);
-		await this.displayReady();
-		rpio.spiWrite(Display.COMMANDS.viaGray, Display.COMMANDS.viaGray.length);
+		await this.write(Display.COMMANDS.completeTransmit);
+		await this.write(Display.COMMANDS.refreshScreen);
+		await this.write(Display.COMMANDS.origin);
+		await this.write(Display.COMMANDS.origin);
+		await this.write(Display.COMMANDS.fullWidth);
+		await this.write(Display.COMMANDS.fullHeight);
+		await this.write(Display.COMMANDS.viaGray);
 	}
 
 	private async reset(): Promise<void> {
@@ -142,7 +115,7 @@ class Display {
 		await this.displayReady();
 		const size = 42;
 		const rxBuffer = Buffer.alloc(size);
-		rpio.spiTransfer(Display.COMMANDS.receiveData, rxBuffer, size);
+		rpio.spiTransfer(Buffer.from(Display.COMMANDS.receiveData), rxBuffer, size);
 		this.spec = {
 			height: rxBuffer.readInt16BE(6),
 			width: rxBuffer.readInt16BE(4),
