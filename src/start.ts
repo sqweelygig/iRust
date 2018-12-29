@@ -202,9 +202,9 @@ async function startClock(display: Display) {
 			"/usr/src/imuse/lib/seven-segment.ttf",
 			64,
 			Math.PI / 2,
-			2 * radius,
 			800,
-			`${now.hour()}:${now.minutes()}`,
+			800,
+			now.format("hh:mm"),
 		);
 		await display.sendStage(stage);
 	}
