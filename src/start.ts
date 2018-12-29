@@ -58,7 +58,7 @@ class Display {
 		rpio.open(this.pins.reset, rpio.OUTPUT, rpio.HIGH);
 		rpio.open(this.pins.ready, rpio.INPUT);
 		rpio.spiBegin();
-		rpio.spiSetClockDivider(128);
+		rpio.spiSetClockDivider(32);
 	}
 
 	public destructor(): void {
@@ -89,16 +89,12 @@ class Display {
 	}
 
 	public async sendStage(stage: Stage): Promise<void> {
-		const updateStarted = Date.now();
-		console.log(updateStarted);
 		if (this.inUpdate) {
 			return Promise.reject(new Error("Still processing previous update!"));
 		}
 		this.inUpdate = true;
-		console.log(Date.now() - updateStarted);
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
-		console.log(Date.now() - updateStarted);
 		const data = [];
 		for (let y = 0; y < this.spec.height; y++) {
 			for (let x = 0; x < this.spec.width; x++) {
@@ -106,9 +102,8 @@ class Display {
 				data.push(pixel);
 			}
 		}
-		console.log(Date.now() - updateStarted);
+		// TODO: Speed the data transfer up, it currently takes about 3s
 		await this.write(Display.COMMANDS.sendData.concat(data));
-		console.log(Date.now() - updateStarted);
 		await this.write(Display.COMMANDS.completeTransmit);
 		await this.write(Display.COMMANDS.refreshScreen);
 		await this.write(Display.COMMANDS.origin);
@@ -116,7 +111,6 @@ class Display {
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
 		await this.write(Display.COMMANDS.updateViaWhite);
-		console.log(Date.now() - updateStarted);
 		this.inUpdate = false;
 	}
 
@@ -174,9 +168,8 @@ async function startClock(display: Display) {
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
 		stage.setThickness(3);
-		stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
-		stage.ellipse(radius, radius, radius * 2 - 1, radius * 2 - 1, 0x000000);
-		stage.ellipse(radius, radius, radius * 2 - 2, radius * 2 - 2, 0x000000);
+		stage.filledEllipse(radius, radius, radius * 2, radius * 2, 0x000000);
+		stage.filledEllipse(radius, radius, radius * 2 - 2, radius * 2 - 2, 0xffffff);
 		stage.line(
 			radius,
 			radius,
