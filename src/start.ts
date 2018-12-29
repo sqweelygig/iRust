@@ -126,11 +126,11 @@ class Display {
 		await this.displayReady();
 		const buffer = Buffer.from(data);
 		rpio.spiWrite(buffer, buffer.length);
+		await this.displayReady();
 	}
 
 	private async readHardwareInformation(): Promise<void> {
 		await this.write(Display.COMMANDS.getInfo);
-		await this.displayReady();
 		const size = 42;
 		const rxBuffer = Buffer.alloc(size);
 		rpio.spiTransfer(Buffer.from(Display.COMMANDS.receiveData), rxBuffer, size);
@@ -145,11 +145,13 @@ async function startClock(display: Display) {
 	const spec = display.getDimensions();
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	setInterval(async () => {
+		console.log("VVV");
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
 		await display.sendStage(stage);
 		console.log(spec.width, spec.height);
 		console.log(now.hour(), now.minutes(), now.seconds());
+		console.log("^^^");
 	}, 1000);
 	const s = await display.createStage(0xffffff);
 	const rn = moment();
@@ -171,10 +173,8 @@ async function startClock(display: Display) {
 	s.line(
 		radius,
 		radius,
-		radius -
-			Math.round(0.7 * radius * Math.sin((rn.hour() * Math.PI) / 6)),
-		radius +
-			Math.round(0.7 * radius * Math.cos((rn.hour() * Math.PI) / 6)),
+		radius - Math.round(0.7 * radius * Math.sin((rn.hour() * Math.PI) / 6)),
+		radius + Math.round(0.7 * radius * Math.cos((rn.hour() * Math.PI) / 6)),
 		0x000000,
 	);
 	await display.sendStage(s);
