@@ -89,12 +89,16 @@ class Display {
 	}
 
 	public async sendStage(stage: Stage): Promise<void> {
+		const updateStarted = Date.now();
+		console.log(updateStarted);
 		if (this.inUpdate) {
 			return Promise.reject(new Error("Still processing previous update!"));
 		}
 		this.inUpdate = true;
+		console.log(Date.now() - updateStarted);
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
+		console.log(Date.now() - updateStarted);
 		const data = [];
 		for (let y = 0; y < this.spec.height; y++) {
 			for (let x = 0; x < this.spec.width; x++) {
@@ -102,6 +106,7 @@ class Display {
 				data.push(pixel);
 			}
 		}
+		console.log(Date.now() - updateStarted);
 		await this.write(Display.COMMANDS.sendData.concat(data));
 		await this.write(Display.COMMANDS.completeTransmit);
 		await this.write(Display.COMMANDS.refreshScreen);
@@ -110,6 +115,7 @@ class Display {
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
 		await this.write(Display.COMMANDS.updateViaWhite);
+		console.log(Date.now() - updateStarted);
 		this.inUpdate = false;
 	}
 
@@ -164,12 +170,8 @@ async function startClock(display: Display) {
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	// noinspection InfiniteLoopJS
 	while (true) {
-		const updateStarted = Date.now();
-		console.log(updateStarted);
 		const stage = await display.createStage(0xffffff);
-		console.log(updateStarted - Date.now());
 		const now = moment();
-		console.log(updateStarted - Date.now());
 		stage.setThickness(3);
 		stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
 		stage.ellipse(radius, radius, radius * 2 - 1, radius * 2 - 1, 0x000000);
@@ -195,9 +197,7 @@ async function startClock(display: Display) {
 			radius + Math.round(0.7 * radius * Math.cos((now.hour() * Math.PI) / 6)),
 			0x000000,
 		);
-		console.log(updateStarted - Date.now());
 		await display.sendStage(stage);
-		console.log(updateStarted - Date.now());
 	}
 }
 
