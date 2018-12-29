@@ -175,6 +175,4 @@ async function test() {
 	await display.sendStage(stage);
 }
 
-test().then(() => {
-	console.log("Clock initiated.");
-});
+setInterval(test, 1000);
