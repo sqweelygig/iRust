@@ -105,7 +105,7 @@ class Display {
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
-		await this.write(Display.COMMANDS.clearSubtly);
+		await this.write([0x00, 0x00, 0x00, 0x03]);
 		this.inUpdate = false;
 	}
 
