@@ -141,8 +141,7 @@ class Display {
 	}
 }
 
-async function test() {
-	const display = await Display.build();
+async function startClock(display: Display) {
 	const spec = display.getDimensions();
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	const stage = await display.createStage(0xffffff);
@@ -175,4 +174,4 @@ async function test() {
 	await display.sendStage(stage);
 }
 
-setInterval(test, 1000);
+Display.build().then(startClock);
