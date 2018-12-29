@@ -26,6 +26,7 @@ class Display {
 	};
 
 	private static COMMANDS = {
+		clearUsingAnti: [0x00, 0x00, 0x00, 0x02],
 		completeTransmit: [0x60, 0x00, 0x00, 0x22],
 		dataFormat: [0x00, 0x00, 0x00, 0x30],
 		fullHeight: [0x00, 0x00, 0x03, 0x39],
@@ -36,8 +37,6 @@ class Display {
 		refreshScreen: [0x60, 0x00, 0x00, 0x34],
 		sendData: [0x00, 0x00],
 		transmitScreen: [0x60, 0x00, 0x00, 0x20],
-		viaGray: [0x00, 0x00, 0x00, 0x02],
-		viaWhite: [0x00, 0x00, 0x00, 0x00],
 	};
 
 	private pins: Pins;
@@ -104,7 +103,7 @@ class Display {
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
-		await this.write(Display.COMMANDS.viaWhite);
+		await this.write([0x00, 0x00, 0x00, 0x01]);
 		this.inUpdate = false;
 	}
 
