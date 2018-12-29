@@ -154,19 +154,15 @@ async function test() {
 	stage.line(
 		radius,
 		radius,
-		radius -
-			Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
-		radius +
-			Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
+		radius - Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
+		radius + Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
 		0x000000,
 	);
 	stage.line(
 		radius,
 		radius,
-		radius -
-			Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
-		radius +
-			Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
+		radius - Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
+		radius + Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
 		0x000000,
 	);
 	stage.line(
