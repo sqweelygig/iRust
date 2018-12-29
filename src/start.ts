@@ -146,13 +146,13 @@ async function startClock(display: Display) {
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	setInterval(async () => {
 		console.log("VVV");
-		const stage = await display.createStage(0xffffff);
+		const stage = await display.createStage(0x444444);
 		const now = moment();
 		await display.sendStage(stage);
 		console.log(spec.width, spec.height);
 		console.log(now.hour(), now.minutes(), now.seconds());
 		console.log("^^^");
-	}, 1000);
+	}, 10000);
 	const s = await display.createStage(0xffffff);
 	const rn = moment();
 	s.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
