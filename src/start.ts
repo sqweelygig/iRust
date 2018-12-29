@@ -143,12 +143,12 @@ class Display {
 
 async function startClock(display: Display) {
 	const spec = display.getDimensions();
-	setTimeout(() => {
+	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
+	setInterval(() => {
 		const thisMoment = moment();
 		console.log(spec.width, spec.height);
 		console.log(thisMoment.hour(), thisMoment.minutes(), thisMoment.seconds());
 	}, 1000);
-	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	const stage = await display.createStage(0xffffff);
 	const rightNow = moment();
 	stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
@@ -175,7 +175,6 @@ async function startClock(display: Display) {
 			Math.round(0.7 * radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
 		0x000000,
 	);
-	console.log(rightNow.hour(), rightNow.minutes(), rightNow.seconds());
 	await display.sendStage(stage);
 }
 
