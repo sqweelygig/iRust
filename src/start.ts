@@ -168,14 +168,21 @@ async function startClock(display: Display) {
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
 		stage.setThickness(3);
+		stage.filledEllipse(0, 0, 20, 20, 0x000000);
 		stage.filledEllipse(radius, radius, radius * 2, radius * 2, 0x000000);
-		stage.filledEllipse(radius, radius, radius * 2 - 2, radius * 2 - 2, 0xffffff);
+		stage.filledEllipse(
+			radius,
+			radius,
+			radius * 0.9,
+			radius * 0.9,
+			0xffffff,
+		);
 		stage.line(
 			radius,
 			radius,
 			radius - Math.round(radius * Math.sin((now.seconds() * Math.PI) / 30)),
 			radius + Math.round(radius * Math.cos((now.seconds() * Math.PI) / 30)),
-			0x000000,
+			0x666666,
 		);
 		stage.line(
 			radius,
