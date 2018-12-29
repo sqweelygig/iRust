@@ -43,8 +43,6 @@ class Display {
 		updateViaWhite: [0x00, 0x00, 0x00, 0x03],
 	};
 
-	private data: number[];
-
 	private pins: Pins;
 
 	private spec: DisplayDimensions;
@@ -53,14 +51,13 @@ class Display {
 
 	private constructor(pins = Display.PINS) {
 		this.pins = pins;
-		this.data = [];
 		rpio.init({
 			gpiomem: false,
 		});
 		rpio.open(this.pins.reset, rpio.OUTPUT, rpio.HIGH);
 		rpio.open(this.pins.ready, rpio.INPUT);
 		rpio.spiBegin();
-		rpio.spiSetClockDivider(32);
+		rpio.spiSetClockDivider(64);
 	}
 
 	public destructor(): void {
@@ -95,16 +92,16 @@ class Display {
 			return Promise.reject(new Error("Still processing previous update!"));
 		}
 		this.inUpdate = true;
-		const lastUpdate = this.data;
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
-		this.data = [];
+		const data = [];
 		for (let y = 0; y < this.spec.height; y++) {
 			for (let x = 0; x < this.spec.width; x++) {
-				this.data.push(stage.getPixel(x, y));
+				const pixel = stage.getPixel(x, y);
+				data.push(pixel);
 			}
 		}
-		await this.write(Display.COMMANDS.sendData.concat(this.data));
+		await this.write(Display.COMMANDS.sendData.concat(data));
 		await this.write(Display.COMMANDS.completeTransmit);
 		await this.write(Display.COMMANDS.refreshScreen);
 		await this.write(Display.COMMANDS.origin);
