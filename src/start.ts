@@ -143,15 +143,6 @@ class Display {
 
 	private async write(data: number[]): Promise<void> {
 		await this.displayReady();
-		// const flippedData = [];
-		// for (let i = 0; i < data.length; i++) {
-		// 	if (i + 1 > data.length) {
-		// 		flippedData.push(0x00);
-		// 	} else {
-		// 		flippedData.push(data[i+1]);
-		// 	}
-		// 	flippedData.push(data);
-		// }
 		const buffer = Buffer.from(data);
 		rpio.spiWrite(buffer, buffer.length);
 		await this.displayReady();
@@ -181,8 +172,8 @@ async function startClock(display: Display) {
 		stage.filledEllipse(
 			radius,
 			radius,
-			radius * 2 - 3,
-			radius * 2 - 3,
+			radius * 2 - 5,
+			radius * 2 - 5,
 			0xffffff,
 		);
 		stage.line(
