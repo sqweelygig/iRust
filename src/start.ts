@@ -202,7 +202,7 @@ async function startClock(display: Display) {
 			0x000000,
 			"/usr/src/imuse/lib/seven-segment.ttf",
 			32,
-			0,
+			90,
 			300,
 			300,
 			"Hello world!",
