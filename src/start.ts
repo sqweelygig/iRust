@@ -57,7 +57,7 @@ class Display {
 		rpio.open(this.pins.reset, rpio.OUTPUT, rpio.HIGH);
 		rpio.open(this.pins.ready, rpio.INPUT);
 		rpio.spiBegin();
-		rpio.spiSetClockDivider(64);
+		rpio.spiSetClockDivider(128);
 	}
 
 	public destructor(): void {
@@ -166,6 +166,7 @@ async function startClock(display: Display) {
 		console.log("VVV");
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
+		stage.setThickness(300);
 		stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
 		stage.line(
 			radius,
