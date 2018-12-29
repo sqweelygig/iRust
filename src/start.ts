@@ -200,7 +200,7 @@ async function startClock(display: Display) {
 		);
 		stage.stringFT(
 			0x000000,
-			"/usr/src/imuse/lib/sassoon-primary.ttf",
+			"/usr/src/imuse/lib/sassoon-primary.otf",
 			32,
 			Math.PI / 4,
 			300,
