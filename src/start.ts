@@ -168,7 +168,7 @@ async function startClock(display: Display) {
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
 		stage.setThickness(3);
-		stage.filledEllipse(0, 0, 20, 60, 0x000000);
+		stage.filledEllipse(10, 30, 20, 60, 0x000000);
 		stage.filledEllipse(radius, radius, radius * 2, radius * 2, 0x000000);
 		stage.filledEllipse(
 			radius,
