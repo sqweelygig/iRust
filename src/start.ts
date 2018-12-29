@@ -51,9 +51,12 @@ class Display {
 		});
 		rpio.open(this.pins.reset, rpio.OUTPUT, rpio.HIGH);
 		rpio.open(this.pins.ready, rpio.INPUT);
+		rpio.spiBegin();
+		rpio.spiSetClockDivider(32);
 	}
 
 	public destructor(): void {
+		rpio.spiEnd();
 		rpio.close(this.pins.ready);
 		rpio.close(this.pins.reset);
 	}
@@ -80,8 +83,6 @@ class Display {
 	}
 
 	public async sendStage(stage: Stage): Promise<void> {
-		rpio.spiBegin();
-		rpio.spiSetClockDivider(32);
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
 		const data = [];
@@ -98,7 +99,6 @@ class Display {
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
 		await this.write([0x00, 0x00, 0x00, 0x01]);
-		rpio.spiEnd();
 	}
 
 	private async reset(): Promise<void> {
@@ -129,8 +129,6 @@ class Display {
 	}
 
 	private async readHardwareInformation(): Promise<void> {
-		rpio.spiBegin();
-		rpio.spiSetClockDivider(32);
 		await this.write(Display.COMMANDS.getInfo);
 		await this.displayReady();
 		const size = 42;
@@ -140,7 +138,6 @@ class Display {
 			height: rxBuffer.readInt16BE(6),
 			width: rxBuffer.readInt16BE(4),
 		};
-		rpio.spiEnd();
 	}
 }
 
