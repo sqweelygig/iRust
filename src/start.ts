@@ -202,7 +202,7 @@ async function startClock(display: Display) {
 			0x000000,
 			"/usr/src/imuse/lib/sassoon-primary.otf",
 			32,
-			Math.PI / 4,
+			Math.PI / 2,
 			300,
 			300,
 			"Hello world!",
