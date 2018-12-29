@@ -143,6 +143,11 @@ class Display {
 
 async function startClock(display: Display) {
 	const spec = display.getDimensions();
+	setTimeout(() => {
+		const thisMoment = moment();
+		console.log(spec.width, spec.height);
+		console.log(thisMoment.hour(), thisMoment.minutes(), thisMoment.seconds());
+	}, 1000);
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	const stage = await display.createStage(0xffffff);
 	const rightNow = moment();
