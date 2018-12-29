@@ -146,8 +146,15 @@ async function startClock(display: Display) {
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
 	setInterval(async () => {
 		console.log("VVV");
-		const stage = await display.createStage(0x444444);
+		const stage = await display.createStage(0xffffff);
 		const now = moment();
+		stage.line(
+			radius,
+			radius,
+			radius - Math.round(radius * Math.sin((rn.seconds() * Math.PI) / 30)),
+			radius + Math.round(radius * Math.cos((rn.seconds() * Math.PI) / 30)),
+			0x000000,
+		);
 		await display.sendStage(stage);
 		console.log(spec.width, spec.height);
 		console.log(now.hour(), now.minutes(), now.seconds());
