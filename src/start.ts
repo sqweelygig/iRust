@@ -98,7 +98,7 @@ class Display {
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
-		await this.write([0x00, 0x00, 0x00, 0x01]);
+		await this.write(Display.COMMANDS.viaGray);
 	}
 
 	private async reset(): Promise<void> {
@@ -153,7 +153,7 @@ async function startClock(display: Display) {
 		console.log(now.hour(), now.minutes(), now.seconds());
 		console.log("^^^");
 	}, 10000);
-	const s = await display.createStage(0xffffff);
+	const s = await display.createStage(0x444444);
 	const rn = moment();
 	s.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
 	s.line(
