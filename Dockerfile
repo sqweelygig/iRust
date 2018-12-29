@@ -20,6 +20,8 @@ COPY package.json ./package.json
 RUN npm install --unsafe-perm && \
 	npm cache clean --force
 
+COPY lib ./lib
+
 COPY src ./src
 
 RUN npm run build && \
