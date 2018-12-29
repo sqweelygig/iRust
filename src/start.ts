@@ -199,12 +199,12 @@ async function startClock(display: Display) {
 		);
 		stage.stringFT(
 			0x000000,
-			"/usr/src/imuse/lib/sassoon-primary.otf",
-			32,
+			"/usr/src/imuse/lib/seven-segment.otf",
+			64,
 			Math.PI / 2,
-			300,
-			300,
-			"Hello world!",
+			2 * radius,
+			800,
+			`${now.hour}:${now.minutes()}`,
 		);
 		await display.sendStage(stage);
 	}
