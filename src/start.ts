@@ -35,6 +35,7 @@ class Display {
 		receiveData: [0x10, 0x00],
 		refreshScreen: [0x60, 0x00, 0x00, 0x34],
 		sendData: [0x00, 0x00],
+		transmitArea: [0x60, 0x00, 0x00, 0x21],
 		transmitScreen: [0x60, 0x00, 0x00, 0x20],
 		updateRisingEdge: [0x00, 0x00, 0x00, 0x01],
 		updateSomehow: [0x00, 0x00, 0x00, 0x04],
@@ -166,7 +167,7 @@ async function startClock(display: Display) {
 		console.log("VVV");
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
-		stage.setThickness(300);
+		stage.setThickness(30);
 		stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
 		stage.line(
 			radius,
