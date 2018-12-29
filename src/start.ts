@@ -37,11 +37,13 @@ class Display {
 		sendData: [0x00, 0x00],
 		transmitScreen: [0x60, 0x00, 0x00, 0x20],
 		updateRisingEdge: [0x00, 0x00, 0x00, 0x01],
+		updateSomehow: [0x00, 0x00, 0x00, 0x04],
 		updateToWhite: [0x00, 0x00, 0x00, 0x00],
 		updateUsingAnti: [0x00, 0x00, 0x00, 0x02],
 		updateViaWhite: [0x00, 0x00, 0x00, 0x03],
-		updateSomehow: [0x00, 0x00, 0x00, 0x04],
 	};
+
+	private data: number[];
 
 	private pins: Pins;
 
@@ -51,6 +53,7 @@ class Display {
 
 	private constructor(pins = Display.PINS) {
 		this.pins = pins;
+		this.data = [];
 		rpio.init({
 			gpiomem: false,
 		});
@@ -92,15 +95,16 @@ class Display {
 			return Promise.reject(new Error("Still processing previous update!"));
 		}
 		this.inUpdate = true;
+		const lastUpdate = this.data;
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
-		const data = [];
+		this.data = [];
 		for (let y = 0; y < this.spec.height; y++) {
 			for (let x = 0; x < this.spec.width; x++) {
-				data.push(stage.getPixel(x, y));
+				this.data.push(stage.getPixel(x, y));
 			}
 		}
-		await this.write(Display.COMMANDS.sendData.concat(data));
+		await this.write(Display.COMMANDS.sendData.concat(this.data));
 		await this.write(Display.COMMANDS.completeTransmit);
 		await this.write(Display.COMMANDS.refreshScreen);
 		await this.write(Display.COMMANDS.origin);
