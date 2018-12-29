@@ -200,7 +200,7 @@ async function startClock(display: Display) {
 		);
 		stage.stringFT(
 			0x000000,
-			"../lib/seven-segment.ttf",
+			"/usr/src/imuse/lib/seven-segment.ttf",
 			32,
 			0,
 			300,
