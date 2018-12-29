@@ -44,6 +44,8 @@ class Display {
 
 	private spec: DisplayDimensions;
 
+	private inUpdate: boolean;
+
 	private constructor(pins = Display.PINS) {
 		this.pins = pins;
 		rpio.init({
@@ -83,6 +85,10 @@ class Display {
 	}
 
 	public async sendStage(stage: Stage): Promise<void> {
+		if (this.inUpdate) {
+			return Promise.reject(new Error("Still processing previous update!"));
+		}
+		this.inUpdate = true;
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
 		const data = [];
@@ -99,6 +105,7 @@ class Display {
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
 		await this.write(Display.COMMANDS.viaGray);
+		this.inUpdate = false;
 	}
 
 	private async reset(): Promise<void> {
@@ -148,11 +155,26 @@ async function startClock(display: Display) {
 		console.log("VVV");
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
+		stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
 		stage.line(
 			radius,
 			radius,
-			radius - Math.round(radius * Math.sin((rn.seconds() * Math.PI) / 30)),
-			radius + Math.round(radius * Math.cos((rn.seconds() * Math.PI) / 30)),
+			radius - Math.round(radius * Math.sin((now.seconds() * Math.PI) / 30)),
+			radius + Math.round(radius * Math.cos((now.seconds() * Math.PI) / 30)),
+			0x000000,
+		);
+		stage.line(
+			radius,
+			radius,
+			radius - Math.round(radius * Math.sin((now.minutes() * Math.PI) / 30)),
+			radius + Math.round(radius * Math.cos((now.minutes() * Math.PI) / 30)),
+			0x000000,
+		);
+		stage.line(
+			radius,
+			radius,
+			radius - Math.round(0.7 * radius * Math.sin((now.hour() * Math.PI) / 6)),
+			radius + Math.round(0.7 * radius * Math.cos((now.hour() * Math.PI) / 6)),
 			0x000000,
 		);
 		await display.sendStage(stage);
@@ -160,31 +182,6 @@ async function startClock(display: Display) {
 		console.log(now.hour(), now.minutes(), now.seconds());
 		console.log("^^^");
 	}, 10000);
-	const s = await display.createStage(0xffffff);
-	const rn = moment();
-	s.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
-	s.line(
-		radius,
-		radius,
-		radius - Math.round(radius * Math.sin((rn.seconds() * Math.PI) / 30)),
-		radius + Math.round(radius * Math.cos((rn.seconds() * Math.PI) / 30)),
-		0x000000,
-	);
-	s.line(
-		radius,
-		radius,
-		radius - Math.round(radius * Math.sin((rn.minutes() * Math.PI) / 30)),
-		radius + Math.round(radius * Math.cos((rn.minutes() * Math.PI) / 30)),
-		0x000000,
-	);
-	s.line(
-		radius,
-		radius,
-		radius - Math.round(0.7 * radius * Math.sin((rn.hour() * Math.PI) / 6)),
-		radius + Math.round(0.7 * radius * Math.cos((rn.hour() * Math.PI) / 6)),
-		0x000000,
-	);
-	await display.sendStage(s);
 }
 
 Display.build().then(startClock);
