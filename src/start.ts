@@ -144,38 +144,40 @@ class Display {
 async function startClock(display: Display) {
 	const spec = display.getDimensions();
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
-	setInterval(() => {
-		const thisMoment = moment();
+	setInterval(async () => {
+		const stage = await display.createStage(0xffffff);
+		const now = moment();
+		await display.sendStage(stage);
 		console.log(spec.width, spec.height);
-		console.log(thisMoment.hour(), thisMoment.minutes(), thisMoment.seconds());
+		console.log(now.hour(), now.minutes(), now.seconds());
 	}, 1000);
-	const stage = await display.createStage(0xffffff);
-	const rightNow = moment();
-	stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
-	stage.line(
+	const s = await display.createStage(0xffffff);
+	const rn = moment();
+	s.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
+	s.line(
 		radius,
 		radius,
-		radius - Math.round(radius * Math.sin((rightNow.seconds() * Math.PI) / 30)),
-		radius + Math.round(radius * Math.cos((rightNow.seconds() * Math.PI) / 30)),
+		radius - Math.round(radius * Math.sin((rn.seconds() * Math.PI) / 30)),
+		radius + Math.round(radius * Math.cos((rn.seconds() * Math.PI) / 30)),
 		0x000000,
 	);
-	stage.line(
+	s.line(
 		radius,
 		radius,
-		radius - Math.round(radius * Math.sin((rightNow.minutes() * Math.PI) / 30)),
-		radius + Math.round(radius * Math.cos((rightNow.minutes() * Math.PI) / 30)),
+		radius - Math.round(radius * Math.sin((rn.minutes() * Math.PI) / 30)),
+		radius + Math.round(radius * Math.cos((rn.minutes() * Math.PI) / 30)),
 		0x000000,
 	);
-	stage.line(
+	s.line(
 		radius,
 		radius,
 		radius -
-			Math.round(0.7 * radius * Math.sin((rightNow.hour() * Math.PI) / 6)),
+			Math.round(0.7 * radius * Math.sin((rn.hour() * Math.PI) / 6)),
 		radius +
-			Math.round(0.7 * radius * Math.cos((rightNow.hour() * Math.PI) / 6)),
+			Math.round(0.7 * radius * Math.cos((rn.hour() * Math.PI) / 6)),
 		0x000000,
 	);
-	await display.sendStage(stage);
+	await display.sendStage(s);
 }
 
 Display.build().then(startClock);
