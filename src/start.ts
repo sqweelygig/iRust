@@ -151,7 +151,8 @@ class Display {
 async function startClock(display: Display) {
 	const spec = display.getDimensions();
 	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
-	setInterval(async () => {
+	// noinspection InfiniteLoopJS
+	while (true) {
 		console.log("VVV");
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
@@ -181,7 +182,7 @@ async function startClock(display: Display) {
 		console.log(spec.width, spec.height);
 		console.log(now.hour(), now.minutes(), now.seconds());
 		console.log("^^^");
-	}, 10000);
+	}
 }
 
 Display.build().then(startClock);
