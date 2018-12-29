@@ -173,8 +173,8 @@ async function startClock(display: Display) {
 		stage.filledEllipse(
 			radius,
 			radius,
-			radius * 2 - 3,
-			radius * 2 - 3,
+			radius * 2 - 30,
+			radius * 2 - 30,
 			0xffffff,
 		);
 		stage.line(
