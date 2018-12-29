@@ -204,7 +204,7 @@ async function startClock(display: Display) {
 			Math.PI / 2,
 			2 * radius,
 			800,
-			`${now.hour}:${now.minutes()}`,
+			`${now.hour()}:${now.minutes()}`,
 		);
 		await display.sendStage(stage);
 	}
