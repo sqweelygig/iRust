@@ -26,6 +26,8 @@ class Display {
 	};
 
 	private static COMMANDS = {
+		clearSubtly: [0x00, 0x00, 0x00, 0x01],
+		clearToWhite: [0x00, 0x00, 0x00, 0x00],
 		clearUsingAnti: [0x00, 0x00, 0x00, 0x02],
 		completeTransmit: [0x60, 0x00, 0x00, 0x22],
 		dataFormat: [0x00, 0x00, 0x00, 0x30],
@@ -103,15 +105,21 @@ class Display {
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
-		await this.write([0x00, 0x00, 0x00, 0x01]);
+		await this.write(Display.COMMANDS.clearSubtly);
 		this.inUpdate = false;
 	}
 
 	private async reset(): Promise<void> {
 		rpio.write(this.pins.reset, rpio.LOW);
 		return new Promise<void>((resolve) => {
-			setTimeout(() => {
+			setTimeout(async () => {
 				rpio.write(this.pins.reset, rpio.HIGH);
+				await this.write(Display.COMMANDS.refreshScreen);
+				await this.write(Display.COMMANDS.origin);
+				await this.write(Display.COMMANDS.origin);
+				await this.write(Display.COMMANDS.fullWidth);
+				await this.write(Display.COMMANDS.fullHeight);
+				await this.write(Display.COMMANDS.clearToWhite);
 				resolve();
 			}, 100);
 		});
