@@ -108,6 +108,7 @@ class Display {
 		}
 		console.log(Date.now() - updateStarted);
 		await this.write(Display.COMMANDS.sendData.concat(data));
+		console.log(Date.now() - updateStarted);
 		await this.write(Display.COMMANDS.completeTransmit);
 		await this.write(Display.COMMANDS.refreshScreen);
 		await this.write(Display.COMMANDS.origin);
