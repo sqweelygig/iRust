@@ -198,7 +198,15 @@ async function startClock(display: Display) {
 			radius + Math.round(0.7 * radius * Math.cos((now.hour() * Math.PI) / 6)),
 			0x000000,
 		);
-		stage.stringFT(0x000000, "../lib/seven-segment.tff", 32, 0, 300, 300, "Hello world!");
+		stage.stringFT(
+			0x000000,
+			"../lib/seven-segment.ttf",
+			32,
+			0,
+			300,
+			300,
+			"Hello world!",
+		);
 		await display.sendStage(stage);
 	}
 }
