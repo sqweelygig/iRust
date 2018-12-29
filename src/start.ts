@@ -199,7 +199,7 @@ async function startClock(display: Display) {
 		);
 		stage.stringFT(
 			0x000000,
-			"/usr/src/imuse/lib/seven-segment.otf",
+			"/usr/src/imuse/lib/seven-segment.ttf",
 			64,
 			Math.PI / 2,
 			2 * radius,
