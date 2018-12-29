@@ -90,6 +90,7 @@ class Display {
 
 	public async sendStage(stage: Stage): Promise<void> {
 		const updateStarted = moment();
+		console.log(updateStarted.unix());
 		if (this.inUpdate) {
 			return Promise.reject(new Error("Still processing previous update!"));
 		}
