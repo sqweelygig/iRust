@@ -167,8 +167,10 @@ async function startClock(display: Display) {
 		console.log("VVV");
 		const stage = await display.createStage(0xffffff);
 		const now = moment();
-		stage.setThickness(30);
+		stage.setThickness(3);
 		stage.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
+		stage.ellipse(radius, radius, (radius * 2) - 1, (radius * 2) - 1, 0x000000);
+		stage.ellipse(radius, radius, (radius * 2) - 2, (radius * 2) - 2, 0x000000);
 		stage.line(
 			radius,
 			radius,
