@@ -153,7 +153,7 @@ async function startClock(display: Display) {
 		console.log(now.hour(), now.minutes(), now.seconds());
 		console.log("^^^");
 	}, 10000);
-	const s = await display.createStage(0x444444);
+	const s = await display.createStage(0xffffff);
 	const rn = moment();
 	s.ellipse(radius, radius, radius * 2, radius * 2, 0x000000);
 	s.line(
