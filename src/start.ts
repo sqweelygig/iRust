@@ -8,6 +8,7 @@ interface TextStyle {
 	size: number;
 	lineDrop: number; // The space to allocate below the baseLine
 	lineHeight: number; // The space to allocate above the baseLine
+	spacing: number;
 }
 
 class Page implements PixelGrid {
@@ -55,12 +56,13 @@ class Page implements PixelGrid {
 		this.baseLine += Math.ceil(
 			this.defaultStyle.size * this.defaultStyle.lineHeight,
 		);
+		this.baseLine += this.defaultStyle.spacing;
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
 			this.defaultStyle.size,
 			0,
-			0,
+			this.defaultStyle.spacing,
 			this.baseLine,
 			text,
 		);
@@ -82,6 +84,7 @@ async function startClock(display: Display) {
 				lineDrop: 0.2,
 				lineHeight: 1.16,
 				size: 64,
+				spacing: 4,
 			},
 			0xffffff,
 		);
