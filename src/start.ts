@@ -1,6 +1,7 @@
 import * as moment from "moment";
 import * as gd from "node-gd";
 import { Display, DisplayDimensions, PixelGrid } from "./display";
+import { merge } from "lodash";
 
 interface TextStyle {
 	colour: number;
@@ -52,21 +53,22 @@ class Page implements PixelGrid {
 		return this.stage.getPixel(x, y);
 	}
 
-	public write(text: string) {
+	public write(text: string, style?: Partial<TextStyle>) {
+		const mergedStyle = merge(this.defaultStyle, style);
 		this.baseLine +=
-			Math.ceil(this.defaultStyle.size * this.defaultStyle.lineHeight) +
-			this.defaultStyle.spacing;
+			Math.ceil(mergedStyle.size * mergedStyle.lineHeight) +
+			mergedStyle.spacing;
 		this.stage.stringFT(
-			this.defaultStyle.colour,
-			this.defaultStyle.fontPath,
-			this.defaultStyle.size,
+			mergedStyle.colour,
+			mergedStyle.fontPath,
+			mergedStyle.size,
 			0,
-			this.defaultStyle.spacing,
+			mergedStyle.spacing,
 			this.baseLine,
 			text,
 		);
 		this.baseLine += Math.ceil(
-			this.defaultStyle.size * this.defaultStyle.lineDrop,
+			mergedStyle.size * mergedStyle.lineDrop,
 		);
 	}
 }
@@ -89,7 +91,7 @@ async function startClock(display: Display) {
 		);
 		const now = moment();
 		page.write(now.format("dddd MMMM Do, YYYY"));
-		page.write(now.format("dddd hh:mm").toUpperCase());
+		page.write(now.format("hh:mm").toUpperCase());
 		await display.update(page);
 	}
 }
