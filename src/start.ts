@@ -1,10 +1,9 @@
-import * as moment from "moment";
 import * as Path from "path";
 import { DataRepository } from "./data-repository";
 import { Display } from "./display";
-import { Page } from "./page";
+import { Page, TextStyle } from "./page";
 
-async function start(defaultTextStyle) {
+async function start(defaultTextStyle: TextStyle) {
 	let previousContent: string | null = null;
 	const onUpdate = async () => {
 		console.log("Data Repository Updated.");
