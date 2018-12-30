@@ -53,9 +53,9 @@ class Page implements PixelGrid {
 	}
 
 	public write(text: string) {
-		this.baseLine += Math.ceil(
-			this.defaultStyle.size * this.defaultStyle.lineHeight,
-		) + this.defaultStyle.spacing;
+		this.baseLine +=
+			Math.ceil(this.defaultStyle.size * this.defaultStyle.lineHeight) +
+			this.defaultStyle.spacing;
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
@@ -83,7 +83,7 @@ async function startClock(display: Display) {
 				lineDrop: 0.2,
 				lineHeight: 1.16,
 				size: 64,
-				spacing: 4,
+				spacing: 40,
 			},
 			0xffffff,
 		);
