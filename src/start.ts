@@ -86,7 +86,7 @@ async function startClock(display: Display) {
 			0xffffff,
 		);
 		const now = moment();
-		page.write(now.format("dddd, MMMM, Do, YYYY"));
+		page.write(now.format("dddd MMMM Do, YYYY"));
 		page.write(now.format("hh:mm"));
 		await display.update(page);
 	}
