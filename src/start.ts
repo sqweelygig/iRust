@@ -58,6 +58,16 @@ class Page implements PixelGrid {
 		this.baseLine +=
 			Math.ceil(mergedStyle.size * mergedStyle.lineHeight) +
 			mergedStyle.spacing;
+		console.log(this.stage.stringFTBBox(
+				mergedStyle.colour,
+				mergedStyle.fontPath,
+				mergedStyle.size,
+				0,
+				mergedStyle.spacing,
+				this.baseLine,
+				text,
+			)
+		);
 		this.stage.stringFT(
 			mergedStyle.colour,
 			mergedStyle.fontPath,
