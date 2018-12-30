@@ -79,8 +79,8 @@ async function startClock(display: Display) {
 			{
 				colour: 0x000000,
 				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
-				lineDrop: 0.32,
-				lineHeight: 1.08,
+				lineDrop: 0.3,
+				lineHeight: 1.1,
 				size: 64,
 			},
 			0xffffff,
