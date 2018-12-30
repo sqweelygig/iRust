@@ -48,8 +48,7 @@ class Page implements PixelGrid {
 	}
 
 	public write(x: number, y: number, text: string) {
-		console.log(
-			this.stage.stringFTBBox(
+		const box = this.stage.stringFTBBox(
 				this.defaultStyle.colour,
 				this.defaultStyle.fontPath,
 				this.defaultStyle.size,
@@ -57,8 +56,9 @@ class Page implements PixelGrid {
 				0,
 				0,
 				text,
-			)[1],
 		);
+		console.log(box);
+		console.log(box[1] - box[5]);
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
