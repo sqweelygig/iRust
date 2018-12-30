@@ -62,7 +62,7 @@ export class Page implements PixelGrid {
 	public write(text: string, style?: Partial<TextStyle>) {
 		const lines = [""];
 		const words = text.split(/ /g);
-		const mergedStyle = merge(this.defaultStyle, style);
+		const mergedStyle = merge({}, this.defaultStyle, style);
 		words.forEach((word) => {
 			const appendedLine = `${lines[lines.length - 1]} ${word}`.trim();
 			const box = this.stage.stringFTBBox(
