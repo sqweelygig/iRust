@@ -2,9 +2,9 @@ import * as gd from "node-gd";
 import { DisplayDimensions, PixelGrid } from "./display";
 
 interface TextStyle {
-	colour: number,
-	font: string,
-	size: number,
+	colour: number;
+	font: string;
+	size: number;
 }
 
 export class Page implements PixelGrid {
@@ -14,18 +14,22 @@ export class Page implements PixelGrid {
 		fill?: number,
 	): Promise<Page> {
 		return new Promise<Page>((resolve, reject) => {
-			gd.createTrueColor(dimensions.width, dimensions.height, (error, stage) => {
-				if (error) {
-					reject(error);
-				} else if (stage) {
-					if (fill) {
-						stage.fill(0, 0, fill);
+			gd.createTrueColor(
+				dimensions.width,
+				dimensions.height,
+				(error, stage) => {
+					if (error) {
+						reject(error);
+					} else if (stage) {
+						if (fill) {
+							stage.fill(0, 0, fill);
+						}
+						resolve(new Page(stage, defaultStyle));
+					} else {
+						reject(new Error("Huh? Should have either error or stage?"));
 					}
-					resolve(new Page(stage, defaultStyle));
-				} else {
-					reject(new Error("Huh? Should have either error or stage?"));
-				}
-			});
+				},
+			);
 		});
 	}
 
