@@ -5,6 +5,7 @@ import { Display, DisplayDimensions, PixelGrid } from "./display";
 interface TextStyle {
 	colour: number;
 	fontPath: string;
+	size: number;
 }
 
 class Page implements PixelGrid {
@@ -47,7 +48,6 @@ class Page implements PixelGrid {
 	}
 
 	public write(
-		size: number,
 		rotation: number,
 		x: number,
 		y: number,
@@ -56,7 +56,7 @@ class Page implements PixelGrid {
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
-			size,
+			this.defaultStyle.size,
 			rotation,
 			x,
 			y,
@@ -69,15 +69,13 @@ async function startClock(display: Display) {
 	const dimensions = display.getDimensions();
 	// noinspection InfiniteLoopJS
 	while (true) {
-		const page = await Page.build(dimensions, { colour: 0x000000, fontPath: "/usr/src/imuse/lib/seven-segment.ttf" }, 0xffffff);
-		const now = moment();
-		page.write(
-			64,
-			Math.PI / 2,
-			300,
-			400,
-			now.format("hh:mm"),
+		const page = await Page.build(
+			dimensions,
+			{ colour: 0x000000, fontPath: "/usr/src/imuse/lib/seven-segment.ttf", size: 64 },
+			0xffffff,
 		);
+		const now = moment();
+		page.write(0, 300, 400, now.format("hh:mm"));
 		await display.update(page);
 	}
 }
