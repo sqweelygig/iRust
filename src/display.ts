@@ -81,8 +81,8 @@ export class Display {
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
 		const data = [];
-		for (let y = 0; y < this.dimensions.width; y++) {
-			for (let x = 0; x < this.dimensions.height; x++) {
+		for (let y = 0; y < this.dimensions.height; y++) {
+			for (let x = 0; x < this.dimensions.width; x++) {
 				const pixel = grid.getPixel(x, y);
 				data.push(pixel);
 			}
