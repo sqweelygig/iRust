@@ -1,14 +1,26 @@
 import * as moment from "moment";
+import { DataRepository } from "./data-repository";
 import { Display } from "./display";
 import { Page } from "./page";
+import * as Path from "path";
 
 async function start() {
+	const onUpdate = () => {
+		console.log("Data Repository Updated.");
+	};
+	const repo = process.env.REPO || "localhost";
+	const data = new DataRepository(repo, onUpdate);
+	console.log("Data Repository Initialised.");
+	await data.clone();
+	console.log("Data Repository Populated.");
+	const content = await data.get(Path.join("pages", `${this.name}.md`));
+	console.log(content);
 	const display = await Display.build();
-	const dimensions = display.getDimensions();
+	console.log("Display Panel Initialised.");
 	// noinspection InfiniteLoopJS
 	while (true) {
 		const page = await Page.build(
-			dimensions,
+			display.getDimensions(),
 			{
 				colour: 0x000000,
 				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
@@ -27,10 +39,10 @@ async function start() {
 }
 
 start()
-.then(() => {
-	console.log("Application Initialised.");
-})
-.catch((error) => {
-	console.error("Initialisation Failed.");
-	console.error(error);
-});
+	.then(() => {
+		console.log("Application Initialised.");
+	})
+	.catch((error) => {
+		console.error("Initialisation Failed.");
+		console.error(error);
+	});
