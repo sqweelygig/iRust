@@ -62,6 +62,7 @@ class Page implements PixelGrid {
 
 async function startClock(display: Display) {
 	const dimensions = display.getDimensions();
+	console.log(dimensions);
 	// noinspection InfiniteLoopJS
 	while (true) {
 		const page = await Page.build(

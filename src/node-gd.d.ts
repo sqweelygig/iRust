@@ -25,6 +25,15 @@ interface Stage {
 		y: number,
 		text: string,
 	): void;
+	stringFTBBox(
+		colour: number,
+		font: string,
+		size: number,
+		angle: number,
+		x: number,
+		y: number,
+		text: string,
+	): number[];
 	getPixel(x: number, y: number): number;
 }
 
