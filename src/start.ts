@@ -81,7 +81,6 @@ class Page implements PixelGrid {
 				lines.push(word);
 			}
 		});
-		console.log(lines);
 		lines.forEach((line) => {
 			this.baseLine +=
 				Math.ceil(mergedStyle.size * mergedStyle.lineHeight) +
