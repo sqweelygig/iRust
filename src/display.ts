@@ -10,7 +10,7 @@ export interface DisplayDimensions {
 	height: number;
 }
 
-interface PixelGrid {
+export interface PixelGrid {
 	getPixel(x: number, y: number): number;
 }
 
