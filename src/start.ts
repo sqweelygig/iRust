@@ -47,12 +47,7 @@ class Page implements PixelGrid {
 		return this.stage.getPixel(x, y);
 	}
 
-	public write(
-		rotation: number,
-		x: number,
-		y: number,
-		text: string,
-	) {
+	public write(rotation: number, x: number, y: number, text: string) {
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
@@ -71,7 +66,11 @@ async function startClock(display: Display) {
 	while (true) {
 		const page = await Page.build(
 			dimensions,
-			{ colour: 0x000000, fontPath: "/usr/src/imuse/lib/seven-segment.ttf", size: 64 },
+			{
+				colour: 0x000000,
+				fontPath: "/usr/src/imuse/lib/seven-segment.ttf",
+				size: 64,
+			},
 			0xffffff,
 		);
 		const now = moment();
