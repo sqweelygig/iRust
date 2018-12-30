@@ -47,7 +47,7 @@ async function startClock(display: Display) {
 			800,
 			now.format("hh:mm"),
 		);
-		await display.sendStage(stage);
+		await display.update(stage);
 	}
 }
 

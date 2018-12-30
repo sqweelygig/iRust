@@ -11,6 +11,10 @@ interface DisplayDimensions {
 	height: number;
 }
 
+interface PixelGrid {
+	getPixel(x: number, y: number): number;
+}
+
 export class Display {
 	public static async build(): Promise<Display> {
 		const display = new Display();
@@ -72,22 +76,26 @@ export class Display {
 
 	public async createStage(fill?: number): Promise<Stage> {
 		return new Promise<Stage>((resolve, reject) => {
-			gd.createTrueColor(this.dimensions.width, this.dimensions.height, (error, stage) => {
-				if (error) {
-					reject(error);
-				} else if (stage) {
-					if (fill) {
-						stage.fill(0, 0, fill);
+			gd.createTrueColor(
+				this.dimensions.width,
+				this.dimensions.height,
+				(error, stage) => {
+					if (error) {
+						reject(error);
+					} else if (stage) {
+						if (fill) {
+							stage.fill(0, 0, fill);
+						}
+						resolve(stage);
+					} else {
+						reject();
 					}
-					resolve(stage);
-				} else {
-					reject();
-				}
-			});
+				},
+			);
 		});
 	}
 
-	public async sendStage(stage: Stage): Promise<void> {
+	public async update(grid: PixelGrid): Promise<void> {
 		if (this.inUpdate) {
 			return Promise.reject(new Error("Still processing previous update!"));
 		}
@@ -97,7 +105,7 @@ export class Display {
 		const data = [];
 		for (let y = 0; y < this.dimensions.height; y++) {
 			for (let x = 0; x < this.dimensions.width; x++) {
-				const pixel = stage.getPixel(x, y);
+				const pixel = grid.getPixel(x, y);
 				data.push(pixel);
 			}
 		}
