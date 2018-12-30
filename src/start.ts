@@ -54,10 +54,10 @@ class Page implements PixelGrid {
 				this.defaultStyle.fontPath,
 				this.defaultStyle.size,
 				0,
-				x,
-				y,
+				0,
+				0,
 				text,
-			),
+			)[1],
 		);
 		this.stage.stringFT(
 			this.defaultStyle.colour,
