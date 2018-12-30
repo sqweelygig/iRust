@@ -67,9 +67,7 @@ class Page implements PixelGrid {
 			this.baseLine,
 			text,
 		);
-		this.baseLine += Math.ceil(
-			mergedStyle.size * mergedStyle.lineDrop,
-		);
+		this.baseLine += Math.ceil(mergedStyle.size * mergedStyle.lineDrop);
 	}
 }
 
@@ -91,7 +89,7 @@ async function startClock(display: Display) {
 		);
 		const now = moment();
 		page.write(now.format("dddd MMMM Do, YYYY"));
-		page.write(now.format("hh:mm").toUpperCase());
+		page.write(now.format("hh:mm").toUpperCase(), { size: 128 });
 		await display.update(page);
 	}
 }
