@@ -139,8 +139,8 @@ export class Display {
 		const rxBuffer = Buffer.alloc(size);
 		rpio.spiTransfer(Buffer.from(Display.COMMANDS.receiveData), rxBuffer, size);
 		this.dimensions = {
-			height: rxBuffer.readInt16BE(6),
-			width: rxBuffer.readInt16BE(4),
+			height: rxBuffer.readInt16BE(4),
+			width: rxBuffer.readInt16BE(6),
 		};
 	}
 }
