@@ -1,53 +1,15 @@
 import * as moment from "moment";
 import { Display } from "./display";
+import { Page } from "./page";
 
 async function startClock(display: Display) {
-	const spec = display.getDimensions();
-	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
+	const dimensions = display.getDimensions();
 	// noinspection InfiniteLoopJS
 	while (true) {
-		const page = await display.createPage(0xffffff);
+		const page = await Page.build(dimensions, { colour: 0x000000, font: "/usr/src/imuse/lib/seven-segment.ttf", size: 64 }, 0xffffff);
 		const now = moment();
-		page.setThickness(3);
-		page.filledEllipse(radius, radius, radius * 2, radius * 2, 0x000000);
-		page.filledEllipse(
-			radius,
-			radius,
-			radius * 2 - 5,
-			radius * 2 - 5,
-			0xffffff,
-		);
-		page.line(
-			radius,
-			radius,
-			radius - Math.round(radius * Math.sin((now.seconds() * Math.PI) / 30)),
-			radius + Math.round(radius * Math.cos((now.seconds() * Math.PI) / 30)),
-			0x666666,
-		);
-		page.line(
-			radius,
-			radius,
-			radius - Math.round(radius * Math.sin((now.minutes() * Math.PI) / 30)),
-			radius + Math.round(radius * Math.cos((now.minutes() * Math.PI) / 30)),
-			0x000000,
-		);
-		page.line(
-			radius,
-			radius,
-			radius - Math.round(0.7 * radius * Math.sin((now.hour() * Math.PI) / 6)),
-			radius + Math.round(0.7 * radius * Math.cos((now.hour() * Math.PI) / 6)),
-			0x000000,
-		);
-		page.stringFT(
-			0x000000,
-			"/usr/src/imuse/lib/seven-segment.ttf",
-			64,
-			Math.PI / 2,
-			800,
-			800,
-			now.format("hh:mm"),
-		);
-		await display.sendPage(page);
+		page.write(now.format("hh:mm"));
+		await display.update(page);
 	}
 }
 

@@ -1,5 +1,4 @@
 import * as rpio from "rpio";
-import { Page } from "./page";
 
 interface Pins {
 	reset: number;
@@ -9,6 +8,10 @@ interface Pins {
 export interface DisplayDimensions {
 	width: number;
 	height: number;
+}
+
+export interface PixelGrid {
+	getPixel(x: number, y: number): number;
 }
 
 export class Display {
@@ -70,11 +73,7 @@ export class Display {
 		return this.dimensions;
 	}
 
-	public async createPage(fill?: number): Promise<Page> {
-		return Page.build(this.dimensions, fill);
-	}
-
-	public async sendPage(page: Page): Promise<void> {
+	public async update(matrix: PixelGrid): Promise<void> {
 		if (this.inUpdate) {
 			return Promise.reject(new Error("Still processing previous update!"));
 		}
@@ -84,7 +83,7 @@ export class Display {
 		const data = [];
 		for (let y = 0; y < this.dimensions.height; y++) {
 			for (let x = 0; x < this.dimensions.width; x++) {
-				const pixel = page.getPixel(x, y);
+				const pixel = matrix.getPixel(x, y);
 				data.push(pixel);
 			}
 		}

@@ -1,28 +1,28 @@
-declare class Stage {
-	public ellipse(
+interface Stage {
+	ellipse(
 		centreX: number,
 		centreY: number,
 		width: number,
 		height: number,
 		colour: number,
 	): void;
-	public filledEllipse(
+	filledEllipse(
 		centreX: number,
 		centreY: number,
 		width: number,
 		height: number,
 		colour: number,
 	): void;
-	public fill(x: number, y: number, colour: number): void;
-	public line(
+	fill(x: number, y: number, colour: number): void;
+	line(
 		x1: number,
 		y1: number,
 		x2: number,
 		y2: number,
 		colour: number,
 	): void;
-	public setThickness(width: number): void;
-	public stringFT(
+	setThickness(width: number): void;
+	stringFT(
 		colour: number,
 		font: string,
 		size: number,
@@ -31,7 +31,7 @@ declare class Stage {
 		y: number,
 		text: string,
 	): void;
-	public getPixel(x: number, y: number): number;
+	getPixel(x: number, y: number): number;
 }
 
 declare module "node-gd" {
