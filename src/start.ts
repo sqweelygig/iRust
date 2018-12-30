@@ -21,7 +21,7 @@ async function start() {
 	console.log("Data Repository Initialised.");
 	await data.clone();
 	console.log("Data Repository Populated.");
-	const content = await data.get(Path.join("pages", `${process.env.PAGE}.md`));
+	const content = await data.get(Path.join("content", `${process.env.PAGE}.md`));
 	console.log(content);
 	const display = await Display.build();
 	console.log("Display Panel Initialised.");
