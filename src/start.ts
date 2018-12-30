@@ -53,7 +53,15 @@ class Page implements PixelGrid {
 		y: number,
 		text: string,
 	) {
-		this.stage.stringFT(this.defaultStyle.colour, font, size, rotation, x, y, text);
+		this.stage.stringFT(
+			this.defaultStyle.colour,
+			font,
+			size,
+			rotation,
+			x,
+			y,
+			text,
+		);
 	}
 }
 
@@ -67,7 +75,7 @@ async function startClock(display: Display) {
 			"/usr/src/imuse/lib/seven-segment.ttf",
 			64,
 			Math.PI / 2,
-			100,
+			300,
 			400,
 			now.format("hh:mm"),
 		);
