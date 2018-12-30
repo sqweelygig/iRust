@@ -30,15 +30,15 @@ export class Display {
 	private static COMMANDS = {
 		completeTransmit: [0x60, 0x00, 0x00, 0x22],
 		dataFormat: [0x00, 0x00, 0x01, 0x31],
-		fullHeight: [0x00, 0x00, 0x04, 0xb0],
-		fullWidth: [0x00, 0x00, 0x03, 0x39],
 		getInfo: [0x60, 0x00, 0x03, 0x02],
+		longEdge: [0x00, 0x00, 0x04, 0xb0],
 		origin: [0x00, 0x00, 0x00, 0x00],
 		receiveData: [0x10, 0x00],
-		refreshScreen: [0x60, 0x00, 0x00, 0x34],
 		sendData: [0x00, 0x00],
+		shortEdge: [0x00, 0x00, 0x03, 0x39],
 		transmitArea: [0x60, 0x00, 0x00, 0x21],
 		transmitScreen: [0x60, 0x00, 0x00, 0x20],
+		updateArea: [0x60, 0x00, 0x00, 0x34],
 		updateRisingEdge: [0x00, 0x00, 0x00, 0x01],
 		updateSomehow: [0x00, 0x00, 0x00, 0x04],
 		updateToWhite: [0x00, 0x00, 0x00, 0x00],
@@ -90,11 +90,11 @@ export class Display {
 		// TODO: Speed the data transfer up, it currently takes about 3s
 		await this.write(Display.COMMANDS.sendData.concat(data));
 		await this.write(Display.COMMANDS.completeTransmit);
-		await this.write(Display.COMMANDS.refreshScreen);
+		await this.write(Display.COMMANDS.updateArea);
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.origin);
-		await this.write(Display.COMMANDS.fullWidth);
-		await this.write(Display.COMMANDS.fullHeight);
+		await this.write(Display.COMMANDS.longEdge);
+		await this.write(Display.COMMANDS.shortEdge);
 		await this.write(Display.COMMANDS.updateViaWhite);
 		this.inUpdate = false;
 	}
@@ -104,11 +104,11 @@ export class Display {
 		return new Promise<void>((resolve) => {
 			setTimeout(async () => {
 				rpio.write(this.pins.reset, rpio.HIGH);
-				await this.write(Display.COMMANDS.refreshScreen);
+				await this.write(Display.COMMANDS.updateArea);
 				await this.write(Display.COMMANDS.origin);
 				await this.write(Display.COMMANDS.origin);
-				await this.write(Display.COMMANDS.fullWidth);
-				await this.write(Display.COMMANDS.fullHeight);
+				await this.write(Display.COMMANDS.longEdge);
+				await this.write(Display.COMMANDS.shortEdge);
 				await this.write(Display.COMMANDS.updateToWhite);
 				resolve();
 			}, 100);
