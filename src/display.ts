@@ -29,7 +29,7 @@ export class Display {
 
 	private static COMMANDS = {
 		completeTransmit: [0x60, 0x00, 0x00, 0x22],
-		dataFormat: [0x00, 0x00, 0x01, 0x31],
+		dataFormat: [0x00, 0x00, 0x01, 0x30],
 		getInfo: [0x60, 0x00, 0x03, 0x02],
 		longEdge: [0x00, 0x00, 0x04, 0xb0],
 		origin: [0x00, 0x00, 0x00, 0x00],
@@ -139,8 +139,8 @@ export class Display {
 		const rxBuffer = Buffer.alloc(size);
 		rpio.spiTransfer(Buffer.from(Display.COMMANDS.receiveData), rxBuffer, size);
 		this.dimensions = {
-			height: rxBuffer.readInt16BE(4),
-			width: rxBuffer.readInt16BE(6),
+			height: rxBuffer.readInt16BE(6),
+			width: rxBuffer.readInt16BE(4),
 		};
 	}
 }
