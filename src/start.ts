@@ -1,7 +1,7 @@
+import { merge } from "lodash";
 import * as moment from "moment";
 import * as gd from "node-gd";
 import { Display, DisplayDimensions, PixelGrid } from "./display";
-import { merge } from "lodash";
 
 interface TextStyle {
 	colour: number;
@@ -29,7 +29,7 @@ class Page implements PixelGrid {
 						if (fill) {
 							stage.fill(0, 0, fill);
 						}
-						resolve(new Page(stage, defaultStyle));
+						resolve(new Page(stage, defaultStyle, dimensions));
 					} else {
 						reject(new Error("Huh? Empty callback!"));
 					}
@@ -38,15 +38,18 @@ class Page implements PixelGrid {
 		});
 	}
 
-	private stage: Stage;
+	private readonly stage: Stage;
 
-	private defaultStyle: TextStyle;
+	private readonly defaultStyle: TextStyle;
+
+	private readonly dimensions: DisplayDimensions;
 
 	private baseLine: number = 0;
 
-	constructor(stage: Stage, defaultStyle: TextStyle) {
+	constructor(stage: Stage, defaultStyle: TextStyle, dimensions: DisplayDimensions) {
 		this.stage = stage;
 		this.defaultStyle = defaultStyle;
+		this.dimensions = dimensions;
 	}
 
 	public getPixel(x: number, y: number): number {
@@ -58,7 +61,8 @@ class Page implements PixelGrid {
 		this.baseLine +=
 			Math.ceil(mergedStyle.size * mergedStyle.lineHeight) +
 			mergedStyle.spacing;
-		console.log(this.stage.stringFTBBox(
+		console.log(
+			this.stage.stringFTBBox(
 				mergedStyle.colour,
 				mergedStyle.fontPath,
 				mergedStyle.size,
@@ -66,7 +70,7 @@ class Page implements PixelGrid {
 				mergedStyle.spacing,
 				this.baseLine,
 				text,
-			)
+			), this.defaultStyle.spacing, this.dimensions.width,
 		);
 		this.stage.stringFT(
 			mergedStyle.colour,
