@@ -5,8 +5,15 @@ import { Display } from "./display";
 import { Page } from "./page";
 
 async function start() {
-	const onUpdate = () => {
+	let previousContent: string | null = null;
+	const onUpdate = async () => {
 		console.log("Data Repository Updated.");
+		const content = await data.get(Path.join("content", `${process.env.PAGE}.md`));
+		if (previousContent !== content) {
+			previousContent = content;
+			console.log(content);
+			console.log("Content Updated.");
+		}
 	};
 	const defaultTextStyle = {
 		colour: 0x000000,
@@ -21,12 +28,10 @@ async function start() {
 	console.log("Data Repository Initialised.");
 	await data.clone();
 	console.log("Data Repository Populated.");
-	const content = await data.get(
-		Path.join("content", `${process.env.PAGE}.md`),
-	);
-	console.log(content);
 	const display = await Display.build();
 	console.log("Display Panel Initialised.");
+	await onUpdate();
+	console.log("Initial Content Displayed.");
 	// noinspection InfiniteLoopJS
 	while (true) {
 		const page = await Page.build(
