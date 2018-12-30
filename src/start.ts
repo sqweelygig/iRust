@@ -38,6 +38,8 @@ class Page implements PixelGrid {
 
 	private defaultStyle: TextStyle;
 
+	private baseLine: number = 0;
+
 	constructor(stage: Stage, defaultStyle: TextStyle) {
 		this.stage = stage;
 		this.defaultStyle = defaultStyle;
@@ -48,6 +50,15 @@ class Page implements PixelGrid {
 	}
 
 	public write(x: number, y: number, text: string) {
+		console.log(this.stage.stringFTBBox(
+			this.defaultStyle.colour,
+			this.defaultStyle.fontPath,
+			this.defaultStyle.size,
+			0,
+			x,
+			y,
+			text,
+		));
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
