@@ -38,6 +38,8 @@ class Page implements PixelGrid {
 
 	private defaultStyle: TextStyle;
 
+	private baseLine: number = 0;
+
 	constructor(stage: Stage, defaultStyle: TextStyle) {
 		this.stage = stage;
 		this.defaultStyle = defaultStyle;
@@ -47,25 +49,24 @@ class Page implements PixelGrid {
 		return this.stage.getPixel(x, y);
 	}
 
-	public write(x: number, y: number, text: string) {
+	public write(text: string) {
 		const box = this.stage.stringFTBBox(
-				this.defaultStyle.colour,
-				this.defaultStyle.fontPath,
-				this.defaultStyle.size,
-				0,
-				0,
-				0,
-				text,
+			this.defaultStyle.colour,
+			this.defaultStyle.fontPath,
+			this.defaultStyle.size,
+			0,
+			0,
+			0,
+			text,
 		);
-		console.log(box);
-		console.log(box[1] - box[5]);
+		this.baseLine += box[1] - box[5];
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
 			this.defaultStyle.size,
 			0,
-			x,
-			y,
+			0,
+			this.baseLine,
 			text,
 		);
 	}
@@ -85,7 +86,7 @@ async function startClock(display: Display) {
 			0xffffff,
 		);
 		const now = moment();
-		page.write(300, 400, now.format("hh:mm"));
+		page.write(now.format("hh:mm"));
 		await display.update(page);
 	}
 }
