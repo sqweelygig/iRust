@@ -17,7 +17,7 @@ async function start(defaultTextStyle: TextStyle) {
 				defaultTextStyle,
 				0xffffff,
 			);
-			page.write(content.split(/\r\n\r\n/g)[0]);
+			page.write(content.split(/\r/g)[0]);
 			await display.update(page);
 			console.log("Content Updated.");
 		}
