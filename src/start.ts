@@ -50,16 +50,7 @@ class Page implements PixelGrid {
 	}
 
 	public write(text: string) {
-		const box = this.stage.stringFTBBox(
-			this.defaultStyle.colour,
-			this.defaultStyle.fontPath,
-			this.defaultStyle.size,
-			0,
-			0,
-			0,
-			text,
-		);
-		this.baseLine += box[1] - box[5];
+		this.baseLine += Math.ceil(this.defaultStyle.size * 2);
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
