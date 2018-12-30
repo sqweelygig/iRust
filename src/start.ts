@@ -6,6 +6,8 @@ interface TextStyle {
 	colour: number;
 	fontPath: string;
 	size: number;
+	lineDrop: number; // The space to allocate below the baseLine
+	lineHeight: number; // The space to allocate above the baseLine
 }
 
 class Page implements PixelGrid {
@@ -50,7 +52,7 @@ class Page implements PixelGrid {
 	}
 
 	public write(text: string) {
-		this.baseLine += Math.ceil(this.defaultStyle.size * 2);
+		this.baseLine += Math.ceil(this.defaultStyle.size * this.defaultStyle.lineHeight);
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
@@ -60,6 +62,7 @@ class Page implements PixelGrid {
 			this.baseLine,
 			text,
 		);
+		this.baseLine += Math.ceil(this.defaultStyle.size * this.defaultStyle.lineDrop);
 	}
 }
 
@@ -72,6 +75,8 @@ async function startClock(display: Display) {
 			{
 				colour: 0x000000,
 				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
+				lineDrop: 0.2,
+				lineHeight: 1.5,
 				size: 64,
 			},
 			0xffffff,
