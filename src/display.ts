@@ -93,8 +93,8 @@ export class Display {
 		await this.write(Display.COMMANDS.updateArea);
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.origin);
-		await this.write(Display.COMMANDS.longEdge);
 		await this.write(Display.COMMANDS.shortEdge);
+		await this.write(Display.COMMANDS.longEdge);
 		await this.write(Display.COMMANDS.updateViaWhite);
 		this.inUpdate = false;
 	}
