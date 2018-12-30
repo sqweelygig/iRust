@@ -57,31 +57,41 @@ class Page implements PixelGrid {
 	}
 
 	public write(text: string, style?: Partial<TextStyle>) {
+		const lines = [""];
+		const words = text.split(/ /g);
 		const mergedStyle = merge(this.defaultStyle, style);
-		this.baseLine +=
-			Math.ceil(mergedStyle.size * mergedStyle.lineHeight) +
-			mergedStyle.spacing;
-		console.log(
-			this.stage.stringFTBBox(
+		words.forEach((word) => {
+			const appendedLine = [lines[lines.length - 1], word].join(" ");
+			const box = this.stage.stringFTBBox(
 				mergedStyle.colour,
 				mergedStyle.fontPath,
 				mergedStyle.size,
 				0,
 				mergedStyle.spacing,
 				this.baseLine,
-				text,
-			), this.defaultStyle.spacing, this.dimensions.width,
-		);
-		this.stage.stringFT(
-			mergedStyle.colour,
-			mergedStyle.fontPath,
-			mergedStyle.size,
-			0,
-			mergedStyle.spacing,
-			this.baseLine,
-			text,
-		);
-		this.baseLine += Math.ceil(mergedStyle.size * mergedStyle.lineDrop);
+				appendedLine,
+			);
+			if (box[2] + mergedStyle.spacing <= this.dimensions.width ) {
+				lines[lines.length - 1] = appendedLine;
+			} else {
+				lines.push(word);
+			}
+		});
+		lines.forEach((line) => {
+			this.baseLine +=
+				Math.ceil(mergedStyle.size * mergedStyle.lineHeight) +
+				mergedStyle.spacing;
+			this.stage.stringFT(
+				mergedStyle.colour,
+				mergedStyle.fontPath,
+				mergedStyle.size,
+				0,
+				mergedStyle.spacing,
+				this.baseLine,
+				line,
+			);
+			this.baseLine += Math.ceil(mergedStyle.size * mergedStyle.lineDrop);
+		});
 	}
 }
 
