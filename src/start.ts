@@ -43,7 +43,7 @@ async function startClock(display: Display) {
 			"/usr/src/imuse/lib/seven-segment.ttf",
 			64,
 			Math.PI / 2,
-			800,
+			1000,
 			800,
 			now.format("hh:mm"),
 		);
