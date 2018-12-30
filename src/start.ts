@@ -55,7 +55,7 @@ class Page implements PixelGrid {
 	public write(text: string) {
 		this.baseLine += Math.ceil(
 			this.defaultStyle.size * this.defaultStyle.lineHeight,
-		);
+		) + this.defaultStyle.spacing;
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
