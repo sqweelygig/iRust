@@ -80,7 +80,7 @@ async function startClock(display: Display) {
 			dimensions,
 			{
 				colour: 0x000000,
-				fontPath: "/usr/src/imuse/lib/sassoon-primary.ttf",
+				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
 				size: 64,
 			},
 			0xffffff,
