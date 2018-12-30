@@ -17,8 +17,10 @@ async function start(defaultTextStyle: TextStyle) {
 				defaultTextStyle,
 				0xffffff,
 			);
-			content.split(/\n/g).forEach((line) => {
-				page.write(line);
+			content.split(/[\r\n]+/g).forEach((line) => {
+				if (line.trim().length > 0) {
+					page.write(line);
+				}
 			});
 			await display.update(page);
 			console.log("Content Updated.");
@@ -40,7 +42,7 @@ start({
 	fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
 	lineDrop: 0.2,
 	lineHeight: 1.16,
-	size: 64,
+	size: 32,
 	spacing: 10,
 })
 	.then(() => {
