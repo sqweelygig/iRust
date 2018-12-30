@@ -17,7 +17,9 @@ async function start(defaultTextStyle: TextStyle) {
 				defaultTextStyle,
 				0xffffff,
 			);
-			page.write(content.split(/\n/g)[0]);
+			content.split(/\n/g).forEach((line) => {
+				page.write(line);
+			});
 			await display.update(page);
 			console.log("Content Updated.");
 		}
