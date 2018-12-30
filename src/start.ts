@@ -1,3 +1,4 @@
+import * as marked from "marked";
 import * as Path from "path";
 import { DataRepository } from "./data-repository";
 import { Display } from "./display";
@@ -17,6 +18,10 @@ async function start(defaultTextStyle: TextStyle) {
 				defaultTextStyle,
 				0xffffff,
 			);
+			const contentHTML = marked(content, {
+				gfm: true, // Github Flavoured Markdown
+			});
+			console.log(contentHTML);
 			page.write(content.split(/\r/g)[0]);
 			await display.update(page);
 			console.log("Content Updated.");
