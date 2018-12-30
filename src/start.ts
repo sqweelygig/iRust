@@ -52,7 +52,9 @@ class Page implements PixelGrid {
 	}
 
 	public write(text: string) {
-		this.baseLine += Math.ceil(this.defaultStyle.size * this.defaultStyle.lineHeight);
+		this.baseLine += Math.ceil(
+			this.defaultStyle.size * this.defaultStyle.lineHeight,
+		);
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
@@ -62,7 +64,9 @@ class Page implements PixelGrid {
 			this.baseLine,
 			text,
 		);
-		this.baseLine += Math.ceil(this.defaultStyle.size * this.defaultStyle.lineDrop);
+		this.baseLine += Math.ceil(
+			this.defaultStyle.size * this.defaultStyle.lineDrop,
+		);
 	}
 }
 
@@ -76,14 +80,14 @@ async function startClock(display: Display) {
 				colour: 0x000000,
 				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
 				lineDrop: 0.2,
-				lineHeight: 1.5,
+				lineHeight: 1.2,
 				size: 64,
 			},
 			0xffffff,
 		);
 		const now = moment();
 		page.write(now.format("dddd MMMM Do, YYYY"));
-		page.write(now.format("hh:mm"));
+		page.write(now.format("dddd hh:mm"));
 		await display.update(page);
 	}
 }
