@@ -1,19 +1,27 @@
 import * as moment from "moment";
+import * as Path from "path";
 import { DataRepository } from "./data-repository";
 import { Display } from "./display";
 import { Page } from "./page";
-import * as Path from "path";
 
 async function start() {
 	const onUpdate = () => {
 		console.log("Data Repository Updated.");
+	};
+	const defaultTextStyle = {
+		colour: 0x000000,
+		fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
+		lineDrop: 0.2,
+		lineHeight: 1.16,
+		size: 64,
+		spacing: 10,
 	};
 	const repo = process.env.REPO || "localhost";
 	const data = new DataRepository(repo, onUpdate);
 	console.log("Data Repository Initialised.");
 	await data.clone();
 	console.log("Data Repository Populated.");
-	const content = await data.get(Path.join("pages", `${this.name}.md`));
+	const content = await data.get(Path.join("pages", `${process.env.PAGE}.md`));
 	console.log(content);
 	const display = await Display.build();
 	console.log("Display Panel Initialised.");
@@ -21,14 +29,7 @@ async function start() {
 	while (true) {
 		const page = await Page.build(
 			display.getDimensions(),
-			{
-				colour: 0x000000,
-				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
-				lineDrop: 0.2,
-				lineHeight: 1.16,
-				size: 64,
-				spacing: 10,
-			},
+			defaultTextStyle,
 			0xffffff,
 		);
 		const now = moment();
