@@ -17,10 +17,7 @@ async function start(defaultTextStyle: TextStyle) {
 				defaultTextStyle,
 				0xffffff,
 			);
-			content.split(/\r\n\r\n/g).forEach((line) => {
-				console.log(line.replace(/\r\n/g, " "));
-				page.write(line.replace(/\r\n/g, " "));
-			});
+			page.write(content.split(/\r\n\r\n/g)[0]);
 			await display.update(page);
 			console.log("Content Updated.");
 		}
