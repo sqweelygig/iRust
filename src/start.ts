@@ -111,7 +111,7 @@ async function startClock(display: Display) {
 				lineDrop: 0.2,
 				lineHeight: 1.16,
 				size: 64,
-				spacing: 40,
+				spacing: 1,
 			},
 			0xffffff,
 		);
