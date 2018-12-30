@@ -7,11 +7,6 @@ interface Pins {
 	ready: number;
 }
 
-interface DisplayDimensions {
-	width: number;
-	height: number;
-}
-
 class Display {
 	public static async build(): Promise<Display> {
 		const display = new Display();
@@ -46,7 +41,7 @@ class Display {
 
 	private pins: Pins;
 
-	private spec: DisplayDimensions;
+	private dimensions: DisplayDimensions;
 
 	private inUpdate: boolean;
 
@@ -68,12 +63,12 @@ class Display {
 	}
 
 	public getDimensions(): DisplayDimensions {
-		return this.spec;
+		return this.dimensions;
 	}
 
 	public async createStage(fill?: number): Promise<Stage> {
 		return new Promise<Stage>((resolve, reject) => {
-			gd.createTrueColor(this.spec.width, this.spec.height, (error, stage) => {
+			gd.createTrueColor(this.dimensions.width, this.dimensions.height, (error, stage) => {
 				if (error) {
 					reject(error);
 				} else if (stage) {
@@ -96,8 +91,8 @@ class Display {
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
 		const data = [];
-		for (let y = 0; y < this.spec.height; y++) {
-			for (let x = 0; x < this.spec.width; x++) {
+		for (let y = 0; y < this.dimensions.height; y++) {
+			for (let x = 0; x < this.dimensions.width; x++) {
 				const pixel = stage.getPixel(x, y);
 				data.push(pixel);
 			}
@@ -153,7 +148,7 @@ class Display {
 		const size = 42;
 		const rxBuffer = Buffer.alloc(size);
 		rpio.spiTransfer(Buffer.from(Display.COMMANDS.receiveData), rxBuffer, size);
-		this.spec = {
+		this.dimensions = {
 			height: rxBuffer.readInt16BE(6),
 			width: rxBuffer.readInt16BE(4),
 		};
