@@ -46,7 +46,11 @@ class Page implements PixelGrid {
 
 	private baseLine: number = 0;
 
-	constructor(stage: Stage, defaultStyle: TextStyle, dimensions: DisplayDimensions) {
+	constructor(
+		stage: Stage,
+		defaultStyle: TextStyle,
+		dimensions: DisplayDimensions,
+	) {
 		this.stage = stage;
 		this.defaultStyle = defaultStyle;
 		this.dimensions = dimensions;
@@ -61,7 +65,7 @@ class Page implements PixelGrid {
 		const words = text.split(/ /g);
 		const mergedStyle = merge(this.defaultStyle, style);
 		words.forEach((word) => {
-			const appendedLine = [lines[lines.length - 1], word].join(" ");
+			const appendedLine = `${lines[lines.length - 1]} ${word}`.trim();
 			const box = this.stage.stringFTBBox(
 				mergedStyle.colour,
 				mergedStyle.fontPath,
@@ -71,7 +75,7 @@ class Page implements PixelGrid {
 				this.baseLine,
 				appendedLine,
 			);
-			if (box[2] + mergedStyle.spacing <= this.dimensions.width ) {
+			if (box[2] + mergedStyle.spacing <= this.dimensions.width) {
 				lines[lines.length - 1] = appendedLine;
 			} else {
 				lines.push(word);
