@@ -1,12 +1,12 @@
-import * as gd from "node-gd";
 import * as rpio from "rpio";
+import { Page } from "./page";
 
 interface Pins {
 	reset: number;
 	ready: number;
 }
 
-interface DisplayDimensions {
+export interface DisplayDimensions {
 	width: number;
 	height: number;
 }
@@ -45,7 +45,7 @@ export class Display {
 
 	private pins: Pins;
 
-	private spec: DisplayDimensions;
+	private dimensions: DisplayDimensions;
 
 	private inUpdate: boolean;
 
@@ -67,27 +67,14 @@ export class Display {
 	}
 
 	public getDimensions(): DisplayDimensions {
-		return this.spec;
+		return this.dimensions;
 	}
 
-	public async createStage(fill?: number): Promise<Stage> {
-		return new Promise<Stage>((resolve, reject) => {
-			gd.createTrueColor(this.spec.width, this.spec.height, (error, stage) => {
-				if (error) {
-					reject(error);
-				} else if (stage) {
-					if (fill) {
-						stage.fill(0, 0, fill);
-					}
-					resolve(stage);
-				} else {
-					reject();
-				}
-			});
-		});
+	public async createPage(fill?: number): Promise<Page> {
+		return Page.build(this.dimensions, fill);
 	}
 
-	public async sendStage(stage: Stage): Promise<void> {
+	public async sendPage(page: Page): Promise<void> {
 		if (this.inUpdate) {
 			return Promise.reject(new Error("Still processing previous update!"));
 		}
@@ -95,9 +82,9 @@ export class Display {
 		await this.write(Display.COMMANDS.transmitScreen);
 		await this.write(Display.COMMANDS.dataFormat);
 		const data = [];
-		for (let y = 0; y < this.spec.height; y++) {
-			for (let x = 0; x < this.spec.width; x++) {
-				const pixel = stage.getPixel(x, y);
+		for (let y = 0; y < this.dimensions.height; y++) {
+			for (let x = 0; x < this.dimensions.width; x++) {
+				const pixel = page.getPixel(x, y);
 				data.push(pixel);
 			}
 		}
@@ -152,7 +139,7 @@ export class Display {
 		const size = 42;
 		const rxBuffer = Buffer.alloc(size);
 		rpio.spiTransfer(Buffer.from(Display.COMMANDS.receiveData), rxBuffer, size);
-		this.spec = {
+		this.dimensions = {
 			height: rxBuffer.readInt16BE(6),
 			width: rxBuffer.readInt16BE(4),
 		};

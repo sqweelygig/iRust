@@ -14,7 +14,13 @@ declare class Stage {
 		colour: number,
 	): void;
 	public fill(x: number, y: number, colour: number): void;
-	public line(x1: number, y1: number, x2: number, y2: number, colour: number): void;
+	public line(
+		x1: number,
+		y1: number,
+		x2: number,
+		y2: number,
+		colour: number,
+	): void;
 	public setThickness(width: number): void;
 	public stringFT(
 		colour: number,
