@@ -47,12 +47,12 @@ class Page implements PixelGrid {
 		return this.stage.getPixel(x, y);
 	}
 
-	public write(rotation: number, x: number, y: number, text: string) {
+	public write(x: number, y: number, text: string) {
 		this.stage.stringFT(
 			this.defaultStyle.colour,
 			this.defaultStyle.fontPath,
 			this.defaultStyle.size,
-			rotation,
+			0,
 			x,
 			y,
 			text,
@@ -75,7 +75,7 @@ async function startClock(display: Display) {
 			0xffffff,
 		);
 		const now = moment();
-		page.write(0, 300, 400, now.format("hh:mm"));
+		page.write(300, 400, now.format("hh:mm"));
 		await display.update(page);
 	}
 }
