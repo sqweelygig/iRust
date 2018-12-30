@@ -18,10 +18,10 @@ async function start(defaultTextStyle: TextStyle) {
 				0xffffff,
 			);
 			content.split(/\r\n\r\n/g).forEach((line) => {
+				console.log(line.replace(/\r\n/g, " "));
 				page.write(line.replace(/\r\n/g, " "));
 			});
 			await display.update(page);
-			console.log(content);
 			console.log("Content Updated.");
 		}
 	};
