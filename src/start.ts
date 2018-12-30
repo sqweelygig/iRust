@@ -1,12 +1,34 @@
 import * as moment from "moment";
-import { Display } from "./display";
+import * as gd from "node-gd";
+import { Display, DisplayDimensions } from "./display";
+
+async function createStage(dimensions: DisplayDimensions, fill?: number): Promise<Stage> {
+	return new Promise<Stage>((resolve, reject) => {
+		gd.createTrueColor(
+			dimensions.width,
+			dimensions.height,
+			(error, stage) => {
+				if (error) {
+					reject(error);
+				} else if (stage) {
+					if (fill) {
+						stage.fill(0, 0, fill);
+					}
+					resolve(stage);
+				} else {
+					reject();
+				}
+			},
+		);
+	});
+}
 
 async function startClock(display: Display) {
-	const spec = display.getDimensions();
-	const radius = Math.floor(Math.min(spec.width, spec.height) / 2);
+	const dimensions = display.getDimensions();
+	const radius = Math.floor(Math.min(dimensions.width, dimensions.height) / 2);
 	// noinspection InfiniteLoopJS
 	while (true) {
-		const stage = await display.createStage(0xffffff);
+		const stage = await createStage(dimensions, 0xffffff);
 		const now = moment();
 		stage.setThickness(3);
 		stage.filledEllipse(radius, radius, radius * 2, radius * 2, 0x000000);
@@ -44,7 +66,7 @@ async function startClock(display: Display) {
 			64,
 			Math.PI / 2,
 			1000,
-			800,
+			500,
 			now.format("hh:mm"),
 		);
 		await display.update(stage);

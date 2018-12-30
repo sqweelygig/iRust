@@ -1,4 +1,3 @@
-import * as gd from "node-gd";
 import * as rpio from "rpio";
 
 interface Pins {
@@ -6,7 +5,7 @@ interface Pins {
 	ready: number;
 }
 
-interface DisplayDimensions {
+export interface DisplayDimensions {
 	width: number;
 	height: number;
 }
@@ -72,27 +71,6 @@ export class Display {
 
 	public getDimensions(): DisplayDimensions {
 		return this.dimensions;
-	}
-
-	public async createStage(fill?: number): Promise<Stage> {
-		return new Promise<Stage>((resolve, reject) => {
-			gd.createTrueColor(
-				this.dimensions.width,
-				this.dimensions.height,
-				(error, stage) => {
-					if (error) {
-						reject(error);
-					} else if (stage) {
-						if (fill) {
-							stage.fill(0, 0, fill);
-						}
-						resolve(stage);
-					} else {
-						reject();
-					}
-				},
-			);
-		});
 	}
 
 	public async update(grid: PixelGrid): Promise<void> {
