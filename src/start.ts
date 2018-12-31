@@ -6,7 +6,10 @@ import { DataRepository } from "./data-repository";
 import { Display } from "./display";
 import { Page, TextStyle } from "./page";
 
-async function start(defaultTextStyle: TextStyle, textStyles: Dictionary<TextStyle>) {
+async function start(
+	defaultTextStyle: TextStyle,
+	textStyles: Dictionary<Partial<TextStyle>>,
+) {
 	let previousContent: string | null = null;
 	const onUpdate = async () => {
 		console.log("Data Repository Updated.");
@@ -47,14 +50,24 @@ async function start(defaultTextStyle: TextStyle, textStyles: Dictionary<TextSty
 	console.log("Initial Content Displayed.");
 }
 
-start({
-	colour: 0x000000,
-	fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
-	lineDrop: 0.2,
-	lineHeight: 1.16,
-	size: 32,
-	spacing: 10,
-}, {})
+start(
+	{
+		colour: 0x000000,
+		fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
+		lineDrop: 0.2,
+		lineHeight: 1.16,
+		size: 32,
+		spacing: 10,
+	},
+	{
+		h1: {
+			size: 64,
+		},
+		h2: {
+			size: 48,
+		},
+	},
+)
 	.then(() => {
 		console.log("Application Initialised.");
 	})
