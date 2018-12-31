@@ -25,8 +25,12 @@ async function start(defaultTextStyle: TextStyle) {
 				}),
 			);
 			const topLevelChildren = contentDOM.window.document.body.children;
-			for (let i = 0; i < topLevelChildren.length; i++) {
-				console.log(topLevelChildren[i].tagName, topLevelChildren[i].textContent);
+			for (const child of topLevelChildren) {
+				const textContent = child.textContent ? child.textContent.replace(/\s+/g, " ") : "";
+				console.log(
+					child.tagName,
+					textContent,
+				);
 			}
 			content.split(/[\r\n]+/g).forEach((line) => {
 				if (line.trim().length > 0) {
