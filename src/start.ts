@@ -61,11 +61,10 @@ start(
 	},
 	{
 		h1: {
-			lineHeight: 1.4,
 			size: 64,
 		},
 		h2: {
-			lineHeight: 1.4,
+			lineHeight: 1.8,
 			size: 48,
 		},
 	},
