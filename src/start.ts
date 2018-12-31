@@ -1,3 +1,4 @@
+import * as marked from "marked";
 import * as Path from "path";
 import { DataRepository } from "./data-repository";
 import { Display } from "./display";
@@ -17,6 +18,10 @@ async function start(defaultTextStyle: TextStyle) {
 				defaultTextStyle,
 				0xffffff,
 			);
+			const contentHTML = marked(content, {
+				gfm: true,
+			});
+			console.log(contentHTML);
 			content.split(/[\r\n]+/g).forEach((line) => {
 				if (line.trim().length > 0) {
 					page.write(line);
