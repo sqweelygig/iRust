@@ -22,10 +22,8 @@ async function start(defaultTextStyle: TextStyle) {
 			const contentDOM = new JSDOM(marked(content, {
 				gfm: true,
 			}));
-			const topLevelChildren = contentDOM.window.document.childNodes;
-			topLevelChildren.forEach((node) => {
-				console.log(node.textContent);
-			});
+			const topLevelChildren = contentDOM.window.document.body.children;
+			console.log(topLevelChildren[0]);
 			content.split(/[\r\n]+/g).forEach((line) => {
 				if (line.trim().length > 0) {
 					page.write(line);
