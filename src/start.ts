@@ -26,17 +26,12 @@ async function start(defaultTextStyle: TextStyle) {
 			);
 			const topLevelChildren = contentDOM.window.document.body.children;
 			for (const child of topLevelChildren) {
-				const textContent = child.textContent ? child.textContent.replace(/\s+/g, " ") : "";
-				console.log(
-					child.tagName,
-					textContent,
-				);
+				const textContent = child.textContent
+					? child.textContent.replace(/\s+/g, " ")
+					: "";
+				page.write(textContent);
+				console.log(child.tagName, textContent);
 			}
-			content.split(/[\r\n]+/g).forEach((line) => {
-				if (line.trim().length > 0) {
-					page.write(line);
-				}
-			});
 			await display.update(page);
 			console.log("Content Updated.");
 		}
