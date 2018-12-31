@@ -1,11 +1,12 @@
 import { JSDOM } from "jsdom";
+import { Dictionary } from "lodash";
 import * as marked from "marked";
 import * as Path from "path";
 import { DataRepository } from "./data-repository";
 import { Display } from "./display";
 import { Page, TextStyle } from "./page";
 
-async function start(defaultTextStyle: TextStyle) {
+async function start(defaultTextStyle: TextStyle, textStyles: Dictionary<TextStyle>) {
 	let previousContent: string | null = null;
 	const onUpdate = async () => {
 		console.log("Data Repository Updated.");
@@ -29,8 +30,7 @@ async function start(defaultTextStyle: TextStyle) {
 				const textContent = child.textContent
 					? child.textContent.replace(/\s+/g, " ")
 					: "";
-				page.write(textContent);
-				console.log(child.tagName, textContent);
+				page.write(textContent, textStyles[child.tagName.toLowerCase()]);
 			}
 			await display.update(page);
 			console.log("Content Updated.");
@@ -54,7 +54,7 @@ start({
 	lineHeight: 1.16,
 	size: 32,
 	spacing: 10,
-})
+}, {})
 	.then(() => {
 		console.log("Application Initialised.");
 	})
