@@ -1,3 +1,4 @@
+import { JSDOM } from "jsdom";
 import * as marked from "marked";
 import * as Path from "path";
 import { DataRepository } from "./data-repository";
@@ -18,10 +19,13 @@ async function start(defaultTextStyle: TextStyle) {
 				defaultTextStyle,
 				0xffffff,
 			);
-			const contentHTML = marked(content, {
+			const contentDOM = new JSDOM(marked(content, {
 				gfm: true,
+			}));
+			const topLevelChildren = contentDOM.window.document.childNodes;
+			topLevelChildren.forEach((node) => {
+				console.log(node.textContent);
 			});
-			console.log(contentHTML);
 			content.split(/[\r\n]+/g).forEach((line) => {
 				if (line.trim().length > 0) {
 					page.write(line);
