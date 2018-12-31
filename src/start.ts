@@ -19,11 +19,13 @@ async function start(defaultTextStyle: TextStyle) {
 				defaultTextStyle,
 				0xffffff,
 			);
-			const contentDOM = new JSDOM(marked(content, {
-				gfm: true,
-			}));
+			const contentDOM = new JSDOM(
+				marked(content, {
+					gfm: true,
+				}),
+			);
 			const topLevelChildren = contentDOM.window.document.body.children;
-			console.log(topLevelChildren[0]);
+			console.log(topLevelChildren[0].tagName, topLevelChildren[0].textContent);
 			content.split(/[\r\n]+/g).forEach((line) => {
 				if (line.trim().length > 0) {
 					page.write(line);
