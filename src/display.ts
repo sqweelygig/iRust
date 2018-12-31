@@ -95,7 +95,7 @@ export class Display {
 		await this.write(Display.COMMANDS.origin);
 		await this.write(Display.COMMANDS.fullWidth);
 		await this.write(Display.COMMANDS.fullHeight);
-		await this.write(Display.COMMANDS.updateViaWhite);
+		await this.write(Display.COMMANDS.updateUsingAnti);
 		this.inUpdate = false;
 	}
 
