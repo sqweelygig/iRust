@@ -8,23 +8,6 @@ import { Display } from "./display";
 import { Page, TextStyle } from "./page";
 
 async function start(repo: string, article: string) {
-	const defaultTextStyle = {
-		colour: 0x000000,
-		fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
-		lineDrop: 0.2,
-		lineHeight: 1.16,
-		size: 32,
-		spacing: 10,
-	};
-	const textStyles: Dictionary<Partial<TextStyle>> = {
-		h1: {
-			size: 64,
-		},
-		h2: {
-			lineHeight: 1.8,
-			size: 48,
-		},
-	};
 	const catchUpdate = async (pullResult: PullResult) => {
 		const summary = pullResult.summary;
 		if (summary.changes + summary.insertions + summary.deletions > 0) {
@@ -33,9 +16,24 @@ async function start(repo: string, article: string) {
 		}
 	};
 	const doUpdate = async () => {
+		const defaultTextStyle = {
+			colour: 0x000000,
+			fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
+			lineDrop: 0.2,
+			lineHeight: 1.16,
+			size: 32,
+			spacing: 10,
+		};
+		const textStyles: Dictionary<Partial<TextStyle>> = {
+			h1: {
+				size: 64,
+			},
+			h2: {
+				lineHeight: 1.8,
+				size: 48,
+			},
+		};
 		const content = await data.get(Path.join("content", `${article}.md`));
-		const config = await data.getConfig();
-		console.log(config);
 		const page = await Page.build(
 			display.getDimensions(),
 			defaultTextStyle,
