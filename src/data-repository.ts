@@ -27,7 +27,10 @@ export class DataRepository {
 	private readonly dataFolder: string;
 	private readonly onUpdate: Array<(pullResult: Git.PullResult) => void>;
 
-	private constructor(remote: string, onUpdate: (pullResult: Git.PullResult) => void) {
+	private constructor(
+		remote: string,
+		onUpdate: (pullResult: Git.PullResult) => void,
+	) {
 		this.remote = remote;
 		const hash = Crypto.createHash("sha256");
 		hash.update(remote);

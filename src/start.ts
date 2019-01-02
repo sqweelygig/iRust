@@ -26,8 +26,14 @@ async function start(repo: string, article: string) {
 		},
 	};
 	let previousContent: string | null = null;
-	const onUpdate = async () => {
-		console.log("Data Repository Updated.");
+	const catchUpdate = async (pullResult: PullResult) => {
+		const summary = pullResult.summary;
+		if (summary.changes + summary.insertions + summary.deletions > 0) {
+			console.log("Data Repository Updated.");
+			await doUpdate();
+		}
+	};
+	const doUpdate = async () => {
 		const content = await data.get(Path.join("content", `${article}.md`));
 		if (previousContent !== content) {
 			previousContent = content;
@@ -52,11 +58,11 @@ async function start(repo: string, article: string) {
 			console.log("Content Updated.");
 		}
 	};
-	const data = await DataRepository.build(repo, onUpdate);
+	const data = await DataRepository.build(repo, catchUpdate);
 	console.log("Data Repository Initialised.");
 	const display = await Display.build();
 	console.log("Display Panel Initialised.");
-	await onUpdate();
+	await doUpdate();
 	console.log("Initial Content Displayed.");
 }
 
