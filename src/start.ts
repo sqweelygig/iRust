@@ -10,6 +10,7 @@ async function start(repo: string, articleName: string) {
 		if (summary.changes + summary.insertions + summary.deletions > 0) {
 			console.log("Data Repository Updated.");
 			await doUpdate();
+			console.log("Display Panel Updated.");
 		}
 	};
 	const doUpdate = async () => {
@@ -37,7 +38,6 @@ async function start(repo: string, articleName: string) {
 		);
 		page.writeMD(content);
 		await display.update(page);
-		console.log("Display Panel Updated.");
 	};
 	const data = await DataRepository.build(repo, catchUpdate);
 	console.log("Data Repository Initialised.");
