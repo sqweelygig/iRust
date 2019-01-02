@@ -14,7 +14,10 @@ declare interface Config {
 }
 
 export class DataRepository {
-	public static async build(remote: string, onUpdate: () => void): Promise<DataRepository> {
+	public static async build(
+		remote: string,
+		onUpdate: () => void,
+	): Promise<DataRepository> {
 		const repo = new DataRepository(remote, onUpdate);
 		await repo.clone();
 		return repo;
