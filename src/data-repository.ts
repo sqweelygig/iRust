@@ -2,7 +2,7 @@ import * as Crypto from "crypto";
 import { promises as FS } from "fs";
 import * as YML from "js-yaml";
 import * as Path from "path";
-import * as git from "simple-git/promise";
+import * as Git from "simple-git/promise";
 // TODO [REFACTOR] All these data-repository items should be identical, so should be the same file
 // TODO [IMPROVEMENT] The update callback should be an array
 
@@ -16,7 +16,7 @@ declare interface Config {
 export class DataRepository {
 	public static async build(
 		remote: string,
-		onUpdate: () => void,
+		onUpdate: (pullResult: Git.PullResult) => void,
 	): Promise<DataRepository> {
 		const repo = new DataRepository(remote, onUpdate);
 		await repo.clone();
@@ -25,16 +25,16 @@ export class DataRepository {
 
 	private readonly remote: string;
 	private readonly dataFolder: string;
-	private readonly onUpdate: Array<() => void>;
+	private readonly onUpdate: Array<(pullResult: Git.PullResult) => void>;
 
-	public constructor(remote: string, onUpdate: () => void) {
+	private constructor(remote: string, onUpdate: (pullResult: Git.PullResult) => void) {
 		this.remote = remote;
 		const hash = Crypto.createHash("sha256");
 		hash.update(remote);
 		const folder = hash.digest("base64");
 		// This mapping of folders keeps the full history of every repo
 		// TODO Prune data repository back log...
-		// Probably by checking git remotes
+		// Probably by checking Git remotes
 		this.dataFolder = Path.join("/", "data", folder);
 		this.onUpdate = [onUpdate];
 	}
@@ -75,20 +75,18 @@ export class DataRepository {
 
 		try {
 			await FS.stat(this.dataFolder);
-			const pullResult = await git(this.dataFolder).pull();
-			console.log(pullResult);
+			await Git(this.dataFolder).pull();
 		} catch (error) {
 			await FS.mkdir(this.dataFolder);
 			// TODO store github's known_hosts fingerprint in ssh_config
 			// TODO shallow clone
-			await git(Path.join("/", "data")).clone(this.remote, this.dataFolder);
+			await Git(Path.join("/", "data")).clone(this.remote, this.dataFolder);
 		}
 
 		setInterval(async () => {
-			const pullResult = await git(this.dataFolder).pull();
-			console.log(pullResult);
+			const pullResult = await Git(this.dataFolder).pull();
 			this.onUpdate.forEach((onUpdate) => {
-				onUpdate();
+				onUpdate(pullResult);
 			});
 		}, 5 * 60 * 1000);
 	}

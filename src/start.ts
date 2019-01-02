@@ -2,6 +2,7 @@ import { JSDOM } from "jsdom";
 import { Dictionary } from "lodash";
 import * as marked from "marked";
 import * as Path from "path";
+import { PullResult } from "simple-git/promise";
 import { DataRepository } from "./data-repository";
 import { Display } from "./display";
 import { Page, TextStyle } from "./page";
