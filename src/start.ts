@@ -25,7 +25,6 @@ async function start(repo: string, article: string) {
 			size: 48,
 		},
 	};
-	let previousContent: string | null = null;
 	const catchUpdate = async (pullResult: PullResult) => {
 		const summary = pullResult.summary;
 		if (summary.changes + summary.insertions + summary.deletions > 0) {
@@ -35,28 +34,26 @@ async function start(repo: string, article: string) {
 	};
 	const doUpdate = async () => {
 		const content = await data.get(Path.join("content", `${article}.md`));
-		if (previousContent !== content) {
-			previousContent = content;
-			const page = await Page.build(
-				display.getDimensions(),
-				defaultTextStyle,
-				0xffffff,
-			);
-			const contentDOM = new JSDOM(
-				marked(content, {
-					gfm: true,
-				}),
-			);
-			const topLevelChildren = contentDOM.window.document.body.children;
-			for (const child of topLevelChildren) {
-				const textContent = child.textContent
-					? child.textContent.replace(/\s+/g, " ")
-					: "";
-				page.write(textContent, textStyles[child.tagName.toLowerCase()]);
-			}
-			await display.update(page);
-			console.log("Content Updated.");
+		const config = await data.getConfig();
+		console.log(config);
+		const page = await Page.build(
+			display.getDimensions(),
+			defaultTextStyle,
+			0xffffff,
+		);
+		const contentDOM = new JSDOM(
+			marked(content, {
+				gfm: true,
+			}),
+		);
+		const topLevelChildren = contentDOM.window.document.body.children;
+		for (const child of topLevelChildren) {
+			const textContent = child.textContent
+				? child.textContent.replace(/\s+/g, " ")
+				: "";
+			page.write(textContent, textStyles[child.tagName.toLowerCase()]);
 		}
+		await display.update(page);
 	};
 	const data = await DataRepository.build(repo, catchUpdate);
 	console.log("Data Repository Initialised.");
