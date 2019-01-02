@@ -4,6 +4,7 @@ import * as YML from "js-yaml";
 import * as Path from "path";
 import * as git from "simple-git/promise";
 // TODO [REFACTOR] All these data-repository items should be identical, so should be the same file
+// TODO [IMPROVEMENT] The update callback should be an array
 
 declare interface Config {
 	mixpanelToken: string;
@@ -13,9 +14,15 @@ declare interface Config {
 }
 
 export class DataRepository {
+	public static async build(remote: string, onUpdate: () => void): Promise<DataRepository> {
+		const repo = new DataRepository(remote, onUpdate);
+		await repo.clone();
+		return repo;
+	}
+
 	private readonly remote: string;
 	private readonly dataFolder: string;
-	private readonly onUpdate: () => void;
+	private readonly onUpdate: Array<() => void>;
 
 	public constructor(remote: string, onUpdate: () => void) {
 		this.remote = remote;
@@ -26,7 +33,7 @@ export class DataRepository {
 		// TODO Prune data repository back log...
 		// Probably by checking git remotes
 		this.dataFolder = Path.join("/", "data", folder);
-		this.onUpdate = onUpdate;
+		this.onUpdate = [onUpdate];
 	}
 
 	public async get(path: string): Promise<string> {
@@ -65,7 +72,8 @@ export class DataRepository {
 
 		try {
 			await FS.stat(this.dataFolder);
-			await git(this.dataFolder).pull();
+			const pullResult = await git(this.dataFolder).pull();
+			console.log(pullResult);
 		} catch (error) {
 			await FS.mkdir(this.dataFolder);
 			// TODO store github's known_hosts fingerprint in ssh_config
@@ -74,8 +82,11 @@ export class DataRepository {
 		}
 
 		setInterval(async () => {
-			await git(this.dataFolder).pull();
-			this.onUpdate();
+			const pullResult = await git(this.dataFolder).pull();
+			console.log(pullResult);
+			this.onUpdate.forEach((onUpdate) => {
+				onUpdate();
+			});
 		}, 5 * 60 * 1000);
 	}
 }
