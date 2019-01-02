@@ -1,4 +1,7 @@
+import { JSDOM } from "jsdom";
 import { merge } from "lodash";
+import { Dictionary } from "lodash";
+import * as marked from "marked";
 import * as gd from "node-gd";
 import { DisplayDimensions, PixelGrid } from "./display";
 
@@ -15,6 +18,7 @@ export class Page implements PixelGrid {
 	public static async build(
 		dimensions: DisplayDimensions,
 		defaultStyle: TextStyle,
+		textStyles: Dictionary<Partial<TextStyle>>,
 		fill?: number,
 	): Promise<Page> {
 		return new Promise<Page>((resolve, reject) => {
@@ -28,7 +32,7 @@ export class Page implements PixelGrid {
 						if (fill) {
 							stage.fill(0, 0, fill);
 						}
-						resolve(new Page(stage, defaultStyle, dimensions));
+						resolve(new Page(stage, defaultStyle, textStyles, dimensions));
 					} else {
 						reject(new Error("Huh? Empty callback!"));
 					}
@@ -41,6 +45,8 @@ export class Page implements PixelGrid {
 
 	private readonly defaultStyle: TextStyle;
 
+	private readonly textStyles: Dictionary<Partial<TextStyle>>;
+
 	private readonly dimensions: DisplayDimensions;
 
 	private baseLine: number = 0;
@@ -48,10 +54,12 @@ export class Page implements PixelGrid {
 	constructor(
 		stage: Stage,
 		defaultStyle: TextStyle,
+		textStyles: Dictionary<Partial<TextStyle>>,
 		dimensions: DisplayDimensions,
 	) {
 		this.stage = stage;
 		this.defaultStyle = defaultStyle;
+		this.textStyles = textStyles;
 		this.dimensions = dimensions;
 	}
 
@@ -59,10 +67,29 @@ export class Page implements PixelGrid {
 		return this.stage.getPixel(x, y);
 	}
 
-	public write(text: string, style?: Partial<TextStyle>) {
+	public writeMD(content: string): void {
+		const contentDOM = new JSDOM(
+			marked(content, {
+				gfm: true,
+			}),
+		);
+		const topLevelChildren = contentDOM.window.document.body.children;
+		for (const child of topLevelChildren) {
+			const textContent = child.textContent
+				? child.textContent.replace(/\s+/g, " ")
+				: "";
+			this.writeParagraph(textContent, child.tagName.toLowerCase());
+		}
+	}
+
+	public writeParagraph(text: string, style?: string) {
 		const lines = [""];
 		const words = text.split(/ /g);
-		const mergedStyle = merge({}, this.defaultStyle, style);
+		const mergedStyle = merge(
+			{},
+			this.defaultStyle,
+			style ? this.textStyles[style] : {},
+		);
 		words.forEach((word) => {
 			const appendedLine = `${lines[lines.length - 1]} ${word}`.trim();
 			const box = this.stage.stringFTBBox(
