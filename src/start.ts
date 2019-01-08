@@ -34,7 +34,7 @@ class Article implements PixelGrid {
 			textStyles,
 			background,
 		);
-		return new Article(onUpdate, contentPanel, summaryPanel, shortEdge);
+		return new Article(onUpdate, contentPanel, summaryPanel, longEdge - shortEdge);
 	}
 
 	private readonly contentPanel: TextPanel;
@@ -45,7 +45,12 @@ class Article implements PixelGrid {
 
 	private readonly panelBoundary: number;
 
-	private constructor(onUpdate: () => void, contentPanel: TextPanel, summaryPanel: TextPanel, panelBoundary: number) {
+	private constructor(
+		onUpdate: () => void,
+		contentPanel: TextPanel,
+		summaryPanel: TextPanel,
+		panelBoundary: number,
+	) {
 		this.contentPanel = contentPanel;
 		this.summaryPanel = summaryPanel;
 		this.panelBoundary = panelBoundary;
