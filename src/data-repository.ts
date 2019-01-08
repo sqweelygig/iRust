@@ -89,12 +89,7 @@ export class DataRepository {
 		setInterval(async () => {
 			const pullResult = await Git(this.dataFolder).pull();
 			const summary = pullResult.summary;
-			if (
-				summary.changes +
-					summary.insertions +
-					summary.deletions >
-				0
-			) {
+			if (summary.changes + summary.insertions + summary.deletions > 0) {
 				this.onUpdate.forEach((onUpdate) => {
 					onUpdate(pullResult);
 				});

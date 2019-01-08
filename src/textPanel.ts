@@ -1,6 +1,5 @@
 import { JSDOM } from "jsdom";
-import { merge } from "lodash";
-import { Dictionary } from "lodash";
+import { Dictionary, merge } from "lodash";
 import * as marked from "marked";
 import * as gd from "node-gd";
 import { DisplayDimensions, PixelGrid } from "./display";
@@ -19,15 +18,13 @@ export class TextPanel implements PixelGrid {
 		dimensions: DisplayDimensions,
 		defaultStyle: TextStyle,
 		textStyles: Dictionary<Partial<TextStyle>>,
-		onUpdate: () => void,
-		fill?: number,
+		background?: number,
 	): Promise<TextPanel> {
 		const panel = new TextPanel(
 			defaultStyle,
 			textStyles,
 			dimensions,
-			onUpdate,
-			fill,
+			background,
 		);
 		await panel.clear();
 		return panel;
@@ -43,22 +40,18 @@ export class TextPanel implements PixelGrid {
 
 	private baseLine: number = 0;
 
-	private readonly fill: number;
-
-	private readonly onUpdate: Array<() => void>;
+	private readonly background: number;
 
 	private constructor(
 		defaultStyle: TextStyle,
 		textStyles: Dictionary<Partial<TextStyle>>,
 		dimensions: DisplayDimensions,
-		onUpdate: () => void,
-		fill: number = 0xffffff,
+		background: number = 0xffffff,
 	) {
 		this.defaultStyle = defaultStyle;
 		this.textStyles = textStyles;
 		this.dimensions = dimensions;
-		this.onUpdate = [onUpdate];
-		this.fill = fill;
+		this.background = background;
 	}
 
 	public clear(): Promise<void> {
@@ -72,7 +65,7 @@ export class TextPanel implements PixelGrid {
 						reject(error);
 					} else if (stage) {
 						this.stage = stage;
-						stage.fill(0, 0, this.fill);
+						stage.fill(0, 0, this.background);
 						resolve();
 					} else {
 						reject(new Error("Huh? Empty callback!"));
@@ -100,9 +93,6 @@ export class TextPanel implements PixelGrid {
 				: "";
 			this.writeParagraph(textContent, child.tagName.toLowerCase());
 		}
-		this.onUpdate.forEach((onUpdate) => {
-			onUpdate();
-		});
 	}
 
 	private writeParagraph(text: string, style?: string) {
