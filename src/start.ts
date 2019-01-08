@@ -24,21 +24,20 @@ async function start(repo: string, articleName: string) {
 	const data = await DataRepository.build(repo, catchUpdate);
 	console.log("Data Repository Initialised.");
 	const config = await data.getConfig();
-	console.log(config);
+	console.log("Config File Loaded.");
 	const themeText = await FS.readFile(
 		Path.join(__dirname, "..", "themes", `${config.theme}.yml`),
 		"utf8",
 	);
 	const theme = Yaml.safeLoad(themeText);
 	console.log("Theme File Loaded.");
-	console.log(theme);
 	const display = await Display.build();
 	console.log("Display Panel Initialised.");
 	const panel = await TextPanel.build(
 		display.getDimensions(),
 		theme.default,
 		theme.overrides,
-		theme.fill,
+		theme.background,
 	);
 	console.log("Text Article Initialised.");
 	await doUpdate();
