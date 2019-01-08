@@ -22,6 +22,8 @@ RUN npm install --unsafe-perm && \
 
 COPY lib ./lib
 
+COPY themes ./themes
+
 COPY src ./src
 
 RUN npm run build && \
