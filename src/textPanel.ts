@@ -22,7 +22,13 @@ export class TextPanel implements PixelGrid {
 		onUpdate: () => void,
 		fill?: number,
 	): Promise<TextPanel> {
-		const panel = new TextPanel(defaultStyle, textStyles, dimensions, onUpdate, fill);
+		const panel = new TextPanel(
+			defaultStyle,
+			textStyles,
+			dimensions,
+			onUpdate,
+			fill,
+		);
 		await panel.clear();
 		return panel;
 	}
