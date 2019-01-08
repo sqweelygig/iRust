@@ -64,6 +64,7 @@ class Article implements PixelGrid {
 
 	public async writeMD(content: string): Promise<void> {
 		await this.contentPanel.writeMD(content);
+		await this.summaryPanel.writeMD(content);
 		this.onUpdate.forEach((onUpdate) => {
 			onUpdate();
 		});
