@@ -5,12 +5,12 @@ default:
   belowEachBaseline: 0.2
   fontSize: 32
   besideEachParagraph: 10
-  aboveEachParagraph: 0
+  aboveEachParagraph: 0.5
   belowEachParagraph: 0
 overrides:
   h1:
+    aboveEachParagraph: 0
     fontSize: 64
   h2:
-    aboveEachParagraph: 0.5
     fontSize: 48
 background: 0xffffff
