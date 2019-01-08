@@ -11,6 +11,5 @@ overrides:
   h1:
     size: 64
   h2:
-    before: 24
     size: 48
 background: 0xffffff

@@ -122,11 +122,10 @@ export class TextPanel implements PixelGrid {
 				lines.push(word);
 			}
 		});
-		this.baseLine += mergedStyle.before;
+		this.baseLine += Math.ceil(mergedStyle.before * mergedStyle.size * mergedStyle.lineHeight);
 		lines.forEach((line) => {
-			this.baseLine +=
-				Math.ceil(mergedStyle.size * mergedStyle.lineHeight) +
-				mergedStyle.spacing;
+			this.baseLine += Math.ceil(mergedStyle.size * mergedStyle.lineHeight);
+			this.baseLine += mergedStyle.spacing;
 			this.stage.stringFT(
 				mergedStyle.colour,
 				mergedStyle.fontPath,
