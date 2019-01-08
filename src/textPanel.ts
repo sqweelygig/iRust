@@ -36,13 +36,13 @@ export class TextPanel implements PixelGrid {
 
 	private baseLine: number = 0;
 
-	private readonly fill?: number;
+	private readonly fill: number;
 
 	private constructor(
 		defaultStyle: TextStyle,
 		textStyles: Dictionary<Partial<TextStyle>>,
 		dimensions: DisplayDimensions,
-		fill?: number,
+		fill: number = 0xffffff,
 	) {
 		this.defaultStyle = defaultStyle;
 		this.textStyles = textStyles;
@@ -61,9 +61,7 @@ export class TextPanel implements PixelGrid {
 						reject(error);
 					} else if (stage) {
 						this.stage = stage;
-						if (this.fill) {
-							stage.fill(0, 0, this.fill);
-						}
+						stage.fill(0, 0, this.fill);
 						resolve();
 					} else {
 						reject(new Error("Huh? Empty callback!"));
