@@ -21,27 +21,12 @@ export class TextPanel implements PixelGrid {
 		textStyles: Dictionary<Partial<TextStyle>>,
 		fill?: number,
 	): Promise<TextPanel> {
-		return new Promise<TextPanel>((resolve, reject) => {
-			gd.createTrueColor(
-				dimensions.width,
-				dimensions.height,
-				(error, stage) => {
-					if (error) {
-						reject(error);
-					} else if (stage) {
-						if (fill) {
-							stage.fill(0, 0, fill);
-						}
-						resolve(new TextPanel(stage, defaultStyle, textStyles, dimensions));
-					} else {
-						reject(new Error("Huh? Empty callback!"));
-					}
-				},
-			);
-		});
+		const panel = new TextPanel(defaultStyle, textStyles, dimensions, fill);
+		await panel.clear();
+		return panel;
 	}
 
-	private readonly stage: Stage;
+	private stage: Stage;
 
 	private readonly defaultStyle: TextStyle;
 
@@ -51,16 +36,41 @@ export class TextPanel implements PixelGrid {
 
 	private baseLine: number = 0;
 
-	constructor(
-		stage: Stage,
+	private readonly fill?: number;
+
+	private constructor(
 		defaultStyle: TextStyle,
 		textStyles: Dictionary<Partial<TextStyle>>,
 		dimensions: DisplayDimensions,
+		fill?: number,
 	) {
-		this.stage = stage;
 		this.defaultStyle = defaultStyle;
 		this.textStyles = textStyles;
 		this.dimensions = dimensions;
+		this.fill = fill;
+	}
+
+	public clear(): Promise<void> {
+		this.baseLine = 0;
+		return new Promise<void>((resolve, reject) => {
+			gd.createTrueColor(
+				this.dimensions.width,
+				this.dimensions.height,
+				(error, stage) => {
+					if (error) {
+						reject(error);
+					} else if (stage) {
+						this.stage = stage;
+						if (this.fill) {
+							stage.fill(0, 0, this.fill);
+						}
+						resolve();
+					} else {
+						reject(new Error("Huh? Empty callback!"));
+					}
+				},
+			);
+		});
 	}
 
 	public getPixel(x: number, y: number): number {

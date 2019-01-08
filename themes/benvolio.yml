@@ -11,4 +11,4 @@ overrides:
   h2:
     lineHeight: 1.8
     size: 48
-fill: 0xffffff
+background: 0xffffff
