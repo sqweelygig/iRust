@@ -10,7 +10,7 @@ export interface TextStyle {
 	fontSize: number;
 	belowEachBaseline: number;
 	aboveEachBaseline: number;
-	spacing: number;
+	besideEachParagraph: number;
 	aboveEachParagraph: number;
 	belowEachParagraph: number;
 }
@@ -112,11 +112,11 @@ export class TextPanel implements PixelGrid {
 				mergedStyle.fontPath,
 				mergedStyle.fontSize,
 				0,
-				mergedStyle.spacing,
+				mergedStyle.besideEachParagraph,
 				this.baseLine,
 				appendedLine,
 			);
-			if (box[2] + mergedStyle.spacing <= this.dimensions.width) {
+			if (box[2] + mergedStyle.besideEachParagraph <= this.dimensions.width) {
 				lines[lines.length - 1] = appendedLine;
 			} else {
 				lines.push(word);
@@ -126,18 +126,24 @@ export class TextPanel implements PixelGrid {
 			mergedStyle.fontSize * mergedStyle.aboveEachParagraph,
 		);
 		lines.forEach((line) => {
-			this.baseLine += Math.ceil(mergedStyle.fontSize * mergedStyle.aboveEachBaseline);
+			this.baseLine += Math.ceil(
+				mergedStyle.fontSize * mergedStyle.aboveEachBaseline,
+			);
 			this.stage.stringFT(
 				mergedStyle.colour,
 				mergedStyle.fontPath,
 				mergedStyle.fontSize,
 				0,
-				mergedStyle.spacing,
+				mergedStyle.besideEachParagraph,
 				this.baseLine,
 				line,
 			);
-			this.baseLine += Math.ceil(mergedStyle.fontSize * mergedStyle.belowEachBaseline);
+			this.baseLine += Math.ceil(
+				mergedStyle.fontSize * mergedStyle.belowEachBaseline,
+			);
 		});
-		this.baseLine += Math.ceil(mergedStyle.fontSize * mergedStyle.belowEachParagraph);
+		this.baseLine += Math.ceil(
+			mergedStyle.fontSize * mergedStyle.belowEachParagraph,
+		);
 	}
 }
