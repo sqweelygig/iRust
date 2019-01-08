@@ -46,7 +46,7 @@ async function start(repo: string, articleName: string) {
 	const config = await data.getConfig();
 	console.log(config);
 	const themeText = await FS.readFile(
-		Path.join(__dirname, "..", "themes", `${config.theme}.html`),
+		Path.join(__dirname, "..", "themes", `${config.theme}.yml`),
 		"utf8",
 	);
 	const theme = Yaml.safeLoad(themeText);
