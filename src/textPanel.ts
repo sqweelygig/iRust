@@ -7,12 +7,12 @@ import { DisplayDimensions, PixelGrid } from "./display";
 export interface TextStyle {
 	colour: number;
 	fontPath: string;
-	size: number;
-	lineDrop: number; // The space to allocate below the baseLine
-	lineHeight: number; // The space to allocate above the baseLine
+	fontSize: number;
+	belowEachBaseline: number;
+	aboveEachBaseline: number;
 	spacing: number;
-	before: number;
-	after: number;
+	aboveEachParagraph: number;
+	belowEachParagraph: number;
 }
 
 export class TextPanel implements PixelGrid {
@@ -110,7 +110,7 @@ export class TextPanel implements PixelGrid {
 			const box = this.stage.stringFTBBox(
 				mergedStyle.colour,
 				mergedStyle.fontPath,
-				mergedStyle.size,
+				mergedStyle.fontSize,
 				0,
 				mergedStyle.spacing,
 				this.baseLine,
@@ -122,21 +122,22 @@ export class TextPanel implements PixelGrid {
 				lines.push(word);
 			}
 		});
-		this.baseLine += Math.ceil(mergedStyle.before * mergedStyle.size * mergedStyle.lineHeight);
+		this.baseLine += Math.ceil(
+			mergedStyle.fontSize * mergedStyle.aboveEachParagraph,
+		);
 		lines.forEach((line) => {
-			this.baseLine += Math.ceil(mergedStyle.size * mergedStyle.lineHeight);
-			this.baseLine += mergedStyle.spacing;
+			this.baseLine += Math.ceil(mergedStyle.fontSize * mergedStyle.aboveEachBaseline);
 			this.stage.stringFT(
 				mergedStyle.colour,
 				mergedStyle.fontPath,
-				mergedStyle.size,
+				mergedStyle.fontSize,
 				0,
 				mergedStyle.spacing,
 				this.baseLine,
 				line,
 			);
-			this.baseLine += Math.ceil(mergedStyle.size * mergedStyle.lineDrop);
+			this.baseLine += Math.ceil(mergedStyle.fontSize * mergedStyle.belowEachBaseline);
 		});
-		this.baseLine += mergedStyle.after;
+		this.baseLine += Math.ceil(mergedStyle.fontSize * mergedStyle.belowEachParagraph);
 	}
 }

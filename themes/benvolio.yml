@@ -1,15 +1,15 @@
 default:
   colour: 0x000000
   fontPath: "/usr/src/imuse/lib/sassoon-primary.otf"
-  lineDrop: 0.2
-  lineHeight: 1.16
-  size: 32
+  aboveEachBaseline: 1.16
+  belowEachBaseline: 0.2
+  fontSize: 32
   spacing: 10
-  before: 0
-  after: 0
+  aboveEachParagraph: 0
+  belowEachParagraph: 0
 overrides:
   h1:
-    size: 64
+    fontSize: 64
   h2:
-    size: 48
+    fontSize: 48
 background: 0xffffff
