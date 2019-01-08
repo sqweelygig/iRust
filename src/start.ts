@@ -72,8 +72,10 @@ class Article implements PixelGrid {
 	public getPixel(x: number, y: number): number {
 		if (x < this.panelBoundary) {
 			return this.summaryPanel.getPixel(x, y);
-		} else {
+		} else if (x > this.panelBoundary) {
 			return this.contentPanel.getPixel(x - this.panelBoundary, y);
+		} else {
+			return 0x000000;
 		}
 	}
 }
