@@ -1,7 +1,9 @@
 import * as Path from "path";
+import { promises as FS } from "fs";
 import { PullResult } from "simple-git/promise";
 import { DataRepository } from "./data-repository";
 import { Display } from "./display";
+import * as Yaml from "js-yaml";
 import { TextPanel } from "./textPanel";
 
 async function start(repo: string, articleName: string) {
@@ -43,6 +45,12 @@ async function start(repo: string, articleName: string) {
 	console.log("Data Repository Initialised.");
 	const config = await data.getConfig();
 	console.log(config);
+	const themeText = await FS.readFile(
+		Path.join(__dirname, "..", "themes", `${config.theme}.html`),
+		"utf8",
+	);
+	const theme = Yaml.safeLoad(themeText);
+	console.log(theme);
 	const display = await Display.build();
 	console.log("Display Panel Initialised.");
 	await doUpdate();
