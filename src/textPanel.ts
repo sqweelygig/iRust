@@ -19,9 +19,10 @@ export class TextPanel implements PixelGrid {
 		dimensions: DisplayDimensions,
 		defaultStyle: TextStyle,
 		textStyles: Dictionary<Partial<TextStyle>>,
+		onUpdate: () => void,
 		fill?: number,
 	): Promise<TextPanel> {
-		const panel = new TextPanel(defaultStyle, textStyles, dimensions, fill);
+		const panel = new TextPanel(defaultStyle, textStyles, dimensions, onUpdate, fill);
 		await panel.clear();
 		return panel;
 	}
@@ -38,15 +39,19 @@ export class TextPanel implements PixelGrid {
 
 	private readonly fill: number;
 
+	private readonly onUpdate: Array<() => void>;
+
 	private constructor(
 		defaultStyle: TextStyle,
 		textStyles: Dictionary<Partial<TextStyle>>,
 		dimensions: DisplayDimensions,
+		onUpdate: () => void,
 		fill: number = 0xffffff,
 	) {
 		this.defaultStyle = defaultStyle;
 		this.textStyles = textStyles;
 		this.dimensions = dimensions;
+		this.onUpdate = [onUpdate];
 		this.fill = fill;
 	}
 
@@ -75,22 +80,26 @@ export class TextPanel implements PixelGrid {
 		return this.stage.getPixel(x, y);
 	}
 
-	public writeMD(content: string): void {
+	public async writeMD(content: string): Promise<void> {
 		const contentDOM = new JSDOM(
 			marked(content, {
 				gfm: true,
 			}),
 		);
 		const topLevelChildren = contentDOM.window.document.body.children;
+		await this.clear();
 		for (const child of topLevelChildren) {
 			const textContent = child.textContent
 				? child.textContent.replace(/\s+/g, " ")
 				: "";
 			this.writeParagraph(textContent, child.tagName.toLowerCase());
 		}
+		this.onUpdate.forEach((onUpdate) => {
+			onUpdate();
+		});
 	}
 
-	public writeParagraph(text: string, style?: string) {
+	private writeParagraph(text: string, style?: string) {
 		const lines = [""];
 		const words = text.split(/ /g);
 		const mergedStyle = merge(
