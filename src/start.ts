@@ -2,7 +2,7 @@ import * as Path from "path";
 import { PullResult } from "simple-git/promise";
 import { DataRepository } from "./data-repository";
 import { Display } from "./display";
-import { Page } from "./page";
+import { TextPanel } from "./textPanel";
 
 async function start(repo: string, articleName: string) {
 	const catchUpdate = async (pullResult: PullResult) => {
@@ -15,7 +15,7 @@ async function start(repo: string, articleName: string) {
 	};
 	const doUpdate = async () => {
 		const content = await data.get(Path.join("content", `${articleName}.md`));
-		const page = await Page.build(
+		const page = await TextPanel.build(
 			display.getDimensions(),
 			{
 				colour: 0x000000,
@@ -41,6 +41,8 @@ async function start(repo: string, articleName: string) {
 	};
 	const data = await DataRepository.build(repo, catchUpdate);
 	console.log("Data Repository Initialised.");
+	const config = await data.getConfig();
+	console.log(config);
 	const display = await Display.build();
 	console.log("Display Panel Initialised.");
 	await doUpdate();

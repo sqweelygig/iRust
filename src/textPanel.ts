@@ -14,14 +14,14 @@ export interface TextStyle {
 	spacing: number;
 }
 
-export class Page implements PixelGrid {
+export class TextPanel implements PixelGrid {
 	public static async build(
 		dimensions: DisplayDimensions,
 		defaultStyle: TextStyle,
 		textStyles: Dictionary<Partial<TextStyle>>,
 		fill?: number,
-	): Promise<Page> {
-		return new Promise<Page>((resolve, reject) => {
+	): Promise<TextPanel> {
+		return new Promise<TextPanel>((resolve, reject) => {
 			gd.createTrueColor(
 				dimensions.width,
 				dimensions.height,
@@ -32,7 +32,7 @@ export class Page implements PixelGrid {
 						if (fill) {
 							stage.fill(0, 0, fill);
 						}
-						resolve(new Page(stage, defaultStyle, textStyles, dimensions));
+						resolve(new TextPanel(stage, defaultStyle, textStyles, dimensions));
 					} else {
 						reject(new Error("Huh? Empty callback!"));
 					}

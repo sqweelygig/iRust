@@ -51,8 +51,8 @@ export class DataRepository {
 		return YML.safeLoad(configString);
 	}
 
-	public async getContent(page: string): Promise<string> {
-		return this.get(Path.join("content", `${page}.md`));
+	public async getContent(articleName: string): Promise<string> {
+		return this.get(Path.join("content", `${articleName}.md`));
 	}
 
 	public getDataPath(path: string): string {
