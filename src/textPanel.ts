@@ -11,6 +11,8 @@ export interface TextStyle {
 	lineDrop: number; // The space to allocate below the baseLine
 	lineHeight: number; // The space to allocate above the baseLine
 	spacing: number;
+	before: number;
+	after: number;
 }
 
 export class TextPanel implements PixelGrid {
@@ -120,6 +122,7 @@ export class TextPanel implements PixelGrid {
 				lines.push(word);
 			}
 		});
+		this.baseLine += mergedStyle.before;
 		lines.forEach((line) => {
 			this.baseLine +=
 				Math.ceil(mergedStyle.size * mergedStyle.lineHeight) +
@@ -135,5 +138,6 @@ export class TextPanel implements PixelGrid {
 			);
 			this.baseLine += Math.ceil(mergedStyle.size * mergedStyle.lineDrop);
 		});
+		this.baseLine += mergedStyle.after;
 	}
 }

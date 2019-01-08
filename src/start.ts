@@ -34,7 +34,12 @@ class Article implements PixelGrid {
 			textStyles,
 			background,
 		);
-		return new Article(onUpdate, contentPanel, summaryPanel, longEdge - shortEdge);
+		return new Article(
+			onUpdate,
+			contentPanel,
+			summaryPanel,
+			longEdge - shortEdge,
+		);
 	}
 
 	private readonly contentPanel: TextPanel;

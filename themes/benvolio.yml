@@ -5,10 +5,12 @@ default:
   lineHeight: 1.16
   size: 32
   spacing: 10
+  before: 0
+  after: 0
 overrides:
   h1:
     size: 64
   h2:
-    lineHeight: 1.8
+    lineHeight: 1.4
     size: 48
 background: 0xffffff
