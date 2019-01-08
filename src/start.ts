@@ -14,21 +14,41 @@ class Article implements PixelGrid {
 		onUpdate: () => void,
 		background?: number,
 	): Promise<Article> {
+		const shortEdge = Math.min(dimensions.width, dimensions.height);
+		const longEdge = Math.max(dimensions.width, dimensions.height);
 		const contentPanel = await TextPanel.build(
-			dimensions,
+			{
+				height: shortEdge,
+				width: shortEdge,
+			},
 			defaultStyle,
 			textStyles,
 			background,
 		);
-		return new Article(onUpdate, contentPanel);
+		const summaryPanel = await TextPanel.build(
+			{
+				height: shortEdge,
+				width: longEdge - shortEdge,
+			},
+			defaultStyle,
+			textStyles,
+			background,
+		);
+		return new Article(onUpdate, contentPanel, summaryPanel, shortEdge);
 	}
 
 	private readonly contentPanel: TextPanel;
 
+	private readonly summaryPanel: TextPanel;
+
 	private readonly onUpdate: Array<() => void>;
 
-	private constructor(onUpdate: () => void, contentPanel: TextPanel) {
+	private readonly panelBoundary: number;
+
+	private constructor(onUpdate: () => void, contentPanel: TextPanel, summaryPanel: TextPanel, panelBoundary: number) {
 		this.contentPanel = contentPanel;
+		this.summaryPanel = summaryPanel;
+		this.panelBoundary = panelBoundary;
 		this.onUpdate = [onUpdate];
 	}
 
@@ -40,7 +60,11 @@ class Article implements PixelGrid {
 	}
 
 	public getPixel(x: number, y: number): number {
-		return this.contentPanel.getPixel(x, y);
+		if (x < this.panelBoundary) {
+			return this.summaryPanel.getPixel(x, y);
+		} else {
+			return this.contentPanel.getPixel(x - this.panelBoundary, y);
+		}
 	}
 }
 
@@ -77,7 +101,6 @@ async function start(repo: string, articleName: string) {
 	);
 	console.log("Article Initialised.");
 	await onRepoUpdate();
-	console.log("Initial Content Displayed.");
 }
 
 start(process.env.REPO || "localhost", process.env.PAGE || "home")
