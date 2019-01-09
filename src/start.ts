@@ -53,7 +53,7 @@ class Article implements PixelGrid {
 			title: {
 				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
-				fontSize: 50,
+				fontSize: 40,
 			},
 		},
 	};
