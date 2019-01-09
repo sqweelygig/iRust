@@ -92,7 +92,7 @@ class Article implements PixelGrid {
 				title: currentTitle,
 			});
 		}
-		for (const i = 0; i < this.article.length; i++) {
+		for (let i = 0; i < this.article.length; i++) {
 			if (i > 0) {
 				this.summaryPanel.writeParagraph(this.article[i].title);
 			}
