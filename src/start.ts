@@ -46,11 +46,7 @@ class Article implements PixelGrid {
 			dimensions,
 			styleGuide.background,
 		);
-		return new Article(
-			drawingArea,
-			styleGuide,
-			onUpdate,
-		);
+		return new Article(drawingArea, styleGuide, onUpdate);
 	}
 
 	private readonly drawingArea: DrawingArea;
@@ -115,16 +111,31 @@ class Article implements PixelGrid {
 			});
 		}
 		this.drawingArea.writeParagraph({
-			style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.title),
+			style: merge(
+				{},
+				this.styleGuide.textStyles.default,
+				this.styleGuide.textStyles.title,
+			),
 			text: this.article[0].title,
 		});
 		this.drawingArea.writeParagraph({
-			style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.abstract),
+			style: merge(
+				{},
+				this.styleGuide.textStyles.default,
+				this.styleGuide.textStyles.abstract,
+			),
 			text: this.article[0].body,
 		});
+		const dimensions = this.drawingArea.dimensions;
+		const summaryWidth = Math.max(dimensions.width, dimensions.height) - Math.min(dimensions.width, dimensions.height);
+		this.drawingArea.setCursor({right: summaryWidth});
 		for (let i = 1; i < this.article.length; i++) {
 			this.drawingArea.writeParagraph({
-				style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.summary),
+				style: merge(
+					{},
+					this.styleGuide.textStyles.default,
+					this.styleGuide.textStyles.summary,
+				),
 				text: this.article[i].title,
 			});
 		}

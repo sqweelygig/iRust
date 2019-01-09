@@ -1,3 +1,4 @@
+import { merge } from "lodash";
 import * as gd from "node-gd";
 import { DisplayDimensions, PixelGrid } from "./display";
 
@@ -30,9 +31,9 @@ export class DrawingArea implements PixelGrid {
 		return panel;
 	}
 
-	private stage: Stage;
+	public readonly dimensions: DisplayDimensions;
 
-	private readonly dimensions: DisplayDimensions;
+	private stage: Stage;
 
 	private cursor: Cursor = {
 		left: 0,
@@ -75,6 +76,10 @@ export class DrawingArea implements PixelGrid {
 
 	public getCursor(): Cursor {
 		return this.cursor;
+	}
+
+	public setCursor(cursor: Partial<Cursor>): void {
+		merge(this.cursor, cursor);
 	}
 
 	public getPixel(x: number, y: number): number {
