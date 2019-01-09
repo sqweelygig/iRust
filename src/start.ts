@@ -80,6 +80,8 @@ class Article implements PixelGrid {
 		onUpdate: () => void,
 	) {
 		this.styles = Article.themes[theme];
+		console.log(theme);
+		console.log(this.styles);
 		this.drawingArea = drawingArea;
 		this.onUpdate = [onUpdate];
 	}
