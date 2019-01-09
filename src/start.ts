@@ -34,14 +34,17 @@ const themes: Dictionary<StyleGuide> = {
 			header: {
 				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
+				fontSize: 36,
 			},
 			summary: {
 				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
+				fontSize: 32,
 			},
 			title: {
 				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
+				fontSize: 32,
 			},
 		},
 	},
