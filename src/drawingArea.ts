@@ -86,7 +86,7 @@ export class DrawingArea implements PixelGrid {
 		return this.stage.getPixel(x, y);
 	}
 
-	public writeParagraph(args: { style: TextStyle; text: string }) {
+	public writeText(args: { style: TextStyle; text: string }) {
 		const lines = [""];
 		const words = args.text.split(/\s+/g);
 		words.forEach((word) => {

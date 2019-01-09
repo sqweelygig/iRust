@@ -82,7 +82,7 @@ class Article implements PixelGrid {
 	// 		const textContent = child.textContent
 	// 			? child.textContent.replace(/\s+/g, " ")
 	// 			: "";
-	// 		this.writeParagraph(textContent, child.tagName.toLowerCase());
+	// 		this.writeText(textContent, child.tagName.toLowerCase());
 	// 	}
 	// }
 
@@ -110,7 +110,7 @@ class Article implements PixelGrid {
 				title: currentTitle,
 			});
 		}
-		this.drawingArea.writeParagraph({
+		this.drawingArea.writeText({
 			style: merge(
 				{},
 				this.styleGuide.textStyles.default,
@@ -118,7 +118,7 @@ class Article implements PixelGrid {
 			),
 			text: this.article[0].title,
 		});
-		this.drawingArea.writeParagraph({
+		this.drawingArea.writeText({
 			style: merge(
 				{},
 				this.styleGuide.textStyles.default,
@@ -133,7 +133,7 @@ class Article implements PixelGrid {
 		const resetTop = this.drawingArea.getCursor().top;
 		this.drawingArea.setCursor({ right: summaryWidth, top: resetTop});
 		for (let i = 1; i < this.article.length; i++) {
-			this.drawingArea.writeParagraph({
+			this.drawingArea.writeText({
 				style: merge(
 					{},
 					this.styleGuide.textStyles.default,
@@ -143,6 +143,24 @@ class Article implements PixelGrid {
 			});
 		}
 		this.drawingArea.setCursor({ top: resetTop, left: summaryWidth});
+		for (let i = 1; i < this.article.length; i++) {
+			this.drawingArea.writeText({
+				style: merge(
+					{},
+					this.styleGuide.textStyles.default,
+					this.styleGuide.textStyles.header,
+				),
+				text: this.article[i].title,
+			});
+			this.drawingArea.writeText({
+				style: merge(
+					{},
+					this.styleGuide.textStyles.default,
+					this.styleGuide.textStyles.content,
+				),
+				text: this.article[i].body,
+			});
+		}
 		this.onUpdate.forEach((onUpdate) => {
 			onUpdate();
 		});
