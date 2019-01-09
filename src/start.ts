@@ -47,6 +47,7 @@ class Article implements PixelGrid {
 			},
 			summary: {
 				aboveEachBaseline: 1.4,
+				belowEachParagraph: 0.5,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
 				fontSize: 32,
 			},
