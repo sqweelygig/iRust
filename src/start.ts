@@ -57,7 +57,7 @@ class Article implements PixelGrid {
 
 	private article: Array<{
 		title: string;
-		body: string;
+		body: string[];
 	}>;
 
 	private constructor(
@@ -70,43 +70,33 @@ class Article implements PixelGrid {
 		this.onUpdate = [onUpdate];
 	}
 
-	// public async writeMD(content: string): Promise<void> {
-	// 	const contentDOM = new JSDOM(
-	// 		marked(content, {
-	// 			gfm: true,
-	// 		}),
-	// 	);
-	// 	const topLevelChildren = contentDOM.window.document.body.children;
-	// 	await this.clear();
-	// 	for (const child of topLevelChildren) {
-	// 		const textContent = child.textContent
-	// 			? child.textContent.replace(/\s+/g, " ")
-	// 			: "";
-	// 		this.writeParagraph(textContent, child.tagName.toLowerCase());
-	// 	}
-	// }
-
 	public async writeMD(content: string): Promise<void> {
+		let currentParagraph: string[] = [];
 		let currentSection: string[] = [];
 		let currentTitle = "";
 		this.article = [];
 		content.split(/\r?\n/g).forEach((line) => {
 			if (line.match(/^#+/)) {
+				currentSection.push(currentParagraph.join(" ").trim());
 				if (currentSection.length > 0 || currentTitle !== "") {
 					this.article.push({
-						body: currentSection.join("\n").trim(),
+						body: currentSection,
 						title: currentTitle,
 					});
 				}
 				currentTitle = line.replace(/^#+/, "").trim();
 				currentSection = [];
+				currentParagraph = [];
+			} else if (line.trim().match(/^$/)) {
+				currentSection.push(currentParagraph.join(" ").trim());
+				currentParagraph = [];
 			} else {
-				currentSection.push(line.trim());
+				currentParagraph.push(line.trim());
 			}
 		});
 		if (currentSection.length > 0 || currentTitle !== "") {
 			this.article.push({
-				body: currentSection.join("\n").trim(),
+				body: currentSection,
 				title: currentTitle,
 			});
 		}
@@ -124,7 +114,7 @@ class Article implements PixelGrid {
 				this.styleGuide.textStyles.default,
 				this.styleGuide.textStyles.abstract,
 			),
-			text: this.article[0].body,
+			text: this.article[0].body[0],
 		});
 		const dimensions = this.drawingArea.dimensions;
 		const summaryWidth =
@@ -152,13 +142,15 @@ class Article implements PixelGrid {
 				),
 				text: this.article[i].title,
 			});
-			this.drawingArea.writeParagraph({
-				style: merge(
-					{},
-					this.styleGuide.textStyles.default,
-					this.styleGuide.textStyles.content,
-				),
-				text: this.article[i].body,
+			this.article[i].body.forEach((paragraph) => {
+				this.drawingArea.writeParagraph({
+					style: merge(
+						{},
+						this.styleGuide.textStyles.default,
+						this.styleGuide.textStyles.content,
+					),
+					text: paragraph,
+				});
 			});
 		}
 		this.onUpdate.forEach((onUpdate) => {
