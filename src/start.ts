@@ -35,8 +35,14 @@ const themes: Dictionary<StyleGuide> = {
 				belowEachParagraph: 0,
 				besideEachParagraph: 10,
 				colour: 0x000000,
-				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
+				fontPath: "/usr/src/imuse/lib/primary-school.otf",
 				fontSize: 30,
+			},
+			header: {
+				fontPath: "/usr/src/imuse/lib/fancy-script.otf",
+			},
+			title: {
+				fontPath: "/usr/src/imuse/lib/fancy-script.otf",
 			},
 		},
 	},
@@ -88,8 +94,8 @@ class Article implements PixelGrid {
 		this.article = [];
 		// For each line
 		content.split(/\r?\n/g).forEach((line) => {
-			// Check whether it is a header
 			if (line.match(/^#+/)) {
+				// If it is a header
 				// Put any existing paragraph into the section
 				if (currentParagraph.join(" ").trim().length > 0) {
 					currentSection.push(currentParagraph.join(" ").trim());
@@ -105,8 +111,8 @@ class Article implements PixelGrid {
 				}
 				// Reset the existing title
 				currentTitle = line.replace(/^#+/, "").trim();
-			// Check whether it is an explicit line break
 			} else if (line.trim().length === 0) {
+				// If it is an explicit line break
 				// Put any existing paragraph into the section
 				if (currentParagraph.join(" ").trim().length > 0) {
 					currentSection.push(currentParagraph.join(" ").trim());
@@ -150,12 +156,16 @@ class Article implements PixelGrid {
 		// Record this vertical position and divide the remaining screen in two
 		const dimensions = this.drawingArea.dimensions;
 		this.crossLocation = {
-			left: Math.max(dimensions.width, dimensions.height) -
+			left:
+				Math.max(dimensions.width, dimensions.height) -
 				Math.min(dimensions.width, dimensions.height),
 			top: this.drawingArea.getCursor().top,
-	};
+		};
 		// Draw each of the headers as a summary, in the summary area
-		this.drawingArea.setCursor({ right: this.crossLocation.left, top: this.crossLocation.top });
+		this.drawingArea.setCursor({
+			right: this.crossLocation.left,
+			top: this.crossLocation.top,
+		});
 		for (let i = 1; i < this.article.length; i++) {
 			this.drawingArea.writeParagraph({
 				style: merge(
@@ -188,6 +198,7 @@ class Article implements PixelGrid {
 				});
 			});
 		}
+		// Let registered handlers know we've changed
 		this.onUpdate.forEach((onUpdate) => {
 			onUpdate();
 		});
