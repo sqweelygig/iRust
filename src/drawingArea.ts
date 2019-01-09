@@ -79,7 +79,11 @@ export class DrawingArea implements PixelGrid {
 	}
 
 	public setCursor(cursor: Partial<Cursor>): void {
-		merge(this.cursor, { top: 0, right: this.dimensions.width, left: 0 }, cursor);
+		merge(
+			this.cursor,
+			{ top: 0, right: this.dimensions.width, left: 0 },
+			cursor,
+		);
 	}
 
 	public getPixel(x: number, y: number): number {
