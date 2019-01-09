@@ -25,7 +25,7 @@ const themes: Dictionary<StyleGuide> = {
 	benvolio: {
 		colours: {
 			background: 0xffffff,
-			line: 0xffffff,
+			line: 0x000000,
 		},
 		textStyles: {
 			default: {
@@ -39,6 +39,10 @@ const themes: Dictionary<StyleGuide> = {
 				fontSize: 28,
 			},
 			header: {
+				aboveEachBaseline: 1.5,
+				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
+			},
+			summary: {
 				aboveEachBaseline: 1.5,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
 			},
