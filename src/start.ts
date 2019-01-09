@@ -77,29 +77,38 @@ class Article implements PixelGrid {
 		this.article = [];
 		content.split(/\r?\n/g).forEach((line) => {
 			if (line.match(/^#+/)) {
-				currentSection.push(currentParagraph.join(" ").trim());
+				if (currentParagraph.length > 0) {
+					currentSection.push(currentParagraph.join(" ").trim());
+					currentParagraph = [];
+				}
 				if (currentSection.length > 0 || currentTitle !== "") {
 					this.article.push({
 						body: currentSection,
 						title: currentTitle,
 					});
+					currentSection = [];
 				}
 				currentTitle = line.replace(/^#+/, "").trim();
-				currentSection = [];
-				currentParagraph = [];
 			} else if (line.trim().match(/^$/)) {
-				currentSection.push(currentParagraph.join(" ").trim());
-				currentParagraph = [];
+				if (currentParagraph.length > 0) {
+					currentSection.push(currentParagraph.join(" ").trim());
+					currentParagraph = [];
+				}
 			} else {
 				currentParagraph.push(line.trim());
 			}
 		});
+		if (currentParagraph.length > 0) {
+			currentSection.push(currentParagraph.join(" ").trim());
+			currentParagraph = [];
+		}
 		if (currentSection.length > 0 || currentTitle !== "") {
 			this.article.push({
 				body: currentSection,
 				title: currentTitle,
 			});
 		}
+		console.log(this.article);
 		this.drawingArea.writeParagraph({
 			style: merge(
 				{},
