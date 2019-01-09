@@ -138,7 +138,7 @@ class Article implements PixelGrid {
 			});
 		}
 		// Draw the title
-		this.drawingArea.writeParagraph({
+		this.drawingArea.drawParagraph({
 			style: merge(
 				{},
 				this.styleGuide.textStyles.default,
@@ -147,7 +147,7 @@ class Article implements PixelGrid {
 			text: this.article[0].title,
 		});
 		// Draw the abstract
-		this.drawingArea.writeParagraph({
+		this.drawingArea.drawParagraph({
 			style: merge(
 				{},
 				this.styleGuide.textStyles.default,
@@ -169,7 +169,7 @@ class Article implements PixelGrid {
 			top: this.crossLocation.top,
 		});
 		for (let i = 1; i < this.article.length; i++) {
-			this.drawingArea.writeParagraph({
+			this.drawingArea.drawParagraph({
 				style: merge(
 					{},
 					this.styleGuide.textStyles.default,
@@ -181,7 +181,7 @@ class Article implements PixelGrid {
 		// Draw each of the sections as the article, in the content area
 		this.drawingArea.setCursor(this.crossLocation);
 		for (let i = 1; i < this.article.length; i++) {
-			this.drawingArea.writeParagraph({
+			this.drawingArea.drawParagraph({
 				style: merge(
 					{},
 					this.styleGuide.textStyles.default,
@@ -190,7 +190,7 @@ class Article implements PixelGrid {
 				text: this.article[i].title,
 			});
 			this.article[i].body.forEach((paragraph) => {
-				this.drawingArea.writeParagraph({
+				this.drawingArea.drawParagraph({
 					style: merge(
 						{},
 						this.styleGuide.textStyles.default,
