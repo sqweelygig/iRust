@@ -7,7 +7,10 @@ import { DrawingArea, TextStyle } from "./drawingArea";
 // TODO [REFACTOR] Export interface StyleSheet and typescript the themes files.
 
 export interface StyleGuide {
-	background: number;
+	colours: {
+		background: number;
+		line: number;
+	};
 	textStyles: {
 		default: TextStyle;
 		title?: Partial<TextStyle>;
@@ -20,7 +23,10 @@ export interface StyleGuide {
 
 const themes: Dictionary<StyleGuide> = {
 	benvolio: {
-		background: 0xffffff,
+		colours: {
+			background: 0xffffff,
+			line: 0xffffff,
+		},
 		textStyles: {
 			default: {
 				aboveEachBaseline: 1.13,
@@ -30,7 +36,7 @@ const themes: Dictionary<StyleGuide> = {
 				besideEachParagraph: 10,
 				colour: 0x000000,
 				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
-				fontSize: 32,
+				fontSize: 30,
 			},
 		},
 	},
@@ -44,7 +50,7 @@ class Article implements PixelGrid {
 	): Promise<Article> {
 		const drawingArea = await DrawingArea.build(
 			dimensions,
-			styleGuide.background,
+			styleGuide.colours.background,
 		);
 		return new Article(drawingArea, styleGuide, onUpdate);
 	}
@@ -54,6 +60,11 @@ class Article implements PixelGrid {
 	private readonly onUpdate: Array<() => void>;
 
 	private readonly styleGuide: StyleGuide;
+
+	private crossLocation: {
+		top: number;
+		left: number;
+	};
 
 	private article: Array<{
 		title: string;
@@ -75,12 +86,16 @@ class Article implements PixelGrid {
 		let currentSection: string[] = [];
 		let currentTitle = "";
 		this.article = [];
+		// For each line
 		content.split(/\r?\n/g).forEach((line) => {
+			// Check whether it is a header
 			if (line.match(/^#+/)) {
-				if (currentParagraph.length > 0) {
+				// Put any existing paragraph into the section
+				if (currentParagraph.join(" ").trim().length > 0) {
 					currentSection.push(currentParagraph.join(" ").trim());
 					currentParagraph = [];
 				}
+				// Put any existing section & title into the article
 				if (currentSection.length > 0 || currentTitle !== "") {
 					this.article.push({
 						body: currentSection,
@@ -88,27 +103,33 @@ class Article implements PixelGrid {
 					});
 					currentSection = [];
 				}
+				// Reset the existing title
 				currentTitle = line.replace(/^#+/, "").trim();
+			// Check whether it is an explicit line break
 			} else if (line.trim().length === 0) {
+				// Put any existing paragraph into the section
 				if (currentParagraph.join(" ").trim().length > 0) {
 					currentSection.push(currentParagraph.join(" ").trim());
 					currentParagraph = [];
 				}
 			} else {
+				// Accumulate each line
 				currentParagraph.push(line.trim());
 			}
 		});
-		if (currentParagraph.length > 0) {
+		// Put any existing paragraph into the section
+		if (currentParagraph.join(" ").trim().length > 0) {
 			currentSection.push(currentParagraph.join(" ").trim());
 			currentParagraph = [];
 		}
+		// Put any existing section & title into the article
 		if (currentSection.length > 0 || currentTitle !== "") {
 			this.article.push({
 				body: currentSection,
 				title: currentTitle,
 			});
 		}
-		console.log(this.article);
+		// Draw the title
 		this.drawingArea.writeParagraph({
 			style: merge(
 				{},
@@ -117,6 +138,7 @@ class Article implements PixelGrid {
 			),
 			text: this.article[0].title,
 		});
+		// Draw the abstract
 		this.drawingArea.writeParagraph({
 			style: merge(
 				{},
@@ -125,12 +147,15 @@ class Article implements PixelGrid {
 			),
 			text: this.article[0].body[0],
 		});
+		// Record this vertical position and divide the remaining screen in two
 		const dimensions = this.drawingArea.dimensions;
-		const summaryWidth =
-			Math.max(dimensions.width, dimensions.height) -
-			Math.min(dimensions.width, dimensions.height);
-		const resetTop = this.drawingArea.getCursor().top;
-		this.drawingArea.setCursor({ right: summaryWidth, top: resetTop });
+		this.crossLocation = {
+			left: Math.max(dimensions.width, dimensions.height) -
+				Math.min(dimensions.width, dimensions.height),
+			top: this.drawingArea.getCursor().top,
+	};
+		// Draw each of the headers as a summary, in the summary area
+		this.drawingArea.setCursor({ right: this.crossLocation.left, top: this.crossLocation.top });
 		for (let i = 1; i < this.article.length; i++) {
 			this.drawingArea.writeParagraph({
 				style: merge(
@@ -141,7 +166,8 @@ class Article implements PixelGrid {
 				text: this.article[i].title,
 			});
 		}
-		this.drawingArea.setCursor({ top: resetTop, left: summaryWidth });
+		// Draw each of the sections as the article, in the content area
+		this.drawingArea.setCursor(this.crossLocation);
 		for (let i = 1; i < this.article.length; i++) {
 			this.drawingArea.writeParagraph({
 				style: merge(
@@ -168,7 +194,11 @@ class Article implements PixelGrid {
 	}
 
 	public getPixel(x: number, y: number): number {
-		return this.drawingArea.getPixel(x, y);
+		if (x === this.crossLocation.top || y === this.crossLocation.left) {
+			return this.styleGuide.colours.line;
+		} else {
+			return this.drawingArea.getPixel(x, y);
+		}
 	}
 }
 
