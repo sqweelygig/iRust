@@ -1,4 +1,4 @@
-import { Dictionary } from "lodash";
+import { Dictionary, merge } from "lodash";
 import * as Path from "path";
 import { DataRepository } from "./data-repository";
 import { Display, DisplayDimensions, PixelGrid } from "./display";
@@ -8,21 +8,30 @@ import { DrawingArea, TextStyle } from "./drawingArea";
 
 export interface StyleGuide {
 	background: number;
-	default: TextStyle;
+	textStyles: {
+		default: TextStyle;
+		title?: Partial<TextStyle>;
+		abstract?: Partial<TextStyle>;
+		summary?: Partial<TextStyle>;
+		header?: Partial<TextStyle>;
+		content?: Partial<TextStyle>;
+	};
 }
 
 const themes: Dictionary<StyleGuide> = {
 	benvolio: {
 		background: 0xffffff,
-		default: {
-			aboveEachBaseline: 1.13,
-			aboveEachParagraph: 0.5,
-			belowEachBaseline: 0.35,
-			belowEachParagraph: 0,
-			besideEachParagraph: 10,
-			colour: 0x000000,
-			fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
-			fontSize: 32,
+		textStyles: {
+			default: {
+				aboveEachBaseline: 1.13,
+				aboveEachParagraph: 0.5,
+				belowEachBaseline: 0.35,
+				belowEachParagraph: 0,
+				besideEachParagraph: 10,
+				colour: 0x000000,
+				fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
+				fontSize: 32,
+			},
 		},
 	},
 };
@@ -108,7 +117,16 @@ class Article implements PixelGrid {
 		for (let i = 0; i < this.article.length; i++) {
 			if (i === 0) {
 				this.drawingArea.writeParagraph({
-					style: this.styleGuide.default,
+					style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.title),
+					text: this.article[i].title,
+				});
+				this.drawingArea.writeParagraph({
+					style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.abstract),
+					text: this.article[i].body,
+				});
+			} else {
+				this.drawingArea.writeParagraph({
+					style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.summary),
 					text: this.article[i].title,
 				});
 			}

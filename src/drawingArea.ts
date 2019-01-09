@@ -14,15 +14,18 @@ export interface TextStyle {
 	belowEachParagraph: number;
 }
 
+export interface Cursor {
+	top: number;
+	left: number;
+	right: number;
+}
+
 export class DrawingArea implements PixelGrid {
 	public static async build(
 		dimensions: DisplayDimensions,
 		background?: number,
 	): Promise<DrawingArea> {
-		const panel = new DrawingArea(
-			dimensions,
-			background,
-		);
+		const panel = new DrawingArea(dimensions, background);
 		await panel.clear();
 		return panel;
 	}
@@ -31,7 +34,7 @@ export class DrawingArea implements PixelGrid {
 
 	private readonly dimensions: DisplayDimensions;
 
-	private cursor = {
+	private cursor: Cursor = {
 		left: 0,
 		right: 0,
 		top: 0,
@@ -70,14 +73,15 @@ export class DrawingArea implements PixelGrid {
 		});
 	}
 
+	public getCursor(): Cursor {
+		return this.cursor;
+	}
+
 	public getPixel(x: number, y: number): number {
 		return this.stage.getPixel(x, y);
 	}
 
-	public writeParagraph(args: {
-		style: TextStyle,
-		text: string,
-	}) {
+	public writeParagraph(args: { style: TextStyle; text: string }) {
 		const lines = [""];
 		const words = args.text.split(/\s+/g);
 		words.forEach((word) => {
