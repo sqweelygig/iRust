@@ -69,13 +69,12 @@ class Article implements PixelGrid {
 
 	public async writeMD(content: string): Promise<void> {
 		await this.contentPanel.writeMD(content);
-		await this.summaryPanel.writeMD(content);
 		let currentSection: string[] = [];
 		let currentTitle = "";
 		this.article = [];
 		content.split(/\r?\n/g).forEach((line) => {
 			if (line.match(/^#+/)) {
-				if (currentSection.length > 0) {
+				if (currentSection.length > 0 || currentTitle !== "") {
 					this.article.push({
 						body: currentSection.join("\n").trim(),
 						title: currentTitle,
@@ -84,16 +83,20 @@ class Article implements PixelGrid {
 				currentTitle = line.replace(/^#+/, "").trim();
 				currentSection = [];
 			} else {
-				currentSection.push(line);
+				currentSection.push(line.trim());
 			}
 		});
-		if (currentSection.length > 0) {
+		if (currentSection.length > 0 || currentTitle !== "") {
 			this.article.push({
 				body: currentSection.join("\n").trim(),
 				title: currentTitle,
 			});
 		}
-		console.log(this.article);
+		for (const i = 0; i < this.article.length; i++) {
+			if (i > 0) {
+				this.summaryPanel.writeParagraph(this.article[i].title);
+			}
+		}
 		this.onUpdate.forEach((onUpdate) => {
 			onUpdate();
 		});

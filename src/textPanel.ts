@@ -99,7 +99,7 @@ export class TextPanel implements PixelGrid {
 		}
 	}
 
-	private writeParagraph(text: string, style?: string) {
+	public writeParagraph(text: string, style?: string) {
 		const lines = [""];
 		const words = text.split(/ /g);
 		const mergedStyle = merge(
