@@ -51,7 +51,7 @@ class Article implements PixelGrid {
 	private readonly panelBoundary: number;
 
 	private article: Array<{
-		title?: string;
+		title: string;
 		body: string;
 	}>;
 
@@ -75,20 +75,24 @@ class Article implements PixelGrid {
 		this.article = [];
 		content.split(/\r?\n/g).forEach((line) => {
 			if (line.match(/^#+/)) {
-				this.article.push({
-					body: currentSection.join("\n").trim(),
-					title: currentTitle,
-				});
+				if (currentSection.length > 0) {
+					this.article.push({
+						body: currentSection.join("\n").trim(),
+						title: currentTitle,
+					});
+				}
 				currentTitle = line.replace(/^#+/, "").trim();
 				currentSection = [];
 			} else {
 				currentSection.push(line);
 			}
 		});
-		this.article.push({
-			body: currentSection.join("\n").trim(),
-			title: currentTitle,
-		});
+		if (currentSection.length > 0) {
+			this.article.push({
+				body: currentSection.join("\n").trim(),
+				title: currentTitle,
+			});
+		}
 		console.log(this.article);
 		this.onUpdate.forEach((onUpdate) => {
 			onUpdate();
