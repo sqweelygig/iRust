@@ -41,7 +41,6 @@ const themes: Dictionary<StyleGuide> = {
 			},
 			title: {
 				aboveEachBaseline: 1.4,
-				aboveEachParagraph: 0,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
 			},
 		},
