@@ -5,6 +5,7 @@ import { DisplayDimensions, PixelGrid } from "./display";
 // TODO [IMPROVEMENT] Include text alignment.
 
 export interface TextStyle {
+	background: number;
 	colour: number;
 	fontPath: string;
 	fontSize: number;

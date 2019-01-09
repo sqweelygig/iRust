@@ -7,11 +7,7 @@ import { DrawingArea, TextStyle } from "./drawingArea";
 // TODO [REFACTOR] Export interface StyleSheet and typescript the themes files.
 
 export interface StyleGuide {
-	colours: {
-		background: number;
-		line: number;
-	};
-	textStyles: {
+	styles: {
 		default: TextStyle;
 		title?: Partial<TextStyle>;
 		abstract?: Partial<TextStyle>;
@@ -23,14 +19,11 @@ export interface StyleGuide {
 
 const themes: Dictionary<StyleGuide> = {
 	benvolio: {
-		colours: {
-			background: 0xffffff,
-			line: 0x000000,
-		},
-		textStyles: {
+		styles: {
 			default: {
 				aboveEachBaseline: 1.13,
 				aboveEachParagraph: 0.5,
+				background: 0xffffff,
 				belowEachBaseline: 0.35,
 				belowEachParagraph: 0,
 				besideEachParagraph: 10,
@@ -62,7 +55,7 @@ class Article implements PixelGrid {
 	): Promise<Article> {
 		const drawingArea = await DrawingArea.build(
 			dimensions,
-			styleGuide.colours.background,
+			styleGuide.styles.default.background,
 		);
 		return new Article(drawingArea, styleGuide, onUpdate);
 	}
@@ -145,8 +138,8 @@ class Article implements PixelGrid {
 		this.drawingArea.drawParagraph({
 			style: merge(
 				{},
-				this.styleGuide.textStyles.default,
-				this.styleGuide.textStyles.title,
+				this.styleGuide.styles.default,
+				this.styleGuide.styles.title,
 			),
 			text: this.article[0].title,
 		});
@@ -154,8 +147,8 @@ class Article implements PixelGrid {
 		this.drawingArea.drawParagraph({
 			style: merge(
 				{},
-				this.styleGuide.textStyles.default,
-				this.styleGuide.textStyles.abstract,
+				this.styleGuide.styles.default,
+				this.styleGuide.styles.abstract,
 			),
 			text: this.article[0].body[0],
 		});
@@ -176,8 +169,8 @@ class Article implements PixelGrid {
 			this.drawingArea.drawParagraph({
 				style: merge(
 					{},
-					this.styleGuide.textStyles.default,
-					this.styleGuide.textStyles.summary,
+					this.styleGuide.styles.default,
+					this.styleGuide.styles.summary,
 				),
 				text: this.article[i].title,
 			});
@@ -188,8 +181,8 @@ class Article implements PixelGrid {
 			this.drawingArea.drawParagraph({
 				style: merge(
 					{},
-					this.styleGuide.textStyles.default,
-					this.styleGuide.textStyles.header,
+					this.styleGuide.styles.default,
+					this.styleGuide.styles.header,
 				),
 				text: this.article[i].title,
 			});
@@ -197,8 +190,8 @@ class Article implements PixelGrid {
 				this.drawingArea.drawParagraph({
 					style: merge(
 						{},
-						this.styleGuide.textStyles.default,
-						this.styleGuide.textStyles.content,
+						this.styleGuide.styles.default,
+						this.styleGuide.styles.content,
 					),
 					text: paragraph,
 				});
@@ -211,8 +204,8 @@ class Article implements PixelGrid {
 	}
 
 	public getPixel(x: number, y: number): number {
-		if (x === this.crossLocation.top || y === this.crossLocation.left) {
-			return this.styleGuide.colours.line;
+		if (y === this.crossLocation.top || x === this.crossLocation.left) {
+			return this.styleGuide.styles.default.colour;
 		} else {
 			return this.drawingArea.getPixel(x, y);
 		}
