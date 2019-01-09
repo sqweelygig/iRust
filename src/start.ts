@@ -1,54 +1,54 @@
-import { promises as FS } from "fs";
-import * as Yaml from "js-yaml";
 import { Dictionary } from "lodash";
 import * as Path from "path";
 import { DataRepository } from "./data-repository";
 import { Display, DisplayDimensions, PixelGrid } from "./display";
-import { TextPanel, TextStyle } from "./textPanel";
+import { DrawingArea, TextStyle } from "./drawingArea";
+
+// TODO [REFACTOR] Export interface StyleSheet and typescript the themes files.
+
+export interface StyleGuide {
+	background: number;
+	default: TextStyle;
+}
+
+const themes: Dictionary<StyleGuide> = {
+	benvolio: {
+		background: 0xffffff,
+		default: {
+			aboveEachBaseline: 1.13,
+			aboveEachParagraph: 0.5,
+			belowEachBaseline: 0.35,
+			belowEachParagraph: 0,
+			besideEachParagraph: 10,
+			colour: 0x000000,
+			fontPath: "/usr/src/imuse/lib/sassoon-primary.otf",
+			fontSize: 32,
+		},
+	},
+};
 
 class Article implements PixelGrid {
 	public static async build(
 		dimensions: DisplayDimensions,
-		defaultStyle: TextStyle,
-		textStyles: Dictionary<Partial<TextStyle>>,
+		styleGuide: StyleGuide,
 		onUpdate: () => void,
-		background?: number,
 	): Promise<Article> {
-		const shortEdge = Math.min(dimensions.width, dimensions.height);
-		const longEdge = Math.max(dimensions.width, dimensions.height);
-		const contentPanel = await TextPanel.build(
-			{
-				height: shortEdge,
-				width: shortEdge,
-			},
-			defaultStyle,
-			textStyles,
-			background,
-		);
-		const summaryPanel = await TextPanel.build(
-			{
-				height: shortEdge,
-				width: longEdge - shortEdge,
-			},
-			defaultStyle,
-			textStyles,
-			background,
+		const drawingArea = await DrawingArea.build(
+			dimensions,
+			styleGuide.background,
 		);
 		return new Article(
+			drawingArea,
+			styleGuide,
 			onUpdate,
-			contentPanel,
-			summaryPanel,
-			longEdge - shortEdge,
 		);
 	}
 
-	private readonly contentPanel: TextPanel;
-
-	private readonly summaryPanel: TextPanel;
+	private readonly drawingArea: DrawingArea;
 
 	private readonly onUpdate: Array<() => void>;
 
-	private readonly panelBoundary: number;
+	private readonly styleGuide: StyleGuide;
 
 	private article: Array<{
 		title: string;
@@ -56,19 +56,32 @@ class Article implements PixelGrid {
 	}>;
 
 	private constructor(
+		drawingArea: DrawingArea,
+		styleGuide: StyleGuide,
 		onUpdate: () => void,
-		contentPanel: TextPanel,
-		summaryPanel: TextPanel,
-		panelBoundary: number,
 	) {
-		this.contentPanel = contentPanel;
-		this.summaryPanel = summaryPanel;
-		this.panelBoundary = panelBoundary;
+		this.styleGuide = styleGuide;
+		this.drawingArea = drawingArea;
 		this.onUpdate = [onUpdate];
 	}
 
+	// public async writeMD(content: string): Promise<void> {
+	// 	const contentDOM = new JSDOM(
+	// 		marked(content, {
+	// 			gfm: true,
+	// 		}),
+	// 	);
+	// 	const topLevelChildren = contentDOM.window.document.body.children;
+	// 	await this.clear();
+	// 	for (const child of topLevelChildren) {
+	// 		const textContent = child.textContent
+	// 			? child.textContent.replace(/\s+/g, " ")
+	// 			: "";
+	// 		this.writeParagraph(textContent, child.tagName.toLowerCase());
+	// 	}
+	// }
+
 	public async writeMD(content: string): Promise<void> {
-		await this.contentPanel.writeMD(content);
 		let currentSection: string[] = [];
 		let currentTitle = "";
 		this.article = [];
@@ -93,8 +106,11 @@ class Article implements PixelGrid {
 			});
 		}
 		for (let i = 0; i < this.article.length; i++) {
-			if (i > 0) {
-				this.summaryPanel.writeParagraph(this.article[i].title);
+			if (i === 0) {
+				this.drawingArea.writeParagraph({
+					style: this.styleGuide.default,
+					text: this.article[i].title,
+				});
 			}
 		}
 		this.onUpdate.forEach((onUpdate) => {
@@ -103,13 +119,7 @@ class Article implements PixelGrid {
 	}
 
 	public getPixel(x: number, y: number): number {
-		if (x < this.panelBoundary) {
-			return this.summaryPanel.getPixel(x, y);
-		} else if (x > this.panelBoundary) {
-			return this.contentPanel.getPixel(x - this.panelBoundary, y);
-		} else {
-			return 0x000000;
-		}
+		return this.drawingArea.getPixel(x, y);
 	}
 }
 
@@ -128,21 +138,12 @@ async function start(repo: string, articleName: string) {
 	console.log("Repository Initialised.");
 	const config = await data.getConfig();
 	console.log("Config Loaded.");
-	const themeText = await FS.readFile(
-		Path.join(__dirname, "..", "themes", `${config.theme}.yml`),
-		"utf8",
-	);
-	console.log("Config Parsed.");
-	const theme = Yaml.safeLoad(themeText);
-	console.log("Theme Loaded.");
 	const display = await Display.build();
 	console.log("Display Initialised.");
 	const article = await Article.build(
 		display.getDimensions(),
-		theme.default,
-		theme.overrides,
+		themes[config.theme],
 		onArticleUpdate,
-		theme.background,
 	);
 	console.log("Article Initialised.");
 	await onRepoUpdate();
