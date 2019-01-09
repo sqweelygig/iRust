@@ -32,15 +32,15 @@ const themes: Dictionary<StyleGuide> = {
 				fontSize: 28,
 			},
 			header: {
-				aboveEachBaseline: 1.5,
+				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
 			},
 			summary: {
-				aboveEachBaseline: 1.5,
+				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
 			},
 			title: {
-				aboveEachBaseline: 1.5,
+				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
 			},
 		},
@@ -135,6 +135,7 @@ class Article implements PixelGrid {
 			});
 		}
 		// Draw the title
+		this.drawingArea.setCursor(this.crossLocation);
 		this.drawingArea.drawParagraph({
 			style: merge(
 				{},
@@ -204,7 +205,10 @@ class Article implements PixelGrid {
 	}
 
 	public getPixel(x: number, y: number): number {
-		if (y === this.crossLocation.top || x === this.crossLocation.left) {
+		// TODO Put this in as this.drawingArea.drawLine();
+		if (y === this.crossLocation.top) {
+			return this.styleGuide.styles.default.colour;
+		} else if (y > this.crossLocation.top && x === this.crossLocation.left) {
 			return this.styleGuide.styles.default.colour;
 		} else {
 			return this.drawingArea.getPixel(x, y);
