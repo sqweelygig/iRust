@@ -90,7 +90,7 @@ export class DrawingArea implements PixelGrid {
 		return this.stage.getPixel(x, y);
 	}
 
-	public writeText(args: { style: TextStyle; text: string }) {
+	public writeParagraph(args: { style: TextStyle; text: string }) {
 		const lines = [""];
 		const words = args.text.split(/\s+/g);
 		words.forEach((word) => {
@@ -102,11 +102,11 @@ export class DrawingArea implements PixelGrid {
 				args.style.fontPath,
 				args.style.fontSize,
 				0,
-				args.style.besideEachParagraph,
+				args.style.besideEachParagraph + this.cursor.left,
 				this.cursor.top,
 				appendedLine,
 			);
-			if (box[2] + args.style.besideEachParagraph <= this.dimensions.width) {
+			if (box[2] + args.style.besideEachParagraph <= this.cursor.right) {
 				// If the prototype fits then update the final line and repeat
 				lines[lines.length - 1] = appendedLine;
 			} else {
@@ -126,7 +126,7 @@ export class DrawingArea implements PixelGrid {
 				args.style.fontPath,
 				args.style.fontSize,
 				0,
-				args.style.besideEachParagraph,
+				args.style.besideEachParagraph + this.cursor.left,
 				this.cursor.top,
 				line,
 			);
