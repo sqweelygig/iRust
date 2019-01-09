@@ -51,9 +51,9 @@ class Article implements PixelGrid {
 	private readonly panelBoundary: number;
 
 	private article: Array<{
-			title?: string,
-			body: string,
-		}>;
+		title?: string;
+		body: string;
+	}>;
 
 	private constructor(
 		onUpdate: () => void,
@@ -73,7 +73,7 @@ class Article implements PixelGrid {
 		let currentSection = "";
 		let currentTitle = "";
 		this.article = [];
-		content.split(/\r/g).forEach((line) => {
+		content.split(/\r?\n/g).forEach((line) => {
 			if (line.match(/^#*/)) {
 				this.article.push({
 					body: currentSection,
