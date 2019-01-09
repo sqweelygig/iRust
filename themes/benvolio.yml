@@ -10,9 +10,11 @@ default:
 overrides:
   h1:
     fontPath: "/usr/src/imuse/lib/fancy-script.ttf"
+    aboveEachBaseline: 1.3
     aboveEachParagraph: 0
     fontSize: 64
   h2:
+    aboveEachBaseline: 1.3
     fontPath: "/usr/src/imuse/lib/fancy-script.ttf"
     fontSize: 48
 background: 0xffffff
