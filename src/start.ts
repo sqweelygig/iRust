@@ -114,22 +114,19 @@ class Article implements PixelGrid {
 				title: currentTitle,
 			});
 		}
-		for (let i = 0; i < this.article.length; i++) {
-			if (i === 0) {
-				this.drawingArea.writeParagraph({
-					style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.title),
-					text: this.article[i].title,
-				});
-				this.drawingArea.writeParagraph({
-					style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.abstract),
-					text: this.article[i].body,
-				});
-			} else {
-				this.drawingArea.writeParagraph({
-					style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.summary),
-					text: this.article[i].title,
-				});
-			}
+		this.drawingArea.writeParagraph({
+			style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.title),
+			text: this.article[0].title,
+		});
+		this.drawingArea.writeParagraph({
+			style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.abstract),
+			text: this.article[0].body,
+		});
+		for (let i = 1; i < this.article.length; i++) {
+			this.drawingArea.writeParagraph({
+				style: merge({}, this.styleGuide.textStyles.default, this.styleGuide.textStyles.summary),
+				text: this.article[i].title,
+			});
 		}
 		this.onUpdate.forEach((onUpdate) => {
 			onUpdate();
