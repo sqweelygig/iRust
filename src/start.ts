@@ -4,22 +4,31 @@ import { DataRepository } from "./data-repository";
 import { Display, DisplayDimensions, PixelGrid } from "./display";
 import { DrawingArea, TextStyle } from "./drawingArea";
 
-// TODO [REFACTOR] Export interface StyleSheet and typescript the themes files.
-
 export interface StyleGuide {
-	styles: {
-		default: TextStyle;
-		title?: Partial<TextStyle>;
-		abstract?: Partial<TextStyle>;
-		summary?: Partial<TextStyle>;
-		header?: Partial<TextStyle>;
-		content?: Partial<TextStyle>;
-	};
+	default: TextStyle;
+	title?: Partial<TextStyle>;
+	abstract?: Partial<TextStyle>;
+	summary?: Partial<TextStyle>;
+	header?: Partial<TextStyle>;
+	content?: Partial<TextStyle>;
 }
 
-const themes: Dictionary<StyleGuide> = {
-	benvolio: {
-		styles: {
+class Article implements PixelGrid {
+	public static async build(
+		dimensions: DisplayDimensions,
+		theme: string,
+		onUpdate: () => void,
+	): Promise<Article> {
+		const drawingArea = await DrawingArea.build(
+			dimensions,
+			Article.themes[theme].default.background,
+		);
+		return new Article(drawingArea, theme, onUpdate);
+	}
+
+	// TODO [REFACTOR] Put this into separate files.
+	private static themes: Dictionary<StyleGuide> = {
+		benvolio: {
 			default: {
 				aboveEachBaseline: 1.13,
 				aboveEachParagraph: 0.5,
@@ -34,7 +43,7 @@ const themes: Dictionary<StyleGuide> = {
 			header: {
 				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
-				fontSize: 36,
+				fontSize: 32,
 			},
 			summary: {
 				aboveEachBaseline: 1.4,
@@ -44,30 +53,16 @@ const themes: Dictionary<StyleGuide> = {
 			title: {
 				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
-				fontSize: 32,
+				fontSize: 36,
 			},
 		},
-	},
-};
-
-class Article implements PixelGrid {
-	public static async build(
-		dimensions: DisplayDimensions,
-		styleGuide: StyleGuide,
-		onUpdate: () => void,
-	): Promise<Article> {
-		const drawingArea = await DrawingArea.build(
-			dimensions,
-			styleGuide.styles.default.background,
-		);
-		return new Article(drawingArea, styleGuide, onUpdate);
-	}
+	};
 
 	private readonly drawingArea: DrawingArea;
 
 	private readonly onUpdate: Array<() => void>;
 
-	private readonly styleGuide: StyleGuide;
+	private readonly styles: StyleGuide;
 
 	private crossLocation: {
 		top: number;
@@ -81,10 +76,10 @@ class Article implements PixelGrid {
 
 	private constructor(
 		drawingArea: DrawingArea,
-		styleGuide: StyleGuide,
+		theme: string,
 		onUpdate: () => void,
 	) {
-		this.styleGuide = styleGuide;
+		this.styles = Article.themes[theme];
 		this.drawingArea = drawingArea;
 		this.onUpdate = [onUpdate];
 	}
@@ -142,8 +137,8 @@ class Article implements PixelGrid {
 		this.drawingArea.drawParagraph({
 			style: merge(
 				{},
-				this.styleGuide.styles.default,
-				this.styleGuide.styles.title,
+				this.styles.default,
+				this.styles.title,
 			),
 			text: this.article[0].title,
 		});
@@ -151,8 +146,8 @@ class Article implements PixelGrid {
 		this.drawingArea.drawParagraph({
 			style: merge(
 				{},
-				this.styleGuide.styles.default,
-				this.styleGuide.styles.abstract,
+				this.styles.default,
+				this.styles.abstract,
 			),
 			text: this.article[0].body[0],
 		});
@@ -173,8 +168,8 @@ class Article implements PixelGrid {
 			this.drawingArea.drawParagraph({
 				style: merge(
 					{},
-					this.styleGuide.styles.default,
-					this.styleGuide.styles.summary,
+					this.styles.default,
+					this.styles.summary,
 				),
 				text: this.article[i].title,
 			});
@@ -185,8 +180,8 @@ class Article implements PixelGrid {
 			this.drawingArea.drawParagraph({
 				style: merge(
 					{},
-					this.styleGuide.styles.default,
-					this.styleGuide.styles.header,
+					this.styles.default,
+					this.styles.header,
 				),
 				text: this.article[i].title,
 			});
@@ -194,8 +189,8 @@ class Article implements PixelGrid {
 				this.drawingArea.drawParagraph({
 					style: merge(
 						{},
-						this.styleGuide.styles.default,
-						this.styleGuide.styles.content,
+						this.styles.default,
+						this.styles.content,
 					),
 					text: paragraph,
 				});
@@ -210,9 +205,9 @@ class Article implements PixelGrid {
 	public getPixel(x: number, y: number): number {
 		// TODO Put this in as this.drawingArea.drawLine();
 		if (y === this.crossLocation.top) {
-			return this.styleGuide.styles.default.colour;
+			return this.styles.default.colour;
 		} else if (y > this.crossLocation.top && x === this.crossLocation.left) {
-			return this.styleGuide.styles.default.colour;
+			return this.styles.default.colour;
 		} else {
 			return this.drawingArea.getPixel(x, y);
 		}
@@ -238,7 +233,7 @@ async function start(repo: string, articleName: string) {
 	console.log("Display Initialised.");
 	const article = await Article.build(
 		display.getDimensions(),
-		themes[config.theme],
+		config.theme,
 		onArticleUpdate,
 	);
 	console.log("Article Initialised.");
