@@ -74,12 +74,12 @@ class Article implements PixelGrid {
 		let currentTitle = "";
 		this.article = [];
 		content.split(/\r?\n/g).forEach((line) => {
-			if (line.match(/^#*/)) {
+			if (line.match(/^#+/)) {
 				this.article.push({
 					body: currentSection.join("\n").trim(),
 					title: currentTitle,
 				});
-				currentTitle = line.replace(/^#*/, "").trim();
+				currentTitle = line.replace(/^#+/, "").trim();
 				currentSection = [];
 			} else {
 				currentSection.push(line);
