@@ -53,7 +53,7 @@ class Article implements PixelGrid {
 			title: {
 				aboveEachBaseline: 1.4,
 				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
-				fontSize: 36,
+				fontSize: 50,
 			},
 		},
 	};
@@ -80,8 +80,6 @@ class Article implements PixelGrid {
 		onUpdate: () => void,
 	) {
 		this.styles = Article.themes[theme];
-		console.log(theme);
-		console.log(this.styles);
 		this.drawingArea = drawingArea;
 		this.onUpdate = [onUpdate];
 	}
@@ -137,20 +135,12 @@ class Article implements PixelGrid {
 		// Draw the title
 		this.drawingArea.setCursor(this.crossLocation);
 		this.drawingArea.drawParagraph({
-			style: merge(
-				{},
-				this.styles.default,
-				this.styles.title,
-			),
+			style: merge({}, this.styles.default, this.styles.title),
 			text: this.article[0].title,
 		});
 		// Draw the abstract
 		this.drawingArea.drawParagraph({
-			style: merge(
-				{},
-				this.styles.default,
-				this.styles.abstract,
-			),
+			style: merge({}, this.styles.default, this.styles.abstract),
 			text: this.article[0].body[0],
 		});
 		// Record this vertical position and divide the remaining screen in two
@@ -168,11 +158,7 @@ class Article implements PixelGrid {
 		});
 		for (let i = 1; i < this.article.length; i++) {
 			this.drawingArea.drawParagraph({
-				style: merge(
-					{},
-					this.styles.default,
-					this.styles.summary,
-				),
+				style: merge({}, this.styles.default, this.styles.summary),
 				text: this.article[i].title,
 			});
 		}
@@ -180,20 +166,12 @@ class Article implements PixelGrid {
 		this.drawingArea.setCursor(this.crossLocation);
 		for (let i = 1; i < this.article.length; i++) {
 			this.drawingArea.drawParagraph({
-				style: merge(
-					{},
-					this.styles.default,
-					this.styles.header,
-				),
+				style: merge({}, this.styles.default, this.styles.header),
 				text: this.article[i].title,
 			});
 			this.article[i].body.forEach((paragraph) => {
 				this.drawingArea.drawParagraph({
-					style: merge(
-						{},
-						this.styles.default,
-						this.styles.content,
-					),
+					style: merge({}, this.styles.default, this.styles.content),
 					text: paragraph,
 				});
 			});
