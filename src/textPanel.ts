@@ -15,6 +15,8 @@ export interface TextStyle {
 	belowEachParagraph: number;
 }
 
+// TODO [REFACTOR] Export interface StyleSheet and typescript the themes files.
+
 export class TextPanel implements PixelGrid {
 	public static async build(
 		dimensions: DisplayDimensions,

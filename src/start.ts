@@ -50,6 +50,11 @@ class Article implements PixelGrid {
 
 	private readonly panelBoundary: number;
 
+	private article: Array<{
+			title?: string,
+			body: string,
+		}>;
+
 	private constructor(
 		onUpdate: () => void,
 		contentPanel: TextPanel,
@@ -65,6 +70,26 @@ class Article implements PixelGrid {
 	public async writeMD(content: string): Promise<void> {
 		await this.contentPanel.writeMD(content);
 		await this.summaryPanel.writeMD(content);
+		let currentSection = "";
+		let currentTitle = "";
+		this.article = [];
+		content.split(/\r/g).forEach((line) => {
+			if (line.match(/^#*/)) {
+				this.article.push({
+					body: currentSection,
+					title: currentTitle,
+				});
+				currentTitle = line.replace(/^#*/, "").trim();
+				currentSection = "";
+			} else {
+				currentSection += line;
+			}
+		});
+		this.article.push({
+			body: currentSection,
+			title: currentTitle,
+		});
+		console.log(this.article);
 		this.onUpdate.forEach((onUpdate) => {
 			onUpdate();
 		});
