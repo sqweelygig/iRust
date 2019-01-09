@@ -36,13 +36,15 @@ const themes: Dictionary<StyleGuide> = {
 				besideEachParagraph: 10,
 				colour: 0x000000,
 				fontPath: "/usr/src/imuse/lib/primary-school.otf",
-				fontSize: 30,
+				fontSize: 28,
 			},
 			header: {
-				fontPath: "/usr/src/imuse/lib/fancy-script.otf",
+				aboveEachBaseline: 1.5,
+				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
 			},
 			title: {
-				fontPath: "/usr/src/imuse/lib/fancy-script.otf",
+				aboveEachBaseline: 1.5,
+				fontPath: "/usr/src/imuse/lib/fancy-script.ttf",
 			},
 		},
 	},
