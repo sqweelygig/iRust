@@ -127,8 +127,11 @@ class Article implements PixelGrid {
 			text: this.article[0].body,
 		});
 		const dimensions = this.drawingArea.dimensions;
-		const summaryWidth = Math.max(dimensions.width, dimensions.height) - Math.min(dimensions.width, dimensions.height);
-		this.drawingArea.setCursor({right: summaryWidth});
+		const summaryWidth =
+			Math.max(dimensions.width, dimensions.height) -
+			Math.min(dimensions.width, dimensions.height);
+		const resetTop = this.drawingArea.getCursor().top;
+		this.drawingArea.setCursor({ right: summaryWidth, top: resetTop});
 		for (let i = 1; i < this.article.length; i++) {
 			this.drawingArea.writeParagraph({
 				style: merge(
@@ -139,6 +142,7 @@ class Article implements PixelGrid {
 				text: this.article[i].title,
 			});
 		}
+		this.drawingArea.setCursor({ top: resetTop, left: summaryWidth});
 		this.onUpdate.forEach((onUpdate) => {
 			onUpdate();
 		});
