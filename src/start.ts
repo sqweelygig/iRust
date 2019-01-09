@@ -89,8 +89,8 @@ class Article implements PixelGrid {
 					currentSection = [];
 				}
 				currentTitle = line.replace(/^#+/, "").trim();
-			} else if (line.trim().match(/^$/)) {
-				if (currentParagraph.length > 0) {
+			} else if (line.trim().length === 0) {
+				if (currentParagraph.join(" ").trim().length > 0) {
 					currentSection.push(currentParagraph.join(" ").trim());
 					currentParagraph = [];
 				}
